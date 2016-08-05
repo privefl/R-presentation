@@ -6,7 +6,7 @@ output: ioslides_presentation
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, cache = TRUE, autodep = TRUE)
+knitr::opts_chunk$set(echo = FALSE, autodep = TRUE)
 ```
 
 
