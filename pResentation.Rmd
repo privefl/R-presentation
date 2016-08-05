@@ -1,0 +1,61 @@
+---
+title: "Getting My Colleagues Hooked on R"
+author: "Florian Privé"
+date: "August 5, 2016"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache = TRUE, autodep = TRUE)
+```
+
+
+## What is R? 
+
+<iframe width="640" height="360" src="https://www.youtube.com/embed/TR2bHSJ_eck" frameborder="0" allowfullscreen></iframe>
+
+
+## 7 facts about the growth of R:
+
+```{r, echo = FALSE}
+thepage <- readLines('https://cran.r-project.org/web/packages/')
+theline <- grep("Currently, the CRAN package repository features [0-9]+ available packages.", thepage)
+thesplit <- strsplit(thepage[theline], split = " ")[[1]]
+thepos <- match("available", thesplit) - 1
+n <- thesplit[thepos]
+```
+
+- There are  `r n` available packages on CRAN ([CRAN: Contributed Packages, `r Sys.Date()`](https://cran.r-project.org/web/packages/))
+- R is #5 of all programming languages ([IEEE Spectrum, July 2016](https://www.r-bloggers.com/r-moves-up-to-5th-place-in-ieee-language-rankings/))
+- R is the #1 Google Search for Advanced Analytics software ([Google Trends, March 2014](http://blog.revolutionanalytics.com/2014/03/r-free-popular-powerful-flexible-and-supported.html))
+- R is the highest paid IT skill ([Dice.com survey, January 2014](http://blog.revolutionanalytics.com/2014/02/r-salary-surveys.html))
+- R most-used data science language after SQL ([O'Reilly survey, January 2014](http://blog.revolutionanalytics.com/2014/01/in-data-scientist-survey-r-is-the-most-used-tool-other-than-databases.html))
+- R is used by 70% of data miners ([Rexer survey, October 2013](http://blog.revolutionanalytics.com/2013/10/r-usage-skyrocketing-rexer-poll.html))
+- R growing faster than any other data science language ([KDNuggets survey, August 2013](http://blog.revolutionanalytics.com/2013/09/top-languages-for-data-science.html))
+
+
+## R: more than just statistics
+
+R was orginally a language __written by statisticians for statisticians__.
+Now, it adds (to cite but a few):
+
+- elegant visualizations tools: 
+    - [ggplot2](http://ggplot2.org/), 
+    - [plotly](https://plot.ly/ggplot2/): interactive plots with the syntax of ggplot2
+- advanced (and fast) manipulation of datasets:
+    - [data.table](https://cran.r-project.org/web/packages/data.table/): for instance, it enables in-place changes.
+    - [dplyr](https://cran.r-project.org/web/packages/dplyr/): fast manipulations of data.frame-like objects.
+- easy parallel computing: [foreach](https://cran.r-project.org/web/packages/foreach/)
+- easy use of on-disk matrices: [bigmemory](https://cran.r-project.org/web/packages/bigmemory/)
+- easy use or C++ code with [Rcpp](https://cran.r-project.org/web/packages/Rcpp/), or other languages
+
+You may use fast C++ code or JavaScript without knowing it.
+
+
+## References and further reading
+
+- [7 Tips For Getting Your Colleagues Hooked on R](http://scl.io/QZxZZl6u#gs.zMhz76Q)
+- [Video: What is R?](https://www.youtube.com/embed/TR2bHSJ_eck)
+- [How Companies Use R to Compete in a Data-Driven World](http://data-informed.com/companies-use-r-compete-data-driven-world/)
+- [How the growth of R helps data-driven organizations succeed](http://www.slideshare.net/RevolutionAnalytics/how-the-growth-of-r-helps-datadriven-organizations-succeed)
+- [Seven quick facts about R](http://blog.revolutionanalytics.com/2014/04/seven-quick-facts-about-r.html)
