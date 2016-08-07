@@ -2,11 +2,10 @@
 title: "Getting My Colleagues Hooked on R"
 author: "Florian Privé"
 date: "August 5, 2016"
-output: 
+output:
   ioslides_presentation:
     css: styles.css
-    self_contained: true
-    duration: 45
+    self_contained: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -136,7 +135,9 @@ foreach2 <- function(obj, expr_fun, ncores) {
 }
 ```
 
+## We have RStudio
 
+Live demo
 
 ## References and further reading
 
