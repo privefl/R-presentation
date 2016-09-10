@@ -172,13 +172,12 @@ mutate(flights, gain = arr_delay - dep_delay,
 ***
 
 ```{r}
-flights %>%
+flights2 <- flights %>%
   filter(month == 1, day == 1) %>%
   arrange(desc(dep_delay)) %>%
   mutate(gain = arr_delay - dep_delay,
-         speed = distance / air_time * 60) ->
-  flights2
-head(flights2, 4)
+         speed = distance / air_time * 60)
+head(flights2)
 ```
 
 
@@ -186,14 +185,14 @@ head(flights2, 4)
 
 ## Elegant visualization tools: [ggplot2](http://ggplot2.org/)
 
-```{r, out.height=330, out.width=530}
+```{r, out.height=380, out.width=600}
 require(ggplot2)
 p <- qplot(dep_delay, arr_delay, data = flights2, 
       main = "Flights which take off late arrive late. Surprising!")
 print(p)
 ```
 
-## Add layers.
+## Adding layers
 
 ```{r}
 p + geom_smooth()
@@ -210,7 +209,7 @@ citation("ggplot2")
 
 ```{r}
 require(ggExtra)
-ggMarginal(p, type = "histogram", col = "red")
+ggMarginal(p, type = "histogram")
 ```
 
 
