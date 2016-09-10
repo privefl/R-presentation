@@ -75,6 +75,21 @@ n <- thesplit[thepos]
 knitr::include_graphics("http://a3.typepad.com/6a017d41eeee1a970c01bb08ef2103970d-pi")
 ```
 
+---
+
+- There are many R conferences:
+    - useR!: 900+ people in 2016,
+    - eRum: european R users meeting,
+    - EARL: many people from the Industry,
+    - Rencontres R: Grenoble in 2015,
+    - satRdays,
+    - R/Finance & R in Insurance.
+    
+- The R blogosphere is huge: [R-bloggers](https://www.r-bloggers.com/) has
+    - nearly 600 bloggers,
+    - 36K followers on Twitter,
+    - 39K on Facebook,
+    - very interesting posts every day!
 
 ## Manipulating data? Ask Hadley Wickham!
 
