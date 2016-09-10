@@ -1,12 +1,19 @@
 ---
 title: "Getting My Colleagues Hooked on R"
 author: "Florian Privé"
-date: "August 5, 2016"
+date: "`r Sys.Date()`"
 output:
   ioslides_presentation:
     css: styles.css
     self_contained: yes
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  cache = TRUE,
+  warning = FALSE, message = FALSE, 
+  fig.align = 'center', comment = "")
+```
 
 ```{r, include=FALSE}
 pacman::p_load(googlesheets, gsubfn, stringr)
@@ -53,7 +60,7 @@ for (n in counts.lvl) {
 
 - R is #5 of all programming languages ([IEEE Spectrum, July 2016](https://www.r-bloggers.com/r-moves-up-to-5th-place-in-ieee-language-rankings/))
 
-```{r, fig.align='center', echo=FALSE}
+```{r, echo=FALSE}
 knitr::include_graphics("http://revolution-computing.typepad.com/.a/6a010534b1db25970b01bb092485d1970d-800wi")
 ```
 
@@ -71,7 +78,7 @@ n <- thesplit[thepos]
 
 - There are now  `r n` available packages on CRAN ([CRAN: Contributed Packages, `r Sys.Date()`](https://cran.r-project.org/web/packages/))
 
-```{r, fig.align='center', echo=FALSE, out.height=500}
+```{r, echo=FALSE, out.height=500}
 knitr::include_graphics("http://a3.typepad.com/6a017d41eeee1a970c01bb08ef2103970d-pi")
 ```
 
@@ -117,35 +124,115 @@ R packages that he has developped (from [his website](http://hadley.nz/)):
     - <a href="http://github.com/klutometis/roxygen">roxygen2</a> for in-line documentation.
     - <a href="http://github.com/hadley/testthat">testthat</a> for unit testing.
 
-## R: more than just statistics
+## Introduction to dplyr (from its vignette)
 
-R was orginally a language __written by statisticians for statisticians__.
+```{r, collapse=TRUE}
+library(nycflights13)
+dim(flights)
+head(flights)
+```
 
-Now, it adds more and more features.
 
-## Elegant visualizations tools
-- [ggplot2](http://ggplot2.org/)
+***
 
-```{r, echo=TRUE, out.height=330, out.width=530}
-library(ggplot2)
-dsamp <- diamonds[sample(nrow(diamonds), size = 1000), ]
-p <- qplot(carat, price, data = dsamp, colour = clarity)
+```{r}
+require(dplyr)
+```
+
+
+Dplyr aims to provide a function for each basic verb of data manipulation:
+
+- ``filter()`` (and ``slice()``)
+- ``arrange()``
+- ``select()`` (and ``rename()``)
+- ``distinct()``
+- ``mutate()`` (and ``transmute()``)
+- ``summarise()``
+- ``sample_n()`` (and ``sample_frac()``)
+
+*** 
+
+```{r}
+filter(flights, month == 1, day == 1)
+```
+
+***
+
+```{r}
+arrange(flights, desc(dep_delay))
+```
+
+***
+
+```{r}
+mutate(flights, gain = arr_delay - dep_delay,
+  speed = distance / air_time * 60)
+```
+
+***
+
+```{r}
+flights %>%
+  filter(month == 1, day == 1) %>%
+  arrange(desc(dep_delay)) %>%
+  mutate(gain = arr_delay - dep_delay,
+         speed = distance / air_time * 60) ->
+  flights2
+head(flights2, 4)
+```
+
+
+
+
+## Elegant visualization tools: [ggplot2](http://ggplot2.org/)
+
+```{r, out.height=330, out.width=530}
+require(ggplot2)
+p <- qplot(dep_delay, arr_delay, data = flights2, 
+      main = "Flights which take off late arrive late. Surprising!")
 print(p)
 ```
 
-## Interactive visualizations tools
-- [plotly](https://plot.ly/ggplot2/): interactive plots with the syntax of ggplot2
+## Add layers.
 
-```{r, eval=FALSE}
-library(plotly)
+```{r}
+p + geom_smooth()
+```
+
+## More: go check this book
+
+```{r}
+citation("ggplot2")
+```
+
+
+## Some extensions are available [here](https://www.ggplot2-exts.org/)
+
+```{r}
+require(ggExtra)
+ggMarginal(p, type = "histogram", col = "red")
+```
+
+
+## Interactive visualizations tools: [plotly](https://plot.ly/ggplot2/)
+
+```{r}
+require(plotly)
 ggplotly(p)
 ```
-<center>
-```{r, message=FALSE, out.height=380, out.width=580, echo=FALSE}
-library(plotly)
-ggplotly(p)
+<!-- <center> -->
+<!-- ```{r, message=FALSE, out.height=380, out.width=580, echo=FALSE} -->
+<!-- library(plotly) -->
+<!-- ggplotly(p) -->
+<!-- ``` -->
+<!-- </center> -->
+
+## [ggmap](https://github.com/dkahle/ggmap): maps with ggplot2
+
+```{r, echo=FALSE}
+knitr::include_graphics("http://revolution-computing.typepad.com/.a/6a010534b1db25970b0167689d5031970b-800wi")
 ```
-</center>
+
 
 ## Use of faster C++ code when needed
 
@@ -225,3 +312,4 @@ Live demo
 - [How Companies Use R to Compete in a Data-Driven World](http://data-informed.com/companies-use-r-compete-data-driven-world/)
 - [How the growth of R helps data-driven organizations succeed](http://www.slideshare.net/RevolutionAnalytics/how-the-growth-of-r-helps-datadriven-organizations-succeed)
 - [A segmented model of CRAN package growth](https://www.r-bloggers.com/a-segmented-model-of-cran-package-growth/)
+- [Coke vs Soda vs Pop : Linguistic trends analyzed with Twitter and R](https://www.r-bloggers.com/coke-vs-soda-vs-pop-linguistic-trends-analyzed-with-twitter-and-r/)
