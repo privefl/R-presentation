@@ -23,7 +23,7 @@ n <- nrow(responses)
 
 ## What `r n` of you wanted to learn
 
-```{r, echo=FALSE, comment=""}
+```{r, echo=FALSE, results='asis'}
 url <- "https://docs.google.com/forms/d/13Hrr9x-3ASaPKPJGRpKzsGWlkwu59LGITtw1ldG7FAU/edit#responses"
 url <- url(url)
 url.lines <- readLines(url, encoding = "UTF-8", warn = FALSE)
@@ -35,14 +35,14 @@ counts <- str_count(responses, coll(questions))
 counts.lvl <- setdiff(sort(unique(counts), decreasing = TRUE), 0)
 
 for (n in counts.lvl) {
-  printf(" - for %d of you:\n", n)
+  if (n == 2) printf("\n***\n")
+  printf("- for **%d** of you:\n", n)
   q.tmp <- questions[counts == n]
   for (q in q.tmp) {
-    printf("   -> %s\n", q)
+    printf("    - %s\n", q)
   }
 }
 ```
-
 
 <!-- ## What is R?  -->
 
