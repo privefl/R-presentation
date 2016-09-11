@@ -220,15 +220,9 @@ knitr::include_graphics("http://revolution-computing.typepad.com/.a/6a010534b1db
 
 ## Interactive visualizations tools: [plotly](https://plot.ly/ggplot2/)
 
-```{r}
+```{r, results='asis'}
 plotly::ggplotly(p)
 ```
-<!-- <center> -->
-<!-- ```{r, message=FALSE, out.height=380, out.width=580, echo=FALSE} -->
-<!-- library(plotly) -->
-<!-- ggplotly(p) -->
-<!-- ``` -->
-<!-- </center> -->
 
 ## Interactive apps: [Shiny](http://shiny.rstudio.com/)
 
