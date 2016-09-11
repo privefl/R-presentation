@@ -213,6 +213,12 @@ ggMarginal(p, type = "histogram")
 ```
 
 
+## [ggmap](https://github.com/dkahle/ggmap): maps with ggplot2
+
+```{r, echo=FALSE}
+knitr::include_graphics("http://revolution-computing.typepad.com/.a/6a010534b1db25970b0167689d5031970b-800wi")
+```
+
 ## Interactive visualizations tools: [plotly](https://plot.ly/ggplot2/)
 
 ```{r}
@@ -226,23 +232,27 @@ ggplotly(p)
 <!-- ``` -->
 <!-- </center> -->
 
-## [ggmap](https://github.com/dkahle/ggmap): maps with ggplot2
+## Interactive apps: [Shiny](http://shiny.rstudio.com/)
 
-```{r, echo=FALSE}
-knitr::include_graphics("http://revolution-computing.typepad.com/.a/6a010534b1db25970b0167689d5031970b-800wi")
-```
+Live demo!
+
+- From the Shiny website
+- My own shiny app: `shiny::runGitHub("privefl/repartitions_equipes")`
+- A game: [Lights Out](https://daattali.com/shiny/lightsout/)
+
+[Advanced tips and tricks](https://github.com/daattali/advanced-shiny)
+
+## Use of C++ code when needed
 
 
-## Use of faster C++ code when needed
 
-> - easy use or C++ code with [Rcpp](https://cran.r-project.org/web/packages/Rcpp/), or other languages
-> - advanced (and fast) manipulation of datasets:
-    - [data.table](https://cran.r-project.org/web/packages/data.table/): for instance, it enables in-place changes.
-    - [dplyr](https://cran.r-project.org/web/packages/dplyr/): fast manipulations of data.frame-like objects.
-> - easy parallel computing: [foreach](https://cran.r-project.org/web/packages/foreach/)
-> - easy use of on-disk matrices: [bigmemory](https://cran.r-project.org/web/packages/bigmemory/)
+## Bigmemory
 
-You may use JavaScript or C++ code without knowing it.
+- On-disk matrices
+- types: ``char``, ``short``, ``int``, ``float``, ``double``
+- Access with `[i, j]` as a matrix 
+- Access via C++ code with `[j][i]`
+- Easy use of parallelisation with shared matrices
 
 ## Example with foreach and bigmemory
 
@@ -263,7 +273,7 @@ DO_all <- function(X, infos, ncores) {
                           firstCol = lims[1], 
                           lastCol = lims[2],
                           backingpath = "backingfiles")
-    ## Do something with X.chr
+    ## Do something with X.chr (such as imputing)
   }
   range.chr <- LimsChr(infos)
   X.desc <- describe(X)
@@ -277,6 +287,7 @@ DO_all <- function(X, infos, ncores) {
 ```
 
 ***
+
 ```{r, eval = FALSE}
 LimsChr <- function(infos) {
   map.rle <- rle(infos$map$chromosome)
@@ -300,9 +311,33 @@ foreach2 <- function(obj, expr_fun, ncores) {
 }
 ```
 
-## We have RStudio
+## We have [RStudio](https://www.rstudio.com/)
 
-Live demo
+Live demo!
+
+- Code highlighting/autocompletion
+- Help > Cheatsheets
+- Panels (Git, ...)
+- debugger
+- [Notebooks](http://rmarkdown.rstudio.com/r_notebooks.html)
+
+More tips: [RStudio Tips](https://twitter.com/rstudiotips) on Twitter
+
+## Free books to learn about R:
+
+- Advanced R programming: 
+    - [Efficient R Programming](https://csgillespie.github.io/efficientR/preface.html)
+    - [Advanced R](http://adv-r.had.co.nz/)
+- Reporting:
+    - [Getting used to R, RStudio, and R Markdown](https://ismayc.github.io/rbasics-book/index.html)
+- Data analysis:
+    - [R for Data Science](http://r4ds.had.co.nz/)
+    - [An Introduction to Statistical Learning, with Applications in R](http://www-bcf.usc.edu/~gareth/ISL/) (Trevor Hastie)
+- Package development:
+    - [R packages](http://r-pkgs.had.co.nz/)
+
+Learn: [R Course Finder](http://r-exercises.com/r-courses/)
+
 
 ## References and further reading
 
