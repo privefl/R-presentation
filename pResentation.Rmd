@@ -5,14 +5,14 @@ date: "`r Sys.Date()`"
 output:
   ioslides_presentation:
     css: styles.css
-    self_contained: yes
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  cache = TRUE,
+  cache = FALSE,
   warning = FALSE, message = FALSE, 
   fig.align = 'center', comment = "")
+require(magrittr)
 ```
 
 ```{r, include=FALSE}
@@ -69,11 +69,11 @@ knitr::include_graphics("http://revolution-computing.typepad.com/.a/6a010534b1db
 ---
 
 ```{r, echo = FALSE}
-thepage <- readLines('https://cran.r-project.org/web/packages/')
-theline <- grep("Currently, the CRAN package repository features [0-9]+ available packages.", thepage)
-thesplit <- strsplit(thepage[theline], split = " ")[[1]]
-thepos <- match("available", thesplit) - 1
-n <- thesplit[thepos]
+n <- readLines('https://cran.r-project.org/web/packages/') %>%
+  gsubfn::strapply(
+    paste("Currently, the CRAN package repository",
+          "features ([0-9]+) available packages.")) %>%
+  unlist
 ```
 
 - There are now  `r n` available packages on CRAN ([CRAN: Contributed Packages, `r Sys.Date()`](https://cran.r-project.org/web/packages/))
@@ -220,9 +220,11 @@ knitr::include_graphics("http://revolution-computing.typepad.com/.a/6a010534b1db
 
 ## Interactive visualizations tools: [plotly](https://plot.ly/ggplot2/)
 
-```{r, results='asis'}
-plotly::ggplotly(p)
+```{r}
+require(plotly)
+ggplotly(p)
 ```
+
 
 ## Interactive apps: [Shiny](http://shiny.rstudio.com/)
 
@@ -339,3 +341,20 @@ Learn: [R Course Finder](http://r-exercises.com/r-courses/)
 - [How the growth of R helps data-driven organizations succeed](http://www.slideshare.net/RevolutionAnalytics/how-the-growth-of-r-helps-datadriven-organizations-succeed)
 - [A segmented model of CRAN package growth](https://www.r-bloggers.com/a-segmented-model-of-cran-package-growth/)
 - [Coke vs Soda vs Pop : Linguistic trends analyzed with Twitter and R](https://www.r-bloggers.com/coke-vs-soda-vs-pop-linguistic-trends-analyzed-with-twitter-and-r/)
+
+<!-- Script for plotly (https://github.com/ropensci/plotly/issues/463) -->
+
+<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<script>
+  (function() {
+    if (window.jQuery) {
+      $('.plotly').hide();
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).find('.plotly').hide();
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).find('.plotly').show();      
+      });
+    }
+  })();
+</script>
