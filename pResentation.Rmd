@@ -326,7 +326,7 @@ More tips: [RStudio Tips](https://twitter.com/rstudiotips) on Twitter
     - [Getting used to R, RStudio, and R Markdown](https://ismayc.github.io/rbasics-book/index.html)
 - Data analysis:
     - [R for Data Science](http://r4ds.had.co.nz/)
-    - [An Introduction to Statistical Learning, with Applications in R](http://www-bcf.usc.edu/~gareth/ISL/) (Trevor Hastie)
+    - [An Introduction to Statistical Learning, with Applications in R](http://www-bcf.usc.edu/~gareth/ISL/) (Trevor Hastie is one of the 4 authors)
 - Package development:
     - [R packages](http://r-pkgs.had.co.nz/)
 
