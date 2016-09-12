@@ -342,19 +342,3 @@ Learn: [R Course Finder](http://r-exercises.com/r-courses/)
 - [A segmented model of CRAN package growth](https://www.r-bloggers.com/a-segmented-model-of-cran-package-growth/)
 - [Coke vs Soda vs Pop : Linguistic trends analyzed with Twitter and R](https://www.r-bloggers.com/coke-vs-soda-vs-pop-linguistic-trends-analyzed-with-twitter-and-r/)
 
-<!-- Script for plotly (https://github.com/ropensci/plotly/issues/463) -->
-
-<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-<script>
-  (function() {
-    if (window.jQuery) {
-      $('.plotly').hide();
-       window.jQuery(document).on('slideleave', function(e) {
-         window.jQuery(e.target).find('.plotly').hide();
-      });
-       window.jQuery(document).on('slideenter', function(e) {
-         window.jQuery(e.target).find('.plotly').show();      
-      });
-    }
-  })();
-</script>
