@@ -1,0 +1,11 @@
+---
+title: "Untitled"
+author: "Florian Privé"
+date: "13 septembre 2016"
+output: html_document
+---
+
+```{r}
+Sys.getenv()['PATH']
+```
+
