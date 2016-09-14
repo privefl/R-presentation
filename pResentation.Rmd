@@ -51,6 +51,23 @@ for (n in counts.lvl) {
 }
 ```
 
+## Overview
+
+We will try to see a bit of everything.
+
+- This is only a (small) part of what R can do
+- We will only see introductions to each topic, with some links to learn more
+- I'm not an expert in everything in R (yet :D)
+
+Contents:
+
+- some stats about R
+- data manipulation and visualization
+- Rcpp
+- bigmemory
+- RStudio
+- learn more
+
 <!-- ## What is R?  -->
 
 <!-- <iframe width="640" height="360" src="https://www.youtube.com/embed/TR2bHSJ_eck" frameborder="0" allowfullscreen></iframe> -->
@@ -177,7 +194,7 @@ flights2 <- flights %>%
   arrange(desc(dep_delay)) %>%
   mutate(gain = arr_delay - dep_delay,
          speed = distance / air_time * 60)
-head(flights2)
+print(flights2, n = 6)
 ```
 
 
@@ -208,7 +225,8 @@ citation("ggplot2")
 ## Some extensions are available [here](https://www.ggplot2-exts.org/)
 
 ```{r}
-ggExtra::ggMarginal(p, type = "histogram")
+require(ggExtra)
+ggMarginal(p, type = "histogram")
 ```
 
 
@@ -238,7 +256,179 @@ Live demo!
 
 ## Use of C++ code when needed
 
+More infos [there](http://adv-r.had.co.nz/Rcpp.html)
 
+Typical bottlenecks that C++ can address include:
+
+- Recursive functions, or problems which involve calling functions **millions of times**. 
+<!-- The overhead of calling a function in C++ is much lower than that in R. -->
+- Loops that **can’t be easily vectorised** because subsequent iterations depend on previous ones.
+- Problems that require **advanced data structures** and algorithms that R doesn’t provide. 
+<!-- Through the standard template library (STL), C++ has efficient implementations of many important data structures, from ordered maps to double-ended queues. -->
+
+## Sum
+
+```{r}
+sumR <- function(x) {
+  total <- 0
+  for (i in seq_along(x)) {
+    total <- total + x[i]
+  }
+  total
+}
+```
+![](http://medienwoche.ch/wp_live/wp-content/uploads/2016/01/vomit.jpg)
+
+***
+
+In Rcpp:
+
+```{r engine='Rcpp'}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double sumC(NumericVector x) {
+  int n = x.size();
+  double total = 0;
+  for(int i = 0; i < n; ++i) {
+    total += x[i];
+  }
+  return total;
+}
+```
+
+***
+
+Microbenchmark:
+
+```{r}
+require(microbenchmark)
+
+x <- runif(1e3)
+
+microbenchmark(
+  sum(x),
+  sumC(x),
+  sumR(x)
+)
+```
+
+## Gibbs sampler
+
+```{r}
+gibbs_r <- function(N, thin) {
+  mat <- matrix(nrow = 2, ncol = N)
+  x <- y <- 0
+
+  for (i in 1:N) {
+    for (j in 1:thin) {
+      x <- rgamma(1, 3, y * y + 4)
+      y <- rnorm(1, 1 / (x + 1), 1 / sqrt(2 * (x + 1)))
+    }
+    mat[, i] <- c(x, y)
+  }
+  mat
+}
+```
+
+***
+
+```{r engine='Rcpp'}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericMatrix gibbs_cpp(int N, int thin) {
+  NumericMatrix mat(2, N);
+  double x = 0, y = 0;
+
+  for(int i = 0; i < N; i++) {
+    for(int j = 0; j < thin; j++) {
+      x = rgamma(1, 3, 1 / (y * y + 4))[0];
+      y = rnorm(1, 1 / (x + 1), 1 / sqrt(2 * (x + 1)))[0];
+    }
+    mat(0, i) = x;
+    mat(1, i) = y;
+  }
+
+  return(mat);
+}
+```
+
+Note the access to R-like functions (Rcpp Sugar).
+
+***
+
+```{r}
+microbenchmark(
+  gibbs_r(100, 10),
+  gibbs_cpp(100, 10)
+)
+```
+
+## [Rcpp Sugar](http://dirk.eddelbuettel.com/code/rcpp/Rcpp-sugar.pdf)
+
+```{r engine='Rcpp'}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericVector foo_cpp(NumericVector xVec, NumericVector yVec) {
+  int n = xVec.size();
+  NumericVector res(n);
+  double x, y;
+  for(int i = 0; i < n; i++) {
+    x = xVec[i];
+    y = yVec[i];
+    if (x < y) {
+      res[i] = x*x;
+    } else {
+      res[i] = -y*y;
+    }
+  }
+  return res;
+}
+```
+
+***
+
+Vectorized R version:
+
+```{r}
+foo_R <- function(x, y) {
+  ifelse(x < y, x*x, -(y*y))
+}
+```
+
+Rcpp Sugar version:
+
+```{r engine='Rcpp'}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericVector foo_cppsugar(NumericVector x, NumericVector y) {
+  return ifelse(x < y, x*x, -(y*y));
+}
+```
+
+
+***
+
+```{r}
+N <- 1e5; x <- rnorm(N); y <- rnorm(N)
+
+microbenchmark(
+  R = res1 <- foo_R(x, y),
+  C = res2 <- foo_cpp(x, y),
+  CS = res3 <- foo_cppsugar(x, y)
+)
+```
+
+```{r}
+all(res1 == res2) & all(res1 == res3)
+```
 
 ## Bigmemory
 
@@ -336,9 +526,10 @@ Learn: [R Course Finder](http://r-exercises.com/r-courses/)
 ## References and further reading
 
 - [7 Tips For Getting Your Colleagues Hooked on R](http://scl.io/QZxZZl6u#gs.zMhz76Q)
-- [Video: What is R?](https://www.youtube.com/embed/TR2bHSJ_eck)
+- [Video: What is R?](https://www.youtube.com/watch?v=TR2bHSJ_eck)
 - [How Companies Use R to Compete in a Data-Driven World](http://data-informed.com/companies-use-r-compete-data-driven-world/)
 - [How the growth of R helps data-driven organizations succeed](http://www.slideshare.net/RevolutionAnalytics/how-the-growth-of-r-helps-datadriven-organizations-succeed)
 - [A segmented model of CRAN package growth](https://www.r-bloggers.com/a-segmented-model-of-cran-package-growth/)
 - [Coke vs Soda vs Pop : Linguistic trends analyzed with Twitter and R](https://www.r-bloggers.com/coke-vs-soda-vs-pop-linguistic-trends-analyzed-with-twitter-and-r/)
-
+- [rPython R package](http://rpython.r-forge.r-project.org/)
+- [Feather: A Fast On-Disk Format for Data Frames for R and Python](https://www.r-bloggers.com/feather-a-fast-on-disk-format-for-data-frames-for-r-and-python-powered-by-apache-arrow/)
