@@ -95,7 +95,7 @@ n <- readLines('https://cran.r-project.org/web/packages/') %>%
 
 - There are now  `r n` available packages on CRAN ([CRAN: Contributed Packages, `r Sys.Date()`](https://cran.r-project.org/web/packages/))
 
-```{r, echo=FALSE, out.height=500}
+```{r, echo=FALSE, out.height="500px"}
 knitr::include_graphics("http://a3.typepad.com/6a017d41eeee1a970c01bb08ef2103970d-pi")
 ```
 
