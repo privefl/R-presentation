@@ -244,6 +244,10 @@ ggplotly(p)
 ```
 
 
+## More
+
+Looking for inspiration or help concerning data visualisation with R? Go check the [R graph gallery](http://www.r-graph-gallery.com/)!
+
 ## Interactive apps: [Shiny](http://shiny.rstudio.com/)
 
 Live demo!
@@ -252,7 +256,7 @@ Live demo!
 - My own shiny app: `shiny::runGitHub("privefl/repartitions_equipes")`
 - A game: [Lights Out](https://daattali.com/shiny/lightsout/)
 
-[Advanced tips and tricks](https://github.com/daattali/advanced-shiny)
+More advanced usage: [Advanced tips and tricks](https://github.com/daattali/advanced-shiny)
 
 ## Use of C++ code when needed
 
