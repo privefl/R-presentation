@@ -12,37 +12,35 @@ knitr::opts_chunk$set(
   cache = TRUE,
   warning = FALSE, message = FALSE, 
   fig.align = 'center', comment = "")
-require(pacman)
-p_load(magrittr)
+
+library(pacman)
 ```
+
 
 ```{r, include=FALSE}
-p_load(httpuv, googlesheets, gsubfn, stringr)
-printf <- function(...) cat(sprintf(...))
+p_load(magrittr, longurl, gsheet)
 
-if (!file.exists(".httr-oauth")) stop("Use 'googlesheets::gs_ls()'")
-
-sheet <- gs_key("113h74NVW_VZWuF9EttiYTNVONS-SXEvi7MwGizZD2LE")
-
-sheet.content <- gs_read(sheet)
-
-responses <- sheet.content[, 2]
-n <- nrow(responses)
+responses <- "goo.gl/4zYmrw" %>% expand_urls %>% {gsheet2tbl(.$expanded_url)[, 2]}
 ```
 
+## What `r nrow(responses)` of you wanted to learn
 
-## What `r n` of you wanted to learn
+```{r, include=FALSE}
+p_load(gsubfn, stringr)
 
-```{r, echo=FALSE, results='asis'}
-url <- "https://docs.google.com/forms/d/13Hrr9x-3ASaPKPJGRpKzsGWlkwu59LGITtw1ldG7FAU/edit#responses"
-url <- url(url)
-url.lines <- readLines(url, encoding = "UTF-8", warn = FALSE)
-pattern <-  "\\[\"([^\"]*)\",,,,0\\]"
-questions <- unlist(gsubfn::strapply(url.lines, pattern))
+questions <- 
+  "https://goo.gl/forms/LREeX5NORBJlCrcC3" %>%
+  readLines(encoding = "UTF-8") %>%
+  strapply(pattern = "\\[\"([^\"]*)\",,,,0\\]") %>%
+  unlist
 
 counts <- str_count(responses, coll(questions))
 
-counts.lvl <- setdiff(sort(unique(counts), decreasing = TRUE), 0)
+counts.lvl <- counts %>% unique %>% sort(decreasing = TRUE) %>% setdiff(0)
+```
+
+```{r, echo=FALSE, results='asis'}
+printf <- function(...) cat(sprintf(...))
 
 for (n in counts.lvl) {
   if (n == 2) printf("\n***\n")
