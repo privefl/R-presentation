@@ -12,12 +12,11 @@ knitr::opts_chunk$set(
   cache = TRUE,
   warning = FALSE, message = FALSE, 
   fig.align = 'center', comment = "")
-
-library(pacman)
 ```
 
 
 ```{r, include=FALSE}
+library(pacman)
 p_load(magrittr, longurl, gsheet)
 
 responses <- "goo.gl/4zYmrw" %>% expand_urls %>% {gsheet2tbl(.$expanded_url)[, 2]}
