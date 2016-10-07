@@ -304,6 +304,20 @@ double sumC(NumericVector x) {
 
 ***
 
+In [Rcpp Sugar](http://dirk.eddelbuettel.com/code/rcpp/Rcpp-sugar.pdf):
+
+```{r engine='Rcpp'}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double sumCS(NumericVector x) {
+  return sum(x);
+}
+```
+
+***
+
 Microbenchmark:
 
 ```{r}
@@ -314,6 +328,7 @@ x <- runif(1e3)
 microbenchmark(
   sum(x),
   sumC(x),
+  sumCS(x),
   sumR(x)
 )
 ```
@@ -360,8 +375,6 @@ NumericMatrix gibbs_cpp(int N, int thin) {
 }
 ```
 
-Note the access to R-like functions (Rcpp Sugar).
-
 ***
 
 ```{r}
@@ -369,69 +382,6 @@ microbenchmark(
   gibbs_r(100, 10),
   gibbs_cpp(100, 10)
 )
-```
-
-## [Rcpp Sugar](http://dirk.eddelbuettel.com/code/rcpp/Rcpp-sugar.pdf)
-
-```{r engine='Rcpp'}
-#include <Rcpp.h>
-using namespace Rcpp;
-
-// [[Rcpp::export]]
-NumericVector foo_cpp(NumericVector xVec, NumericVector yVec) {
-  int n = xVec.size();
-  NumericVector res(n);
-  double x, y;
-  for(int i = 0; i < n; i++) {
-    x = xVec[i];
-    y = yVec[i];
-    if (x < y) {
-      res[i] = x*x;
-    } else {
-      res[i] = -y*y;
-    }
-  }
-  return res;
-}
-```
-
-***
-
-Vectorized R version:
-
-```{r}
-foo_R <- function(x, y) {
-  ifelse(x < y, x*x, -(y*y))
-}
-```
-
-Rcpp Sugar version:
-
-```{r engine='Rcpp'}
-#include <Rcpp.h>
-using namespace Rcpp;
-
-// [[Rcpp::export]]
-NumericVector foo_cppsugar(NumericVector x, NumericVector y) {
-  return ifelse(x < y, x*x, -(y*y));
-}
-```
-
-
-***
-
-```{r}
-N <- 1e5; x <- rnorm(N); y <- rnorm(N)
-
-microbenchmark(
-  R = res1 <- foo_R(x, y),
-  C = res2 <- foo_cpp(x, y),
-  CS = res3 <- foo_cppsugar(x, y)
-)
-```
-
-```{r}
-all(res1 == res2) & all(res1 == res3)
 ```
 
 ## Bigmemory
