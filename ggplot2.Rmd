@@ -1,0 +1,65 @@
+---
+title: "Visualisation with ggplot2"
+author: "Florian Privé & Kevin Caye"
+date: "October 19, 2017"
+output:
+  xaringan::moon_reader:
+    includes:
+      after_body: include_twitter.html
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(fig.align = "center")
+```
+
+class: center, middle, inverse
+
+> "The simple graph has brought more information to the data analyst’s mind than any other device." --- John Tukey
+
+---
+
+## Sources
+
+- [Chapter *Data Visualisation*](http://r4ds.had.co.nz/data-visualisation.html) of 
+
+```{r, out.height='300px', echo=FALSE}
+knitr::include_graphics("http://r4ds.had.co.nz/cover.png")
+```
+
+- [StackOverflow questions with tag `[ggplot2]`](https://stackoverflow.com/questions/tagged/ggplot2)
+
+---
+
+## What does *ggplot2* stand for?
+
+--
+
+### A __Grammar of Graphics__!
+
+---
+
+## How long have you known **ggplot2**?
+
+<br>
+<br>
+<br>
+
+--
+
+<blockquote class="twitter-tweet" data-lang="en" align="center"><p lang="en" dir="ltr">Happy 10th birthday ggplot2! 🎉🎂📊📈10 years ago today the first version was accepted to CRAN: <a href="https://t.co/tiXIkqnCcA">https://t.co/tiXIkqnCcA</a></p>&mdash; Hadley Wickham (@hadleywickham) <a href="https://twitter.com/hadleywickham/status/873556949207535616">10 juin 2017</a></blockquote>
+
+
+
+---
+
+class: center, middle, inverse
+
+# Thanks!
+
+.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
