@@ -7,7 +7,6 @@ output:
     includes:
       after_body: include_twitter.html
     lib_dir: libs
-    chakra: libs/remark-latest.min.js
     nature:
       highlightStyle: github
       highlightLines: true
