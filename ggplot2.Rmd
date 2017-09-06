@@ -4,9 +4,11 @@ author: "Florian Privé & "
 date: "October 19, 2017"
 output:
   xaringan::moon_reader:
+    self_contained: true
     includes:
       after_body: include_twitter.html
     lib_dir: libs
+    chakra: libs/remark-latest.min.js
     nature:
       highlightStyle: github
       highlightLines: true
