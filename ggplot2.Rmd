@@ -19,6 +19,12 @@ knitr::opts_chunk$set(fig.align = "center")
 ```
 
 class: center, middle, inverse
+background-image: url(http://hexb.in/vector/ggplot2.svg)
+background-size: 50%
+
+---
+
+class: center, middle, inverse
 
 > "The simple graph has brought more information to the data analyst’s mind than any other device." --- John Tukey
 
@@ -35,6 +41,12 @@ knitr::include_graphics("http://r4ds.had.co.nz/cover.png")
 <!-- - This [workshop on introducting the tidyverse](https://github.com/Cascadia-R/gRadual-intRoduction-tidyverse) -->
 
 - [StackOverflow questions with tag `[ggplot2]`](https://stackoverflow.com/questions/tagged/ggplot2)
+
+---
+
+class: center, middle, inverse
+
+# Introduction
 
 ---
 
@@ -74,6 +86,38 @@ ggplot(data = <DATA>) +
 --
 
 <blockquote class="twitter-tweet" data-lang="en" align="center"><p lang="en" dir="ltr">Happy 10th birthday ggplot2! 🎉🎂📊📈10 years ago today the first version was accepted to CRAN: <a href="https://t.co/tiXIkqnCcA">https://t.co/tiXIkqnCcA</a></p>&mdash; Hadley Wickham (@hadleywickham) <a href="https://twitter.com/hadleywickham/status/873556949207535616">10 juin 2017</a></blockquote>
+
+---
+
+## Why use ggplot2?
+
+</br>
+
+- Automatic legends, colors, etc.
+
+- Easy superposition, facetting, etc.
+
+- Nice rendering (yet, I don't like the default grey theme).
+
+- **Store any ggplot2 object for modification or future recall.** Super useful for packages.
+
+- Lots of users (less bugs, much help on Stack Overflow).
+
+- Lots of extensions.
+
+- Nice saving option.
+
+---
+
+class: center, middle, inverse
+background-image: url(http://spatialanalysis.co.uk/wp-content/uploads/2012/06/flights_sml.jpg)
+background-size: 100%
+
+---
+
+class: center, middle, inverse
+
+# Tidy data?
 
 ---
 
@@ -183,6 +227,91 @@ library(tidyverse)
    rename(Country = `Total fertility rate`) %>%
    gather(key = "Year", value = "Fertility", -Country))
 ```
+
+---
+
+### This is easier to plot
+
+```{r, out.width = "70%", fig.asp = 0.7}
+ggplot(data = fertilityDataTidy) + 
+  geom_point(mapping = aes(x = Year, y = Fertility))
+```
+
+---
+
+class: center, middle, inverse
+
+# Customization
+
+---
+
+## Add colors
+
+```{r, out.width = "80%", fig.asp = 0.7}
+ggplot(data = fertilityDataTidy) + 
+  geom_point(mapping = aes(x = Year, y = Fertility, 
+                           color = Country))
+```
+
+---
+
+### Add lines: move 'aes' to the top (1/2)
+
+```{r, out.width = "70%", fig.asp = 0.7}
+ggplot(fertilityDataTidy, aes(Year, Fertility, color = Country)) + 
+  geom_point() +
+  geom_line()
+```
+
+---
+
+### Add lines: add a group (2/2)
+
+```{r, out.width = "80%", fig.asp = 0.7}
+ggplot(fertilityDataTidy, aes(Year, Fertility, color = Country)) + 
+  geom_point() +
+  geom_line(aes(group = Country))
+```
+
+---
+
+### My custom theme: black and white and larger fonts
+
+```{r out.width = "70%", fig.asp = 0.7}
+bigstatsr:::MY_THEME(
+  ggplot(fertilityDataTidy, aes(x = Year, y = Fertility, 
+                                color = Country)), coeff = 1.2
+) + 
+  geom_point() +
+  geom_line(aes(group = Country))
+```
+
+---
+
+### Larger points and lines
+
+```{r out.width = "70%", fig.asp = 0.7}
+bigstatsr:::MY_THEME(
+  ggplot(fertilityDataTidy, aes(x = Year, y = Fertility, 
+                                color = Country)), coeff = 1.2
+) + 
+  geom_point(cex = 4) +
+  geom_line(aes(group = Country), lwd = 2)
+```
+
+---
+
+```{r out.width = "85%", fig.asp = 0.7, fig.width=8}
+bigstatsr:::MY_THEME(
+  ggplot(fertilityDataTidy, aes(x = Year, y = Fertility, 
+                                color = Country)), coeff = 1.2
+) + 
+  geom_point(cex = 4) +
+  geom_line(aes(group = Country), lwd = 2) +
+  theme(aspect.ratio = 0.8, 
+        legend.key.width = unit(3, "line"))
+```
+
 
 
 ---

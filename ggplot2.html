@@ -21,6 +21,12 @@ class: center, middle, inverse, title-slide
 
 
 class: center, middle, inverse
+background-image: url(http://hexb.in/vector/ggplot2.svg)
+background-size: 50%
+
+---
+
+class: center, middle, inverse
 
 &gt; "The simple graph has brought more information to the data analyst’s mind than any other device." --- John Tukey
 
@@ -35,6 +41,12 @@ class: center, middle, inverse
 &lt;!-- - This [workshop on introducting the tidyverse](https://github.com/Cascadia-R/gRadual-intRoduction-tidyverse) --&gt;
 
 - [StackOverflow questions with tag `[ggplot2]`](https://stackoverflow.com/questions/tagged/ggplot2)
+
+---
+
+class: center, middle, inverse
+
+# Introduction
 
 ---
 
@@ -74,6 +86,38 @@ ggplot(data = &lt;DATA&gt;) +
 --
 
 &lt;blockquote class="twitter-tweet" data-lang="en" align="center"&gt;&lt;p lang="en" dir="ltr"&gt;Happy 10th birthday ggplot2! 🎉🎂📊📈10 years ago today the first version was accepted to CRAN: &lt;a href="https://t.co/tiXIkqnCcA"&gt;https://t.co/tiXIkqnCcA&lt;/a&gt;&lt;/p&gt;&amp;mdash; Hadley Wickham (@hadleywickham) &lt;a href="https://twitter.com/hadleywickham/status/873556949207535616"&gt;10 juin 2017&lt;/a&gt;&lt;/blockquote&gt;
+
+---
+
+## Why use ggplot2?
+
+&lt;/br&gt;
+
+- Automatic legends, colors, etc.
+
+- Easy superposition, facetting, etc.
+
+- Nice rendering (yet, I don't like the default grey theme).
+
+- **Store any ggplot2 object for modification or future recall.** Super useful for packages.
+
+- Lots of users (less bugs, much help on Stack Overflow).
+
+- Lots of extensions.
+
+- Nice saving option.
+
+---
+
+class: center, middle, inverse
+background-image: url(http://spatialanalysis.co.uk/wp-content/uploads/2012/06/flights_sml.jpg)
+background-size: 100%
+
+---
+
+class: center, middle, inverse
+
+# Tidy data?
 
 ---
 
@@ -125,7 +169,7 @@ Learn more at http://tidyr.tidyverse.org/articles/tidy-data.html.
 
 ---
 
-### Tidy previous data
+### Tidy prevthe ious data
 
 
 ```r
@@ -152,6 +196,117 @@ library(tidyverse)
 ## 10             Austria  1800      5.10
 ## # ... with 62 more rows
 ```
+
+---
+
+### This is easier to plot
+
+
+```r
+ggplot(data = fertilityDataTidy) + 
+  geom_point(mapping = aes(x = Year, y = Fertility))
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-6-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center, middle, inverse
+
+# Customization
+
+---
+
+## Add colors
+
+
+```r
+ggplot(data = fertilityDataTidy) + 
+  geom_point(mapping = aes(x = Year, y = Fertility, 
+                           color = Country))
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Add lines: move 'aes' to the top (1/2)
+
+
+```r
+ggplot(fertilityDataTidy, aes(Year, Fertility, color = Country)) + 
+  geom_point() +
+  geom_line()
+```
+
+```
+## geom_path: Each group consists of only one observation. Do you need to
+## adjust the group aesthetic?
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-8-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Add lines: add a group (2/2)
+
+
+```r
+ggplot(fertilityDataTidy, aes(Year, Fertility, color = Country)) + 
+  geom_point() +
+  geom_line(aes(group = Country))
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### My custom theme: black and white and larger fonts
+
+
+```r
+bigstatsr:::MY_THEME(
+  ggplot(fertilityDataTidy, aes(x = Year, y = Fertility, 
+                                color = Country)), coeff = 1.2
+) + 
+  geom_point() +
+  geom_line(aes(group = Country))
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-10-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Larger points and lines
+
+
+```r
+bigstatsr:::MY_THEME(
+  ggplot(fertilityDataTidy, aes(x = Year, y = Fertility, 
+                                color = Country)), coeff = 1.2
+) + 
+  geom_point(cex = 4) +
+  geom_line(aes(group = Country), lwd = 2)
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+bigstatsr:::MY_THEME(
+  ggplot(fertilityDataTidy, aes(x = Year, y = Fertility, 
+                                color = Country)), coeff = 1.2
+) + 
+  geom_point(cex = 4) +
+  geom_line(aes(group = Country), lwd = 2) +
+  theme(aspect.ratio = 0.8, 
+        legend.key.width = unit(3, "line"))
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-12-1.png" width="85%" style="display: block; margin: auto;" /&gt;
+
 
 
 ---
