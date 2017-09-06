@@ -15,7 +15,7 @@ output:
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(fig.align = "center")
+knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
 ```
 
 class: center, middle, inverse
