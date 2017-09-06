@@ -3,7 +3,7 @@
   <head>
     <title>Visualisation with ggplot2</title>
     <meta charset="utf-8">
-    <meta name="author" content="Florian Privé &amp; Kevin Caye" />
+    <meta name="author" content="Florian Privé &amp;" />
     <meta name="date" content="2017-10-19" />
     <link href="libs/remark-css/example.css" rel="stylesheet" />
   </head>
@@ -12,7 +12,7 @@
 class: center, middle, inverse, title-slide
 
 # Visualisation with ggplot2
-### Florian Privé &amp; Kevin Caye
+### Florian Privé &amp;
 ### October 19, 2017
 
 ---
@@ -32,6 +32,8 @@ class: center, middle, inverse
 
 &lt;img src="http://r4ds.had.co.nz/cover.png" height="300px" style="display: block; margin: auto;" /&gt;
 
+&lt;!-- - This [workshop on introducting the tidyverse](https://github.com/Cascadia-R/gRadual-intRoduction-tidyverse) --&gt;
+
 - [StackOverflow questions with tag `[ggplot2]`](https://stackoverflow.com/questions/tagged/ggplot2)
 
 ---
@@ -41,6 +43,25 @@ class: center, middle, inverse
 --
 
 ### A __Grammar of Graphics__!
+
+--
+
+```
+ggplot(data = &lt;DATA&gt;) + 
+  &lt;GEOM_FUNCTION&gt;(
+     mapping = aes(&lt;MAPPINGS&gt;),
+     stat = &lt;STAT&gt;, 
+     position = &lt;POSITION&gt;
+  ) +
+  &lt;COORDINATE_FUNCTION&gt; +
+  &lt;FACET_FUNCTION&gt;
+```
+
+--
+
+&lt;/br&gt;
+
+#### You can uniquely describe any plot as a combination of these 7 parameters.
 
 ---
 
@@ -54,6 +75,83 @@ class: center, middle, inverse
 
 &lt;blockquote class="twitter-tweet" data-lang="en" align="center"&gt;&lt;p lang="en" dir="ltr"&gt;Happy 10th birthday ggplot2! 🎉🎂📊📈10 years ago today the first version was accepted to CRAN: &lt;a href="https://t.co/tiXIkqnCcA"&gt;https://t.co/tiXIkqnCcA&lt;/a&gt;&lt;/p&gt;&amp;mdash; Hadley Wickham (@hadleywickham) &lt;a href="https://twitter.com/hadleywickham/status/873556949207535616"&gt;10 juin 2017&lt;/a&gt;&lt;/blockquote&gt;
 
+---
+
+## Untidy data
+
+
+
+
+```r
+fertilityData
+```
+
+```
+## # A tibble: 12 x 7
+##    `Total fertility rate` `1800` `1801` `1802` `1803` `1804` `1805`
+##                    &lt;fctr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1            Afghanistan   7.00   7.00   7.00   7.00   7.00   7.00
+##  2                Albania   4.60   4.60   4.60   4.60   4.60   4.60
+##  3                Algeria   6.99   6.99   6.99   6.99   6.99   6.99
+##  4                 Angola   6.93   6.93   6.93   6.93   6.93   6.93
+##  5    Antigua and Barbuda   5.00   5.00   4.99   4.99   4.99   4.98
+##  6              Argentina   6.80   6.80   6.80   6.80   6.80   6.80
+##  7                Armenia   7.80   7.80   7.81   7.81   7.81   7.82
+##  8                  Aruba   5.64   5.64   5.64   5.64   5.64   5.64
+##  9              Australia   6.50   6.48   6.46   6.44   6.42   6.40
+## 10                Austria   5.10   5.10   5.10   5.10   5.10   5.10
+## 11             Azerbaijan   8.10   8.10   8.10   8.10   8.10   8.10
+## 12                Bahamas   5.90   5.90   5.90   5.90   5.90   5.90
+```
+
+
+#### How you would plot this data?
+
+---
+
+## Tidy data
+
+&lt;img src="http://r4ds.had.co.nz/images/tidy-1.png" style="display: block; margin: auto;" /&gt;
+
+It is easier to work and reason with
+
+- operations
+
+- manipulation
+
+- visualization
+
+Learn more at http://tidyr.tidyverse.org/articles/tidy-data.html.
+
+---
+
+### Tidy previous data
+
+
+```r
+library(tidyverse)
+
+(fertilityDataTidy &lt;- fertilityData %&gt;%
+   rename(Country = `Total fertility rate`) %&gt;%
+   gather(key = "Year", value = "Fertility", -Country))
+```
+
+```
+## # A tibble: 72 x 3
+##                Country  Year Fertility
+##                 &lt;fctr&gt; &lt;chr&gt;     &lt;dbl&gt;
+##  1         Afghanistan  1800      7.00
+##  2             Albania  1800      4.60
+##  3             Algeria  1800      6.99
+##  4              Angola  1800      6.93
+##  5 Antigua and Barbuda  1800      5.00
+##  6           Argentina  1800      6.80
+##  7             Armenia  1800      7.80
+##  8               Aruba  1800      5.64
+##  9           Australia  1800      6.50
+## 10             Austria  1800      5.10
+## # ... with 62 more rows
+```
 
 
 ---
@@ -70,7 +168,8 @@ class: center, middle, inverse
 "highlightLines": true,
 "countIncrementalSlides": false
 });
-if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});</script>
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
+(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 <script type="text/x-mathjax-config">

@@ -1,6 +1,6 @@
 ---
 title: "Visualisation with ggplot2"
-author: "Florian Privé & Kevin Caye"
+author: "Florian Privé & "
 date: "October 19, 2017"
 output:
   xaringan::moon_reader:
@@ -32,6 +32,8 @@ class: center, middle, inverse
 knitr::include_graphics("http://r4ds.had.co.nz/cover.png")
 ```
 
+<!-- - This [workshop on introducting the tidyverse](https://github.com/Cascadia-R/gRadual-intRoduction-tidyverse) -->
+
 - [StackOverflow questions with tag `[ggplot2]`](https://stackoverflow.com/questions/tagged/ggplot2)
 
 ---
@@ -41,6 +43,25 @@ knitr::include_graphics("http://r4ds.had.co.nz/cover.png")
 --
 
 ### A __Grammar of Graphics__!
+
+--
+
+```
+ggplot(data = <DATA>) + 
+  <GEOM_FUNCTION>(
+     mapping = aes(<MAPPINGS>),
+     stat = <STAT>, 
+     position = <POSITION>
+  ) +
+  <COORDINATE_FUNCTION> +
+  <FACET_FUNCTION>
+```
+
+--
+
+</br>
+
+#### You can uniquely describe any plot as a combination of these 7 parameters.
 
 ---
 
@@ -54,6 +75,114 @@ knitr::include_graphics("http://r4ds.had.co.nz/cover.png")
 
 <blockquote class="twitter-tweet" data-lang="en" align="center"><p lang="en" dir="ltr">Happy 10th birthday ggplot2! 🎉🎂📊📈10 years ago today the first version was accepted to CRAN: <a href="https://t.co/tiXIkqnCcA">https://t.co/tiXIkqnCcA</a></p>&mdash; Hadley Wickham (@hadleywickham) <a href="https://twitter.com/hadleywickham/status/873556949207535616">10 juin 2017</a></blockquote>
 
+---
+
+## Untidy data
+
+```{r, include=FALSE}
+library(tidyverse)
+fertilityData <- structure(list(`Total fertility rate` = structure(c(2L, 5L, 6L, 
+9L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L), .Label = c("Abkhazia", 
+"Afghanistan", "Akrotiri and Dhekelia", "Åland", "Albania", 
+"Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", 
+"Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia", 
+"Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", 
+"Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", 
+"Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", 
+"British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", 
+"Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", 
+"Central African Republic", "Chad", "Channel Islands", "Chile", 
+"China", "Christmas Island", "Cocos Island", "Colombia", "Comoros", 
+"Congo, Dem. Rep.", "Congo, Rep.", "Cook Is", "Costa Rica", "Cote d'Ivoire", 
+"Croatia", "Cuba", "Cyprus", "Czech Republic", "Czechoslovakia", 
+"Denmark", "Djibouti", "Dominica", "Dominican Republic", "East Germany", 
+"Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", 
+"Eritrea and Ethiopia", "Estonia", "Ethiopia", "Faeroe Islands", 
+"Falkland Is (Malvinas)", "Fiji", "Finland", "France", "French Guiana", 
+"French Polynesia", "Gabon", "Gambia", "Georgia", "Germany", 
+"Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guadeloupe", 
+"Guam", "Guatemala", "Guernsey", "Guinea", "Guinea-Bissau", "Guyana", 
+"Haiti", "Holy See", "Honduras", "Hong Kong, China", "Hungary", 
+"Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", 
+"Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", 
+"Kenya", "Kiribati", "Kosovo", "Kuwait", "Kyrgyz Republic", "Lao", 
+"Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", 
+"Lithuania", "Luxembourg", "Macao, China", "Macedonia, FYR", 
+"Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", 
+"Marshall Islands", "Martinique", "Mauritania", "Mauritius", 
+"Mayotte", "Mexico", "Micronesia, Fed. Sts.", "Moldova", "Monaco", 
+"Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", 
+"Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "Netherlands Antilles", 
+"New Caledonia", "New Zealand", "Ngorno-Karabakh", "Nicaragua", 
+"Niger", "Nigeria", "Niue", "Norfolk Island", "North Korea", 
+"North Yemen (former)", "Northern Cyprus", "Northern Mariana Islands", 
+"Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", 
+"Paraguay", "Peru", "Philippines", "Pitcairn", "Poland", "Portugal", 
+"Puerto Rico", "Qatar", "Reunion", "Romania", "Russia", "Rwanda", 
+"Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", 
+"Senegal", "Serbia", "Serbia and Montenegro", "Serbia excluding Kosovo", 
+"Seychelles", "Sierra Leone", "Singapore", "Slovak Republic", 
+"Slovenia", "Solomon Islands", "Somalia", "Somaliland", "South Africa", 
+"South Korea", "South Ossetia", "South Yemen (former)", "Spain", 
+"Sri Lanka", "St. Barthélemy", "St. Helena", "St. Kitts and Nevis", 
+"St. Lucia", "St. Martin", "St. Vincent and the Grenadines", 
+"St.-Pierre-et-Miquelon", "Sudan", "Suriname", "Svalbard", "Swaziland", 
+"Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", 
+"Thailand", "Timor-Leste", "Togo", "Tokelau", "Tonga", "Transnistria", 
+"Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks and Caicos Islands", 
+"Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", 
+"United Korea (former)\n", "United States", "Uruguay", "USSR", 
+"Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Virgin Islands (U.S.)", 
+"Wallis et Futuna", "West Bank and Gaza", "West Germany", "Western Sahara", 
+"Yemen", "Yugoslavia", "Zambia", "Zimbabwe"), class = "factor"), 
+    `1800` = c(7, 4.6, 6.99, 6.93, 5, 6.8, 7.8, 5.64, 6.5, 5.1, 
+    8.1, 5.9), `1801` = c(7, 4.6, 6.99, 6.93, 5, 6.8, 7.8, 5.64, 
+    6.48, 5.1, 8.1, 5.9), `1802` = c(7, 4.6, 6.99, 6.93, 4.99, 
+    6.8, 7.81, 5.64, 6.46, 5.1, 8.1, 5.9), `1803` = c(7, 4.6, 
+    6.99, 6.93, 4.99, 6.8, 7.81, 5.64, 6.44, 5.1, 8.1, 5.9), 
+    `1804` = c(7, 4.6, 6.99, 6.93, 4.99, 6.8, 7.81, 5.64, 6.42, 
+    5.1, 8.1, 5.9), `1805` = c(7, 4.6, 6.99, 6.93, 4.98, 6.8, 
+    7.82, 5.64, 6.4, 5.1, 8.1, 5.9)), .Names = c("Total fertility rate", 
+"1800", "1801", "1802", "1803", "1804", "1805"), row.names = c(NA, 
+-12L), class = c("tbl_df", "tbl", "data.frame"))
+```
+
+```{r}
+fertilityData
+```
+
+
+#### How you would plot this data?
+
+---
+
+## Tidy data
+
+```{r, echo=FALSE}
+knitr::include_graphics("http://r4ds.had.co.nz/images/tidy-1.png")
+```
+
+It is easier to work and reason with
+
+- operations
+
+- manipulation
+
+- visualization
+
+Learn more at http://tidyr.tidyverse.org/articles/tidy-data.html.
+
+---
+
+### Tidy prevthe ious data
+
+```{r}
+library(tidyverse)
+
+(fertilityDataTidy <- fertilityData %>%
+   rename(Country = `Total fertility rate`) %>%
+   gather(key = "Year", value = "Fertility", -Country))
+```
 
 
 ---
