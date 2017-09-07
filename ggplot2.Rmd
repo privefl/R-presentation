@@ -312,7 +312,147 @@ bigstatsr:::MY_THEME(
         legend.key.width = unit(3, "line"))
 ```
 
+---
 
+class: center, middle, inverse
+
+# Layers: example with geom_smooth()
+
+---
+
+## Example with the iris dataset
+
+```{r out.width = "80%", fig.asp = 0.7}
+ggplot(iris, aes(Petal.Length, Petal.Width, 
+                 color = Species, pch = Species)) + 
+  geom_point(cex = 2)
+```
+
+---
+
+### geom_smooth inherits from top 'aes'
+
+```{r out.width = "70%", fig.asp = 0.7}
+ggplot(iris, aes(Petal.Length, Petal.Width, 
+                 color = Species, pch = Species)) + 
+  geom_point(cex = 2) + 
+  geom_smooth()
+```
+
+---
+
+### geom_smooth on all (without grouping)
+
+```{r out.width = "70%", fig.asp = 0.7}
+ggplot(iris, aes(Petal.Length, Petal.Width)) + 
+  geom_point(aes(color = Species, pch = Species), cex = 2) + 
+  geom_smooth(color = "black")
+```
+
+---
+
+### Points on top: change the order of layers
+
+```{r out.width = "70%", fig.asp = 0.7}
+ggplot(iris, aes(Petal.Length, Petal.Width)) + 
+  geom_smooth(color = "black") + 
+  geom_point(aes(color = Species, pch = Species), cex = 2)
+```
+
+---
+
+class: center, middle, inverse
+
+# Multiplot
+
+---
+
+## TODO: cowplot and facetting
+
+---
+
+class: center, middle, inverse
+
+# Go read [chapter 3 of *R for Data Science*](http://r4ds.had.co.nz/data-visualisation.html)
+
+---
+
+class: center, middle, inverse
+
+# Go to [Stack Overflow ](https://stackoverflow.com/questions/tagged/ggplot2?sort=faq) for common questions
+
+# or just google it!
+
+---
+
+class: center, middle, inverse
+
+# Problems I've once encountered
+
+---
+
+## How to change the limits of the x-axis?
+
+```{r out.width = "80%", fig.asp = 0.7}
+ggplot(iris, aes(Petal.Length, Petal.Width, 
+                 color = Species, pch = Species)) + 
+  geom_point(cex = 2)
+```
+
+---
+
+### With coord_cartesian()
+
+```{r out.width = "60%", fig.asp = 0.7}
+ggplot(iris, aes(Petal.Length, Petal.Width, 
+                 color = Species, pch = Species)) + 
+  geom_point(cex = 2) + 
+  geom_smooth() +
+  coord_cartesian(xlim = c(1, 4))
+```
+
+---
+
+### With xlim()
+
+```{r out.width = "50%", fig.asp = 0.7}
+ggplot(iris, aes(Petal.Length, Petal.Width, 
+                 color = Species, pch = Species)) + 
+  geom_point(cex = 2) +
+  geom_smooth() + 
+  xlim(1, 4)
+```
+
+---
+
+```{r out.width = "80%", fig.asp = 0.7}
+library(bigstatsr)
+X <- big_attachExtdata()
+y <- rnorm(nrow(X))
+test <- big_univLinReg(X, y)
+plot(test)
+```
+
+---
+
+### Make a plot lighter
+
+```{r, include=FALSE, cache=FALSE}
+library(ggplot2) ## bug, why ylim() is not found?
+```
+
+
+```{r out.width = "80%", fig.asp = 0.7, cache=FALSE}
+plot(test) + ylim(0.5, NA)
+```
+
+---
+
+### e.g. to make it interactive
+
+```{r out.width = "80%", fig.asp = 0.7, cache=FALSE}
+plotly::ggplotly(last_plot() + ylab("-log10(pval)"))
+```
 
 ---
 
