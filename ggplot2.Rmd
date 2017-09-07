@@ -18,9 +18,12 @@ options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
 ```
 
-class: center, middle, inverse
+class: center, top, inverse
 background-image: url(http://hexb.in/vector/ggplot2.svg)
-background-size: 50%
+background-position: 50% 80%
+background-size: 40%
+
+# http://ggplot2.tidyverse.org/
 
 ---
 
@@ -37,8 +40,6 @@ class: center, middle, inverse
 ```{r, out.height='300px', echo=FALSE}
 knitr::include_graphics("http://r4ds.had.co.nz/cover.png")
 ```
-
-<!-- - This [workshop on introducting the tidyverse](https://github.com/Cascadia-R/gRadual-intRoduction-tidyverse) -->
 
 - [StackOverflow questions with tag `[ggplot2]`](https://stackoverflow.com/questions/tagged/ggplot2)
 
@@ -453,6 +454,93 @@ plot(test) + ylim(0.5, NA)
 ```{r out.width = "80%", fig.asp = 0.7, cache=FALSE}
 plotly::ggplotly(last_plot() + ylab("-log10(pval)"))
 ```
+
+---
+
+## Iterate over variables
+
+```{r out.width = "65%", fig.asp = 0.7}
+var <- names(iris)
+p_list <- vector(mode = "list", length = length(var))
+for (i in seq_along(var)) {
+  p_list[[i]] <- ggplot(iris) + geom_bar(aes_string(var[i]))
+}
+p_list[[2]]
+```
+
+---
+
+class: center, middle, inverse
+
+# Two last points from my experience
+
+---
+
+## Why I finally switched to using ggplot2?
+
+```{r out.width = "70%", fig.asp = 0.7, results='hide'}
+library(bigstatsr)
+X <- big_attachExtdata()
+svd <- big_SVD(X, big_scale(), k = 10)
+(obj <- plot(svd, type = "scores"))
+```
+
+---
+
+## An object that the user can modify
+
+```{r out.width = "60%", fig.asp = 0.7}
+pop <- rep(c("POP1", "POP2", "POP3"), c(143, 167, 207))
+library(ggplot2)
+# add colors
+obj2 <- obj + aes(color = pop) + labs(color = "Population")
+## change the place of the legend
+obj3 <- obj2 + theme(legend.position = c(0.82, 0.17))
+## change the title and the labels of the axes
+obj3 + ggtitle("Yet another title") + xlab("with a new 'x' label")
+```
+
+---
+
+## How do I choose the size of ggplot?
+
+- I plot something, e.g.
+
+```
+ggplot(iris, aes(Petal.Length, Petal.Width, 
+                 color = Species, pch = Species)) + 
+  geom_point(cex = 2)
+```
+
+- I use the *Zoom* button of RStudio
+
+- I resize the "Plot Zoom" windows till I'm satisfied
+
+- Right-click on this window -> "Open Image"
+
+- Then, I use the dimensions that are displayed at the top in `ggsave()` with `scale = 1/75`, e.g. `ggsave("myggplot.png", scale = 1/75, width = 888, height = 725)`
+
+---
+
+## Miscellaneous
+
+- [Pie charts](https://guangchuangyu.github.io/2016/12/scatterpie-for-plotting-pies-on-ggplot/) but [others plots are often better](http://annkemery.com/pie-chart-guidelines/)
+
+- [Spatial Visualization](https://cran.r-project.org/web/packages/ggmap/index.html)
+
+- [Heatmaps](http://blog.aicry.com/r-heat-maps-with-ggplot2/)
+
+- [Cookbook for R - Graphs](http://www.cookbook-r.com/Graphs/)
+
+- [**Cheatsheet**](https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf)
+
+- [Top 50 ggplot2 Visualizations](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
+
+- [**The R Graph Gallery**](http://www.r-graph-gallery.com/portfolio/ggplot2-package/)
+
+- [An RStudio addin for ggplot2 theme tweaking](https://github.com/calligross/ggthemeassist)
+
+- [Publication Ready Plots](http://www.sthda.com/english/rpkgs/ggpubr/)
 
 ---
 
