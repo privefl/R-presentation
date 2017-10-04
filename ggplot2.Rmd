@@ -347,6 +347,16 @@ myggplot(iris, aes(Petal.Length, Petal.Width, color = Species)) +
 
 ---
 
+### Or just add a group
+
+```{r out.width = "75%", fig.asp = 0.7}
+myggplot(iris, aes(Petal.Length, Petal.Width)) + 
+  geom_smooth(aes(group = Species), color = "black") + 
+  geom_point(aes(color = Species, pch = Species), cex = 2)
+```
+
+---
+
 ## Learn more
 
 - [Chapter *Data Visualisation*](http://r4ds.had.co.nz/data-visualisation.html) of 
@@ -369,6 +379,19 @@ myggplot(iris) +
                  color = Species, pch = Species), cex = 2) +
   guides(colour = guide_legend(override.aes = list(size = 10)))
 ```
+
+---
+
+## Go check the [**R Graph Gallery**](http://www.r-graph-gallery.com/portfolio/ggplot2-package/)
+
+<br>
+
+<br>
+
+<br>
+
+<blockquote class="twitter-tweet" data-cards="hidden" data-lang="en" align="center"><p lang="en" dir="ltr">🍾🍾 Today the <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> graph gallery reached 1.000.000 visits! 🍾🍾 Thanks to all users &amp; contributors!<a href="https://t.co/94JzuHDJot">https://t.co/94JzuHDJot</a> <a href="https://t.co/xu4XIsqmut">pic.twitter.com/xu4XIsqmut</a></p>&mdash; The R Graph Gallery (@R_Graph_Gallery) <a href="https://twitter.com/R_Graph_Gallery/status/915092693977460741?ref_src=twsrc%5Etfw">3 octobre 2017</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 ---
 
@@ -415,7 +438,7 @@ cowplot::plot_grid(p1, p2, align = "h", ncol = 2,
 
 ## Interactive plots
 
-```{r}
+```{r, out.width="75%", fig.asp=0.7}
 (p <- myggplot(iris, aes(Petal.Length, Petal.Width, 
                          color = Species, pch = Species)) + 
    geom_point(cex = 2))
@@ -427,7 +450,7 @@ cowplot::plot_grid(p1, p2, align = "h", ncol = 2,
 
 ### infos are aesthetics
 
-```{r}
+```{r, out.width="70%", fig.asp=0.7}
 plotly::ggplotly(p)
 ```
 
@@ -435,7 +458,7 @@ plotly::ggplotly(p)
 
 ## Add more infos
 
-```{r}
+```{r, out.width="70%", fig.asp=0.7}
 (myggplot(iris, aes(Petal.Length, Petal.Width, 
                     color = Species, pch = Species)) + 
     geom_point(aes(text = bigstatsr::asPlotlyText(iris)), cex = 2)) %>%
@@ -456,11 +479,11 @@ plotly::ggplotly(p)
 
 - [Cookbook for R - Graphs](http://www.cookbook-r.com/Graphs/)
 
-- [**Cheatsheet**](https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf)
+- [Cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf)
 
 - [Top 50 ggplot2 Visualizations](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
 
-- [**The R Graph Gallery**](http://www.r-graph-gallery.com/portfolio/ggplot2-package/)
+- [Viridis color palette](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
 
 - [An RStudio addin for ggplot2 theme tweaking](https://github.com/calligross/ggthemeassist)
 
@@ -476,15 +499,7 @@ class: center, middle, inverse
 
 ---
 
-### e.g. to make it interactive
-
-```{r fig.asp = 0.9, cache=FALSE}
-plotly::ggplotly(last_plot() + ylab("-log10(pval)"))
-```
-
----
-
-## Iterate over variables
+## Iterate over variables with **aes_string**
 
 ```{r out.width = "65%", fig.asp = 0.7}
 var <- names(iris)
@@ -494,6 +509,20 @@ for (i in seq_along(var)) {
 }
 cowplot::plot_grid(plotlist = p_list[1:4], ncol = 2)
 ```
+
+---
+
+## Change the limits of your plot
+
+### xlim or coord_cartesian?
+
+```{r out.width = "45%", fig.asp = 0.7}
+myggplot(data.frame(x = 1:10, y = c(1:9, 100) + rnorm(10)), aes(x, y)) + 
+  geom_point(cex = 2) + 
+  geom_smooth(method = "lm") + 
+  xlim(NA, 9.5)
+```
+
 
 ---
 
@@ -518,18 +547,20 @@ svd <- big_SVD(X, big_scale(), k = 10)
 
 ```{r out.width = "60%", fig.asp = 0.7}
 pop <- rep(c("POP1", "POP2", "POP3"), c(143, 167, 207))
-library(ggplot2)
-# add colors
-obj2 <- obj + aes(color = pop) + labs(color = "Population")
-## change the place of the legend
-obj3 <- obj2 + theme(legend.position = c(0.82, 0.17))
-## change the title and the labels of the axes
-obj3 + ggtitle("Yet another title") + xlab("with a new 'x' label")
+obj + 
+  # add colors
+  aes(color = pop) + labs(color = "Population") +
+  ## change the place of the legend
+  theme(legend.position = c(0.82, 0.17)) + 
+  ## change the title and the labels of the axes
+  labs(title = "Yet another title", x = "with a new 'x' label")
 ```
 
 ---
 
 ## How I choose the size of a ggplot?
+
+### (that I export)
 
 - I plot something, e.g.
 
@@ -548,6 +579,90 @@ ggplot(iris, aes(Petal.Length, Petal.Width,
 - Then, I use the dimensions that are displayed at the top in `ggsave()` with `scale = 1/75`, e.g. 
 ```
 ggsave("myggplot.png", scale = 1/75, width = 888, height = 725)
+```
+
+---
+
+## How I choose the size of a ggplot?
+
+### (in an RMarkdown)
+
+- I always use `out.width` (option of R chunk) 
+
+- I get the height with `fig.asp`
+
+- (for generated plots) I use `fig.width` for the "zoom"
+
+***
+
+You can import figures with `knitr::include_graphics`
+
+---
+
+### out.width = "80%", fig.asp = 0.7
+
+```{r, out.width = "80%", fig.asp = 0.7}
+myggplot(iris, aes(Petal.Length, Petal.Width, 
+                 color = Species, pch = Species)) + 
+  geom_point(cex = 2)
+```
+
+---
+
+### out.width = "80%", fig.asp = 0.7, fig.width = 10
+
+```{r, out.width = "80%", fig.asp = 0.7, fig.width=10}
+myggplot(iris, aes(Petal.Length, Petal.Width, 
+                 color = Species, pch = Species)) + 
+  geom_point(cex = 2)
+```
+
+---
+
+### out.width = "80%", fig.asp = 0.7, fig.width = 4
+
+```{r, out.width = "80%", fig.asp = 0.7, fig.width = 4}
+myggplot(iris, aes(Petal.Length, Petal.Width, 
+                 color = Species, pch = Species)) + 
+  geom_point(cex = 2)
+```
+
+---
+
+class: center, middle, inverse
+
+# Your turn
+
+---
+
+## Your turn: reproduce this
+
+<br>
+
+```{r, out.width = "100%", fig.asp = 0.7, echo = FALSE}
+knitr::include_graphics("https://github.com/Cascadia-R/gRadual-intRoduction-tidyverse/raw/master/figure/gap.png")
+```
+
+---
+
+## The data
+
+```{r}
+(df <- gapminder::gapminder %>%
+   filter(year == 1992))
+```
+
+---
+
+### The solution
+
+```{r, out.width = "70%", fig.asp = 0.7}
+ggplot(df) + 
+  geom_point(aes(log10(gdpPercap), lifeExp, size = pop, 
+                 color = continent)) +
+  labs(title = "Gapminder for 1992",
+       x = "Gross Domestic Product (log scale)",
+       y = "Life Expectancy at birth (years)")
 ```
 
 ---
