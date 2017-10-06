@@ -16,8 +16,7 @@ output:
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(cache = TRUE, fig.align = "center",
-                      dev = "svg")
+knitr::opts_chunk$set(cache = TRUE, fig.align = "center", dev = "svg")
 ```
 
 class: center, top, inverse
@@ -207,9 +206,11 @@ Learn more at http://tidyr.tidyverse.org/articles/tidy-data.html.
 
 ### Tidy the previous data
 
-```{r}
+```{r, cache=FALSE, message=FALSE}
 library(tidyverse)
+```
 
+```{r}
 (fertilityDataTidy <- fertilityData %>%
    gather(key = "Year", value = "Fertility", -Country))
 ```
@@ -357,17 +358,40 @@ myggplot(iris, aes(Petal.Length, Petal.Width)) +
 
 ---
 
+## An important application
+
+### Simpson's Paradox
+
+<br>
+
+```{r, echo=FALSE}
+knitr::include_graphics("https://paulvanderlaken.files.wordpress.com/2017/09/simpsonsparadox.png?w=1080")
+```
+
+.footnote[Source: https://goo.gl/GycYod]
+
+---
+
 ## Learn more
 
 - [Chapter *Data Visualisation*](http://r4ds.had.co.nz/data-visualisation.html) of 
 
-```{r, out.height='350px', echo=FALSE}
+```{r, out.width="35%", echo=FALSE}
 knitr::include_graphics("http://r4ds.had.co.nz/cover.png")
 ```
 
-- [StackOverflow questions with tag `[ggplot2]`](https://stackoverflow.com/questions/tagged/ggplot2)
+.footnote[Freely available online.]
 
-    - e.g. google "larger points legend ggplot2"
+---
+
+## Find answers
+
+### [Stack Overflow questions with tag `[ggplot2]`](https://stackoverflow.com/questions/tagged/ggplot2)
+
+<blockquote class="twitter-tweet" data-lang="en" align="center"><p lang="en" dir="ltr">ok, hands up... when looking up code errors/questions with the intent of finding answers on Stack Overflow, do you:</p>&mdash; Sharla Gelfand (@sharlagelfand) <a href="https://twitter.com/sharlagelfand/status/915654253456318464?ref_src=twsrc%5Etfw">4 octobre 2017</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<br><center>e.g. google "larger points legend ggplot2"
 
 ---
 
@@ -438,31 +462,28 @@ cowplot::plot_grid(p1, p2, align = "h", ncol = 2,
 
 ## Interactive plots
 
-```{r, out.width="75%", fig.asp=0.7}
-(p <- myggplot(iris, aes(Petal.Length, Petal.Width, 
-                         color = Species, pch = Species)) + 
-   geom_point(cex = 2))
+```{r, out.width="80%", fig.asp=0.7, cache=FALSE}
+myggplot(iris, aes(Petal.Length, Petal.Width, 
+                   color = Species, pch = Species)) + 
+  geom_point(cex = 2)
 ```
 
 ---
 
 ## Transform ggplot to plotly
 
-### infos are aesthetics
-
-```{r, out.width="70%", fig.asp=0.7}
-plotly::ggplotly(p)
+```{r}
+plotly::ggplotly(width = 700, height = 450)
 ```
 
 ---
 
-## Add more infos
+### Add more infos
 
-```{r, out.width="70%", fig.asp=0.7}
-(myggplot(iris, aes(Petal.Length, Petal.Width, 
-                    color = Species, pch = Species)) + 
-    geom_point(aes(text = bigstatsr::asPlotlyText(iris)), cex = 2)) %>%
-  plotly::ggplotly(tooltip = "text")
+```{r}
+plotly::ggplotly(
+  last_plot() + aes(text = bigstatsr::asPlotlyText(iris)),
+  tooltip = "text", width = 700, height = 420)
 ```
 
 
@@ -534,11 +555,11 @@ class: center, middle, inverse
 
 ## Why I finally switched to using ggplot2?
 
-```{r out.width = "70%", fig.asp = 0.7, results='hide'}
+```{r out.width = "70%", fig.asp = 0.7, results='hide', cache=FALSE}
 library(bigstatsr)
 X <- big_attachExtdata()
 svd <- big_SVD(X, big_scale(), k = 10)
-(obj <- plot(svd, type = "scores"))
+plot(svd, type = "scores")
 ```
 
 ---
@@ -547,12 +568,12 @@ svd <- big_SVD(X, big_scale(), k = 10)
 
 ```{r out.width = "60%", fig.asp = 0.7}
 pop <- rep(c("POP1", "POP2", "POP3"), c(143, 167, 207))
-obj + 
+last_plot() + 
   # add colors
   aes(color = pop) + labs(color = "Population") +
   ## change the place of the legend
   theme(legend.position = c(0.82, 0.17)) + 
-  ## change the title and the labels of the axes
+  ## change the title and the label of the x-axis
   labs(title = "Yet another title", x = "with a new 'x' label")
 ```
 
@@ -576,9 +597,9 @@ ggplot(iris, aes(Petal.Length, Petal.Width,
 
 - Right-click on this window -> "Open Image"
 
-- Then, I use the dimensions that are displayed at the top in `ggsave()` with `scale = 1/75`, e.g. 
+- Then, I use the dimensions that are displayed at the top in `ggsave()` with `scale = 1/90` (calibrate the value for your computer), e.g. 
 ```
-ggsave("myggplot.png", scale = 1/75, width = 888, height = 725)
+ggsave("myggplot.png", scale = 1/90, width = 888, height = 725)
 ```
 
 ---
@@ -635,13 +656,13 @@ class: center, middle, inverse
 
 ---
 
-## Your turn: reproduce this
-
-<br>
+## Your turn: reproduce this plot
 
 ```{r, out.width = "100%", fig.asp = 0.7, echo = FALSE}
 knitr::include_graphics("https://github.com/Cascadia-R/gRadual-intRoduction-tidyverse/raw/master/figure/gap.png")
 ```
+
+.footnote[Source: https://goo.gl/Tci3pw]
 
 ---
 
@@ -671,7 +692,14 @@ class: center, middle, inverse
 
 # Thanks!
 
-### Presentation available at
-### https://privefl.github.io/R-presentation/ggplot2.html
+<br>
+
+Presentation available at
+
+https://privefl.github.io/R-presentation/ggplot2.html
+
+<br>
+
+Twitter and GitHub: [@privefl](https://twitter.com/privefl)
 
 .footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
