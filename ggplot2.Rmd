@@ -180,7 +180,7 @@ fertilityData
 ```
 
 
-#### How would you plot this data?
+The variables are the **country**, **year** and **fertility rate**.
 
 ---
 
@@ -211,8 +211,9 @@ library(tidyverse)
 ```
 
 ```{r}
-(fertilityDataTidy <- fertilityData %>%
-   gather(key = "Year", value = "Fertility", -Country))
+(fertilityTidy <- fertilityData %>%
+   gather(key = "Year", value = "Fertility", -Country) %>%
+   mutate(Year = as.integer(Year)))
 ```
 
 ---
@@ -220,7 +221,7 @@ library(tidyverse)
 ### This is easier to plot
 
 ```{r, out.width = "80%", fig.asp = 0.7}
-ggplot(data = fertilityDataTidy) + 
+ggplot(data = fertilityTidy) + 
   geom_point(mapping = aes(x = Year, y = Fertility))
 ```
 
@@ -235,23 +236,14 @@ class: center, middle, inverse
 ### My custom theme: black and white and larger fonts
 
 ```{r}
-bigstatsr:::MY_THEME
+myggplot <- function(..., coeff = 1) 
+  bigstatsr:::MY_THEME(ggplot(...), coeff = 1.2 * coeff)
 ```
 
 ***
 
-```{r}
-myggplot <- function(..., coeff = 1) {
-  bigstatsr:::MY_THEME(ggplot(...), coeff = 1.2 * coeff)
-} 
-```
-
----
-
-### Black and white and larger fonts
-
-```{r, out.width = "80%", fig.asp = 0.7}
-myggplot(data = fertilityDataTidy) + 
+```{r, out.width = "68%", fig.asp = 0.7}
+myggplot(data = fertilityTidy) + 
   geom_point(mapping = aes(x = Year, y = Fertility))
 ```
 
@@ -259,29 +251,22 @@ myggplot(data = fertilityDataTidy) +
 
 ## Add colors
 
-```{r, out.width = "80%", fig.asp = 0.7}
-myggplot(data = fertilityDataTidy) + 
-  geom_point(mapping = aes(Year, Fertility, color = Country))
+```{r, out.width = "77%", fig.asp = 0.7}
+myggplot(data = fertilityTidy) + 
+  geom_point(mapping = aes(x = Year, y = Fertility, 
+                           color = Country))
 ```
 
 ---
 
-### Add lines: move 'aes' to the top (1/2)
+### Add lines: move 'aes' to the top
 
-```{r, out.width = "70%", fig.asp = 0.7}
-myggplot(fertilityDataTidy, aes(Year, Fertility, color = Country)) + 
+#### So that it's inherited by both geoms
+
+```{r, out.width = "72%", fig.asp = 0.7}
+myggplot(fertilityTidy, aes(Year, Fertility, color = Country)) + 
   geom_point() +
   geom_line()
-```
-
----
-
-### Add lines: add a group (2/2)
-
-```{r, out.width = "80%", fig.asp = 0.7}
-myggplot(fertilityDataTidy, aes(Year, Fertility, color = Country)) + 
-  geom_point() +
-  geom_line(aes(group = Country))
 ```
 
 ---
@@ -289,7 +274,7 @@ myggplot(fertilityDataTidy, aes(Year, Fertility, color = Country)) +
 ### Larger points and lines
 
 ```{r out.width = "80%", fig.asp = 0.7}
-myggplot(fertilityDataTidy, aes(Year, Fertility, color = Country)) + 
+myggplot(fertilityTidy, aes(Year, Fertility, color = Country)) + 
   geom_point(cex = 4) +
   geom_line(aes(group = Country), lwd = 2)
 ```
@@ -298,12 +283,28 @@ myggplot(fertilityDataTidy, aes(Year, Fertility, color = Country)) +
 
 ### Futher customization: themes
 
-```{r out.width = "80%", fig.asp = 0.7, fig.width=8}
-myggplot(fertilityDataTidy, aes(Year, Fertility, color = Country)) + 
+```{r out.width = "85%", fig.asp = 0.7, fig.width=8}
+myggplot(fertilityTidy, aes(Year, Fertility, color = Country)) + 
   geom_point(cex = 4) +
   geom_line(aes(group = Country), lwd = 2) +
   theme(aspect.ratio = 0.8, 
         legend.key.width = unit(3, "line"))
+```
+
+---
+
+class: center, middle, inverse
+
+# Layers 
+
+---
+
+## Iris: base dataset of R
+
+### about plants
+
+```{r}
+as_tibble(iris)   ## print better
 ```
 
 ---
@@ -425,37 +426,63 @@ class: center, middle, inverse
 
 ---
 
+### Coordinates
+
+```{r out.width = "77%", fig.asp = 0.7}
+myggplot(iris) + 
+  geom_point(aes(Petal.Length, Petal.Width, 
+                 color = Species, pch = Species), cex = 2) + 
+  scale_x_log10(breaks = 1:7)
+```
+
+
+---
+
 ### Facets
 
-```{r}
-(res.df <- readRDS("results.rds"))
+```{r out.width = "85%", fig.asp = 0.6}
+myggplot(iris) + 
+  geom_point(aes(Petal.Length, Petal.Width, 
+                 color = Species, pch = Species), cex = 2) + 
+  facet_wrap(~Species) +   ## facet_grid for multiple variables
+  theme(strip.text.x = element_text(size = rel(2.5)))
 ```
 
 ---
 
-```{r out.width = "100%", fig.asp = 0.55}
-myggplot(subset(res.df, Dp %in% c(0.05, 0.1)),
-         aes(NbTopHits, Power, color = Method), coeff = 0.8) +
-  geom_line() +
-  facet_grid(Dp ~ TimeSinceAdmixture) +
-  xlab("Number of top hits") + 
-  theme(strip.text.y = element_text(size = rel(2)))
+## Iterate over variables with **aes_string**
+
+```{r}
+(var <- names(iris)[1:4])
+p_list <- list()
+for (i in seq_along(var)) {
+  p_list[[i]] <- myggplot(iris, coeff = 0.6) + 
+    geom_density(aes_string(var[i], fill = "Species"), alpha = 0.6)
+    
+}
+
+str(p_list, max.level = 1)
 ```
 
 ---
 
 ## Combine plots with [cowplot](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html)
 
-```{r out.width = "95%", fig.asp = 0.4}
-p1 <- myggplot(iris, aes(Petal.Length, Petal.Width, 
-                 color = Species, pch = Species), coeff = 0.6) + 
-  geom_point(cex = 2)
+```{r out.width = "85%", fig.asp = 0.65}
+cowplot::plot_grid(plotlist = p_list, ncol = 2, align = "hv",
+                   labels = LETTERS[1:4], label_size = 15)
+```
 
-p2 <- myggplot(iris, aes(Sepal.Length, Sepal.Width, 
-                 color = Species, pch = Species), coeff = 0.6) + 
-  geom_point(cex = 2)
-cowplot::plot_grid(p1, p2, align = "h", ncol = 2, 
-                   labels = c("A", "B"), label_size = 15)
+---
+
+### Common legend
+
+```{r out.width = "85%", fig.asp = 0.6}
+lapply(p_list, function(p) p + theme(legend.position = "none")) %>%
+  cowplot::plot_grid(plotlist = ., ncol = 2, align = "hv",
+                   labels = LETTERS[1:4], label_size = 15) %>%
+  cowplot::plot_grid(cowplot::get_legend(p_list[[1]]),
+                     rel_widths = c(1, 0.3))
 ```
 
 ---
@@ -500,50 +527,17 @@ plotly::ggplotly(
 
 - [Cookbook for R - Graphs](http://www.cookbook-r.com/Graphs/)
 
-- [Cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf)
+- [**Cheatsheet**](https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf)
 
 - [Top 50 ggplot2 Visualizations](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
 
-- [Viridis color palette](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
+- [**Viridis color palette**](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
 
-- [An RStudio addin for ggplot2 theme tweaking](https://github.com/calligross/ggthemeassist)
+- [**An RStudio addin for ggplot2 theme tweaking**](https://github.com/calligross/ggthemeassist)
 
-- [Publication Ready Plots](http://www.sthda.com/english/rpkgs/ggpubr/)
+- [**Publication Ready Plots**](http://www.sthda.com/english/rpkgs/ggpubr/)
 
 - [Extensions](http://www.ggplot2-exts.org/)
-
----
-
-class: center, middle, inverse
-
-# Problems I've once encountered
-
----
-
-## Iterate over variables with **aes_string**
-
-```{r out.width = "65%", fig.asp = 0.7}
-var <- names(iris)
-p_list <- vector(mode = "list", length = length(var))
-for (i in seq_along(var)) {
-  p_list[[i]] <- myggplot(iris) + geom_bar(aes_string(var[i]))
-}
-cowplot::plot_grid(plotlist = p_list[1:4], ncol = 2)
-```
-
----
-
-## Change the limits of your plot
-
-### xlim or coord_cartesian?
-
-```{r out.width = "45%", fig.asp = 0.7}
-myggplot(data.frame(x = 1:10, y = c(1:9, 100) + rnorm(10)), aes(x, y)) + 
-  geom_point(cex = 2) + 
-  geom_smooth(method = "lm") + 
-  xlim(NA, 9.5)
-```
-
 
 ---
 
@@ -555,7 +549,7 @@ class: center, middle, inverse
 
 ## Why I finally switched to using ggplot2?
 
-```{r out.width = "70%", fig.asp = 0.7, results='hide', cache=FALSE}
+```{r out.width = "70%", fig.asp = 0.75, results='hide', cache=FALSE}
 library(bigstatsr)
 X <- big_attachExtdata()
 svd <- big_SVD(X, big_scale(), k = 10)
@@ -572,20 +566,18 @@ last_plot() +
   # add colors
   aes(color = pop) + labs(color = "Population") +
   ## change the place of the legend
-  theme(legend.position = c(0.82, 0.17)) + 
+  theme(legend.position = c(0.85, 0.2)) + 
   ## change the title and the label of the x-axis
   labs(title = "Yet another title", x = "with a new 'x' label")
 ```
 
 ---
 
-## How I choose the size of a ggplot?
-
-### (that I export)
+## How I choose the size of a plot?
 
 - I plot something, e.g.
 
-```
+```{r, eval = FALSE}
 ggplot(iris, aes(Petal.Length, Petal.Width, 
                  color = Species, pch = Species)) + 
   geom_point(cex = 2)
@@ -598,55 +590,11 @@ ggplot(iris, aes(Petal.Length, Petal.Width,
 - Right-click on this window -> "Open Image"
 
 - Then, I use the dimensions that are displayed at the top in `ggsave()` with `scale = 1/90` (calibrate the value for your computer), e.g. 
-```
-ggsave("myggplot.png", scale = 1/90, width = 888, height = 725)
-```
-
----
-
-## How I choose the size of a ggplot?
-
-### (in an RMarkdown)
-
-- I always use `out.width` (option of R chunk) 
-
-- I get the height with `fig.asp`
-
-- (for generated plots) I use `fig.width` for the "zoom"
-
-***
-
-You can import figures with `knitr::include_graphics`
-
----
-
-### out.width = "80%", fig.asp = 0.7
-
-```{r, out.width = "80%", fig.asp = 0.7}
-myggplot(iris, aes(Petal.Length, Petal.Width, 
-                 color = Species, pch = Species)) + 
-  geom_point(cex = 2)
+```{r, eval = FALSE}
+ggsave("myggplot.pdf", scale = 1/90, width = 888, height = 725)
 ```
 
----
-
-### out.width = "80%", fig.asp = 0.7, fig.width = 10
-
-```{r, out.width = "80%", fig.asp = 0.7, fig.width=10}
-myggplot(iris, aes(Petal.Length, Petal.Width, 
-                 color = Species, pch = Species)) + 
-  geom_point(cex = 2)
-```
-
----
-
-### out.width = "80%", fig.asp = 0.7, fig.width = 4
-
-```{r, out.width = "80%", fig.asp = 0.7, fig.width = 4}
-myggplot(iris, aes(Petal.Length, Petal.Width, 
-                 color = Species, pch = Species)) + 
-  geom_point(cex = 2)
-```
+.footnote[In R Markdown, use chunk options `out.width` and `fig.asp`.]
 
 ---
 
@@ -656,17 +604,7 @@ class: center, middle, inverse
 
 ---
 
-## Your turn: reproduce this plot
-
-```{r, out.width = "100%", fig.asp = 0.7, echo = FALSE}
-knitr::include_graphics("https://github.com/Cascadia-R/gRadual-intRoduction-tidyverse/raw/master/figure/gap.png")
-```
-
-.footnote[Source: https://goo.gl/Tci3pw]
-
----
-
-## The data
+## Use this data..
 
 ```{r}
 (df <- gapminder::gapminder %>%
@@ -675,15 +613,30 @@ knitr::include_graphics("https://github.com/Cascadia-R/gRadual-intRoduction-tidy
 
 ---
 
-### The solution
+## ..to reproduce this plot
 
-```{r, out.width = "70%", fig.asp = 0.7}
+```{r, out.width = "100%", fig.asp = 0.7, echo = FALSE, fig.width = 5}
 ggplot(df) + 
-  geom_point(aes(log10(gdpPercap), lifeExp, size = pop, 
+  geom_point(aes(gdpPercap, lifeExp, size = pop, 
                  color = continent)) +
+  scale_x_log10(breaks = c(300, 1e3, 3e3, 10e3, 30e3)) + 
   labs(title = "Gapminder for 1992",
        x = "Gross Domestic Product (log scale)",
-       y = "Life Expectancy at birth (years)")
+       y = "Life Expectancy at birth (years)",
+       color = "Continent", size = "Population")
+```
+
+---
+
+```{r, out.width = "78%", fig.asp = 0.7, fig.width = 5}
+ggplot(df) + 
+  geom_point(aes(gdpPercap, lifeExp, size = pop, 
+                 color = continent)) +
+  scale_x_log10(breaks = c(300, 1e3, 3e3, 10e3, 30e3)) + 
+  labs(title = "Gapminder for 1992",
+       x = "Gross Domestic Product (log scale)",
+       y = "Life Expectancy at birth (years)",
+       color = "Continent", size = "Population")
 ```
 
 ---
