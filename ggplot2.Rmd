@@ -233,7 +233,7 @@ class: center, middle, inverse
 
 ---
 
-### My custom theme: black and white and larger fonts
+### Custom theme I use: black and white and larger fonts
 
 ```{r}
 myggplot <- function(..., coeff = 1) 
@@ -249,19 +249,37 @@ myggplot(data = fertilityTidy) +
 
 ---
 
-## Add colors
+## Drop extra typing
 
-```{r, out.width = "77%", fig.asp = 0.7}
-myggplot(data = fertilityTidy) + 
-  geom_point(mapping = aes(x = Year, y = Fertility, 
-                           color = Country))
+```{r, out.width = "80%", fig.asp = 0.7}
+myggplot(fertilityTidy) + 
+  geom_point(aes(Year, Fertility))
 ```
 
 ---
 
-### Add lines: move 'aes' to the top
+## Add colors
 
-#### So that it's inherited by both geoms
+```{r, out.width = "80%", fig.asp = 0.7}
+myggplot(fertilityTidy) + 
+  geom_point(aes(Year, Fertility, color = Country))
+```
+
+---
+
+## Add lines: add one geom
+
+```{r, out.width = "80%", fig.asp = 0.7}
+myggplot(fertilityTidy) + 
+  geom_point(aes(Year, Fertility, color = Country)) + 
+  geom_line(aes(Year, Fertility, color = Country))
+```
+
+---
+
+### Remove redundancy: move 'aes' to the top
+
+#### So that the mapping is inherited by both geoms
 
 ```{r, out.width = "72%", fig.asp = 0.7}
 myggplot(fertilityTidy, aes(Year, Fertility, color = Country)) + 
@@ -275,20 +293,19 @@ myggplot(fertilityTidy, aes(Year, Fertility, color = Country)) +
 
 ```{r out.width = "80%", fig.asp = 0.7}
 myggplot(fertilityTidy, aes(Year, Fertility, color = Country)) + 
-  geom_point(cex = 4) +
-  geom_line(aes(group = Country), lwd = 2)
+  geom_point(size = 4) +
+  geom_line(size = 3)
 ```
 
 ---
 
 ### Futher customization: themes
 
-```{r out.width = "85%", fig.asp = 0.7, fig.width=8}
+```{r out.width = "90%", fig.asp = 0.7, fig.width=8}
 myggplot(fertilityTidy, aes(Year, Fertility, color = Country)) + 
-  geom_point(cex = 4) +
-  geom_line(aes(group = Country), lwd = 2) +
-  theme(aspect.ratio = 0.8, 
-        legend.key.width = unit(3, "line"))
+  geom_point(size = 4) +
+  geom_line(size = 3) +
+  theme(aspect.ratio = 0.8, legend.key.width = unit(3, "line"))
 ```
 
 ---
@@ -314,7 +331,7 @@ as_tibble(iris)   ## print better
 ```{r out.width = "80%", fig.asp = 0.7}
 myggplot(iris) + 
   geom_point(aes(Petal.Length, Petal.Width, 
-                 color = Species, pch = Species), cex = 2)
+                 color = Species, shape = Species), size = 3)
 ```
 
 ---
@@ -323,7 +340,7 @@ myggplot(iris) +
 
 ```{r out.width = "75%", fig.asp = 0.7}
 myggplot(iris, aes(Petal.Length, Petal.Width)) + 
-  geom_point(aes(color = Species, pch = Species), cex = 2) + 
+  geom_point(aes(color = Species, shape = Species), size = 3) + 
   geom_smooth(color = "black")
 ```
 
@@ -334,27 +351,27 @@ myggplot(iris, aes(Petal.Length, Petal.Width)) +
 ```{r out.width = "75%", fig.asp = 0.7}
 myggplot(iris, aes(Petal.Length, Petal.Width)) + 
   geom_smooth(color = "black") + 
-  geom_point(aes(color = Species, pch = Species), cex = 2)
+  geom_point(aes(color = Species, shape = Species), size = 3)
 ```
 
 ---
 
-### Geom_smooth inherits from top aesthetics
-
-```{r out.width = "75%", fig.asp = 0.7}
-myggplot(iris, aes(Petal.Length, Petal.Width, color = Species)) + 
-  geom_smooth() + 
-  geom_point(aes(pch = Species), cex = 2)
-```
-
----
-
-### Or just add a group
+### Geom_smooth by group
 
 ```{r out.width = "75%", fig.asp = 0.7}
 myggplot(iris, aes(Petal.Length, Petal.Width)) + 
   geom_smooth(aes(group = Species), color = "black") + 
-  geom_point(aes(color = Species, pch = Species), cex = 2)
+  geom_point(aes(color = Species, shape = Species), size = 3)
+```
+
+---
+
+### Or use color for both geoms
+
+```{r out.width = "75%", fig.asp = 0.7}
+myggplot(iris, aes(Petal.Length, Petal.Width, color = Species)) + 
+  geom_smooth() + 
+  geom_point(aes(shape = Species), size = 3)
 ```
 
 ---
@@ -401,7 +418,7 @@ knitr::include_graphics("http://r4ds.had.co.nz/cover.png")
 ```{r out.width = "75%", fig.asp = 0.7}
 myggplot(iris) + 
   geom_point(aes(Petal.Length, Petal.Width, 
-                 color = Species, pch = Species), cex = 2) +
+                 color = Species, shape = Species), size = 3) +
   guides(colour = guide_legend(override.aes = list(size = 10)))
 ```
 
@@ -431,7 +448,7 @@ class: center, middle, inverse
 ```{r out.width = "77%", fig.asp = 0.7}
 myggplot(iris) + 
   geom_point(aes(Petal.Length, Petal.Width, 
-                 color = Species, pch = Species), cex = 2) + 
+                 color = Species, shape = Species), size = 3) + 
   scale_x_log10(breaks = 1:7)
 ```
 
@@ -443,7 +460,7 @@ myggplot(iris) +
 ```{r out.width = "85%", fig.asp = 0.6}
 myggplot(iris) + 
   geom_point(aes(Petal.Length, Petal.Width, 
-                 color = Species, pch = Species), cex = 2) + 
+                 color = Species, shape = Species), size = 3) + 
   facet_wrap(~Species) +   ## facet_grid for multiple variables
   theme(strip.text.x = element_text(size = rel(2.5)))
 ```
@@ -491,8 +508,8 @@ lapply(p_list, function(p) p + theme(legend.position = "none")) %>%
 
 ```{r, out.width="80%", fig.asp=0.7, cache=FALSE}
 myggplot(iris, aes(Petal.Length, Petal.Width, 
-                   color = Species, pch = Species)) + 
-  geom_point(cex = 2)
+                   color = Species, shape = Species)) + 
+  geom_point(size = 3)
 ```
 
 ---
@@ -579,8 +596,8 @@ last_plot() +
 
 ```{r, eval = FALSE}
 ggplot(iris, aes(Petal.Length, Petal.Width, 
-                 color = Species, pch = Species)) + 
-  geom_point(cex = 2)
+                 color = Species, shape = Species)) + 
+  geom_point(size = 3)
 ```
 
 - I use the *Zoom* button of RStudio
