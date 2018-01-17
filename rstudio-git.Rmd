@@ -1,0 +1,53 @@
+---
+title: "Visualisation with ggplot2"
+subtitle: "https://privefl.github.io/R-presentation/rstudio-git.html"
+author: "Florian Privé & Magali Richard"
+date: "January 18, 2017"
+output:
+  xaringan::moon_reader:
+    includes:
+      after_body: include_twitter.html
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(cache = FALSE, fig.align = "center", dev = "svg")
+```
+
+class: center, top, inverse
+background-image: url(http://hexb.in/vector/ggplot2.svg)
+background-position: 50% 80%
+background-size: 40%
+
+# http://ggplot2.tidyverse.org/
+
+---
+
+class: center, middle, inverse
+
+
+
+---
+
+class: center, middle, inverse
+
+# Thanks!
+
+<br>
+
+Presentation available at
+
+https://privefl.github.io/R-presentation/rstudio-git.html
+
+<br>
+
+Twitter: [@privefl](https://twitter.com/privefl) & [@magg_richard](https://twitter.com/magg_richard)
+
+GitHub: [@privefl](https://github.com/privefl) & [@magrichard](https://github.com/magrichard)
+
+.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
