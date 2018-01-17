@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Visualisation with ggplot2</title>
+    <title>RStudio and Git</title>
     <meta charset="utf-8">
     <meta name="author" content="Florian Privé &amp; Magali Richard" />
     <meta name="date" content="2017-01-18" />
@@ -11,7 +11,7 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Visualisation with ggplot2
+# RStudio and Git
 ## <a href="https://privefl.github.io/R-presentation/rstudio-git.html" class="uri">https://privefl.github.io/R-presentation/rstudio-git.html</a>
 ### Florian Privé &amp; Magali Richard
 ### January 18, 2017
@@ -21,18 +21,377 @@ class: center, middle, inverse, title-slide
 
 
 
-class: center, top, inverse
-background-image: url(http://hexb.in/vector/ggplot2.svg)
-background-position: 50% 80%
-background-size: 40%
+class: center, middle, inverse
 
-# http://ggplot2.tidyverse.org/
+# RStudio
+
+---
+
+## RStudio Features
+
+- everything you can expect from a good IDE
+
+- keyboard shortcuts I use
+  1. *Crtl + Space* (autocompletion)
+  2. *Ctrl + Up* (command history &amp; search)
+  3. *Ctrl + Click* (function source code)
+  3. *Ctrl + Enter* (execute line of code)
+  4. *Ctrl + Shift + K* (knit)
+  4. *Ctrl + Shift + B* (build package or website)
+  4. *Ctrl + Shift + M* (pipe)
+  4. *Alt + Shift + K* to see all shortcuts
+  4. ...
+
+- Panels (everything is integrated, including **Git**)
+
+- **R Projects**
+
+---
+
+## Releases 
+
+- Version 1.0 (November 1st, 2016)
+&lt;ul&gt;
+&lt;li&gt;Authoring tools for &lt;a href="http://rmarkdown.rstudio.com/r_notebooks.html"&gt;R Notebooks&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Integrated support for the &lt;a href="http://spark.rstudio.com"&gt;sparklyr&lt;/a&gt; package (R interface to Spark).&lt;/li&gt;
+&lt;li&gt;Enhanced data import tools based on the &lt;a href="https://github.com/hadley/readr"&gt;readr&lt;/a&gt;, &lt;a href="https://github.com/hadley/readxl"&gt;readxl&lt;/a&gt; and &lt;a href="https://github.com/hadley/haven"&gt;haven&lt;/a&gt; packages.&lt;/li&gt;
+&lt;li&gt;Performance profiling via integration with the &lt;a href="https://github.com/rstudio/profvis"&gt;profvis&lt;/a&gt; package.&lt;/li&gt;
+&lt;li&gt;Authoring tools for R Markdown &lt;a href="http://rmarkdown.rstudio.com/rmarkdown_websites.html"&gt;websites&lt;/a&gt; and the &lt;a href="https://bookdown.org/"&gt;bookdown&lt;/a&gt; package.&lt;/li&gt;
+&lt;li&gt;Many other miscellaneous enhancements and bug fixes.&lt;/li&gt;
+&lt;/ul&gt;
+
+- Version 1.1.383 (October 9th, 2017)
+  - integrated terminal
+  - new features for connections to data bases
+  - better object explorer (`View()`)
+
+---
+
+## R Projects
+
+- **Meaningful structure** in one folder
+
+- The working directory automatically switches to the project's folder.
+
+- File tab displays the associated files and folders in the project
+
+- History of R commands and open files.
+
+- Any settings associated with the project, such as Git settings, are loaded.
+
+- Note that a *set-up.R* or even a *.Rprofile* file in the project's root directory enable project-specific settings to be loaded each time people work on the project.
+
+---
+
+## Project-oriented workflow
+
+&lt;blockquote class="twitter-tweet" data-lang="fr" align="center"&gt;&lt;p lang="en" dir="ltr"&gt;The only two things that make &lt;a href="https://twitter.com/JennyBryan?ref_src=twsrc%5Etfw"&gt;@JennyBryan&lt;/a&gt; 😤😠🤯. Instead use projects + here::here() &lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt; &lt;a href="https://t.co/GwxnHePL4n"&gt;pic.twitter.com/GwxnHePL4n&lt;/a&gt;&lt;/p&gt;&amp;mdash; Hadley Wickham (@hadleywickham) &lt;a href="https://twitter.com/hadleywickham/status/940021008764846080?ref_src=twsrc%5Etfw"&gt;11 décembre 2017&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+
+Read more at https://www.tidyverse.org/articles/2017/12/workflow-vs-script/
+
+---
+
+## More
+
+Chapter [*Efficient set-up*](https://bookdown.org/csgillespie/efficientR/set-up.html) of
+
+&lt;img src="https://csgillespie.github.io/efficientR/figures/f0_web.png" width="45%" style="display: block; margin: auto;" /&gt;
 
 ---
 
 class: center, middle, inverse
 
+background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHH9QYVUjA3IV0ptLQRXVAUBGBH-qXD7pG7wnj_34mwkTKS4NH0w)
+background-position: 50% 80%
+background-size: 40%
 
+# Version control (Git)
+
+---
+
+## You don't use version control?
+
+&lt;br&gt;
+
+&lt;img src="https://www.tacomaworld.com/attachments/i-also-like-to-live-dangerously-jpg.760853/" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Why should you use version control?
+
+Have you ever:
+
+- Made a change to code, realised it was a mistake and wanted to revert back?
+- Lost code or had a backup that was too old?
+- Had to maintain multiple versions of a product?
+- Wanted to see the difference between two (or more) versions of your code?
+- Wanted to prove that a particular change broke or fixed a piece of code?
+- Wanted to review the history of some code?
+- Wanted to submit a change to someone else's code?
+- Wanted to share your code, or let other people work on your code?
+- Wanted to see how much work is being done, and where, when and by whom?
+- Wanted to experiment with a new feature without interfering with working code?
+
+In these cases, and no doubt others, a version control system should make your life easier. 
+
+.footnote[Source: https://stackoverflow.com/a/1408464/6103040]
+
+---
+
+## Why should you use version control?
+
+### Version control for the researcher
+
+&lt;img src="http://www.datacarpentry.org/rr-version-control/fig/phd101212s.png" width="45%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Why should you use version control?
+
+### Version control for the data analyst: reproducible workflow
+
+&lt;center&gt;
+&lt;iframe width="560" height="315" src="https://www.youtube.com/embed/s3JldKoA0zw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/center&gt;
+
+.footnote[Also, see https://stackoverflow.com/q/2712421/6103040]
+
+---
+
+## Why should you use version control?
+
+### To work from anywhere
+
+&lt;img src="git.svg" width="85%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Why should you use version control?
+
+### Working with GitHub, a line on your CV
+
+&lt;br&gt;
+
+&gt; A lot of students have said to me later, even first-year undergraduates, that using GitHub has helped them a lot when they went for an internship or a research position interview.
+
+&gt; They are able to say, "Oh, I already have worked with GitHub. I'm familiar with it. I know how it works.” So I think they are at least able to put that on their CVs and go into a situation where there's a research or data analysis team and say, "Yeah, sure. I am actually familiar with the same tools that you use."
+&gt;
+&gt; -- Mine Cetinkaya-Rundel, Duke University, RStudio
+
+.footnote[[Read more](https://github.com/blog/2336-invest-in-tools-students-can-grow-with-github-and-rstudio-for-data-science-at-duke-university)]
+
+---
+
+## Why should you use version control?
+
+### To get a nice mosaic on GitHub
+
+&lt;img src="rstudio-git_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Why should you use version control?
+
+### Because Master Yoda says so
+
+&lt;img src="https://memegenerator.net/img/instances/28137756.jpg" width="55%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Why should you use version control? 
+
+### Next session: Best coding practices
+
+On February 08, 2018 by A. Arnaud &amp; J. Arbel
+
+- coding style
+
+- R packages (RStudio &amp; Git are super useful for developing!!)
+
+&lt;br&gt;
+
+### Next session: Make your personal webpage with R
+
+On June 14, 2018 by F. Privé &amp; M. Richard
+
+Use R Markdown &amp; GitHub to make websites, presentations &amp; reports easily available online.
+
+
+---
+
+## Git platforms (share your code, collaborate)
+
+- [GitHub](https://github.com/magrichard), [documentation](https://guides.github.com/activities/hello-world/) (only free for public repositories)
+
+- [GitLab UGA](https://gricad-gitlab.univ-grenoble-alpes.fr/), [documentation](https://docs.gricad-pages.univ-grenoble-alpes.fr/help/) or just [GitLab](https://about.gitlab.com/) (open source &amp; free)
+
+- [Bitbucket](https://bitbucket.org/) (free with less than 5 collaborators)
+
+- any server..
+
+---
+
+## 3 main commands: commit, push, and pull
+
+- commit: add your latest contribution/modification
+
+- push: merge your modifications with the main project
+
+- pull: update your local project with the latest version of the main project
+
+---
+
+## Simple (solo) use of git to prevent merge conflicts
+
+&lt;br&gt;
+
+&lt;img src="https://memegenerator.net/img/instances/79811268.jpg" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Simple (solo) use of git to prevent merge conflicts
+
+### When you open a project, always pull
+
+&lt;img src="http://s2.quickmeme.com/img/73/730acd1051914ae6cb59ae7e751498c477bfd0191cc2a07f90682451dc1da9d5.jpg" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Simple (solo) use of git to prevent merge conflicts
+
+### Before you close a project, always push
+
+&lt;img src="https://hikaruzone.files.wordpress.com/2015/10/in-case-of-fire-1-git-commit-2-git-push-3-leave-building2.png?w=800&amp;h=559" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Help with Git
+
+&lt;img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdltx925phiPYsw72GpjM30TBMn30YLTi8kAlf-N2sC_kTQNTiFQ" width="30%" style="display: block; margin: auto;" /&gt;
+
+- [Git cheatsheet](https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf)
+
+- [Happy Git and GitHub for the useR](http://happygitwithr.com/)
+
+- [When things go wrong](https://github.com/k88hudson/git-flight-rules)
+
+- [To fix a mistake](http://ohshitgit.com/)
+
+- [Create a new branch with git and manage branches](https://github.com/Kunena/Kunena-Forum/wiki/Create-a-new-branch-with-git-and-manage-branches)
+
+---
+
+class: center, middle, inverse
+
+# Demo: RStudio &amp; GitHub
+
+---
+
+## Create a local Git repository
+
+1 - RStudio &gt; New Project &gt; New directory &gt; R packages + create a git repository
+
+2 - Go to the git menu, on the top-right, and add your files of interest: 
+
+- (i) save your changes, 
+
+- (ii) open the commit window, 
+
+- (iii) select files, 
+
+- (iv) stage files, 
+
+- (v) write a commit message, 
+
+- (vi) commit
+
+---
+
+## Create a local Git repository 
+
+1 - RStudio &gt; New Project &gt; New directory &gt; R packages + create a git repository
+
+2 - Go to the git menu, on the top-right, and add your files of interest: 
+
+3 - Synchronising with GitHub. Go to RStudio &gt; Tools &gt; Shell
+
+- create a new repo on [GitHub](https://github.com/new) and give it the same name as your package
+
+- push your local respository from the command line
+
+`git remote add origin https://github.com/magrichard/testgit.git`
+
+`git push -u origin master`
+
+4 - Check that your GitHub repository is updated [GitHub repo](https://github.com/magrichard/testgit)
+
+---
+
+## Publishing your code on GitHub (or Gitlab...)
+
+
+1 - Change something (modify the hello.R file and create a new R file)
+
+2 - Go to the git menu, on the top-right, and add your files of interest: 
+
+- (i) save your changes, 
+
+- (ii) open the commit window, 
+
+- (iii) select files, 
+
+- (iv) stage files, 
+
+- (v) write a commit message, 
+
+- (vi) commit
+
+- **(vii) push**
+
+3 - Check that your GitHub repository is updated [GitHub repo](https://github.com/magrichard/testgit)
+
+---
+
+## Import a GitHub repository into RStudio
+
+1 - On GitHub: [create new repo](https://github.com/new) with a README and a description. Leave all the other options as is, then click Submit. (no license, no gitignore...)
+
+2- **CLONE** your repository. **Copy** the web URL
+
+
+3- In RStudio: Create a New Project &gt; Version Control &gt; Git and **paste** the web URL of the project. Congratulation, you have cloned your new repo.
+
+- =&gt; You now have access to Git functionalities within Rstudio
+
+---
+
+## Collaborative work on GitHub
+
+Option 1 - Equal collaborators: Everyone can pull, commit and push on the same 'master' branch
+
+Option 2 - One coordinator (master branch, owns the project) and one (or more) contributor:
+
+![workflow](workflow.png)
+---
+
+## Collaborative work on GitHub
+
+Option 1 - Equal collaborators: Everyone can pull, commit and push on the same 'master' branch
+
+Option 2 - One coordinator (master branch, owns the project) and one (or more) contributor:
+
+- Fork the original repo
+
+- Clone it, and link it to the master repo 
+
+`git remote add upstream https://github.com/magrichard/testgit.git`
+
+- Uptade your fork with latest changes form the master repo (fetch and merge) 
+
+`git pull upstream master`
+
+- Commit, push on your fork, and create a [Pull Request](https://help.github.com/articles/creating-a-pull-request/) (that will be reviewed and accepted by the master)
 
 ---
 

@@ -18,52 +18,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Programme
 
-- Show the programme (what will be covered or not -> other sessions)
-
 - demo creer un projet dans GitHub -> RStudio (Init with readme) et l'inverse
 - besoin d'une clé SSH/RSA. Demo: https://www.youtube.com/watch?v=YxZ8J2rqhEM
+
 Also: http://www.datasurg.net/2015/07/13/rstudio-and-github/
-
-- pas que GitHub, aussi GitLab (https://gricad.univ-grenoble-alpes.fr/thematiques/forge) et Bitbucket
-
-- found a repo of Mag with a typo and correct it?
-
-- RawGit & HtmlPreview -> out-of-scope?
-
-- a line on your CV: https://github.com/blog/2336-invest-in-tools-students-can-grow-with-github-and-rstudio-for-data-science-at-duke-university
-
-- Compare having RStudio to having a smartphone
-
-- Make a warning for merge conflicts
-http://s2.quickmeme.com/img/73/730acd1051914ae6cb59ae7e751498c477bfd0191cc2a07f90682451dc1da9d5.jpg
-(https://img.devrant.com/devrant/rant/r_255820_n8urc.jpg)
-
-- If you push a lot on GitHub, you can have a nice mosaic: mosaic.png
-
-- New features of RStudio: https://www.rstudio.com/products/rstudio/release-notes/
-
-- When things get really bad: https://github.com/k88hudson/git-flight-rules
-http://ohshitgit.com/
-
-- Create a new branch with git and manage branches: https://github.com/Kunena/Kunena-Forum/wiki/Create-a-new-branch-with-git-and-manage-branches
-
-- "Final.doc": http://www.datacarpentry.org/rr-version-control/fig/phd101212s.png
 
 - example with others? Example with hackseq
 
-## Fun memes
-
-You don't use version control? https://www.tacomaworld.com/attachments/i-also-like-to-live-dangerously-jpg.760853/
-
-Use version control: https://memegenerator.net/img/instances/28137756.jpg
-
-Merge conflicts: http://blog.indrek.io/images/2016-01-14-version-control-and-deployment-practices-for-sugarcrm/meme-merge.jpg
-https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQx5OOVlVgml9oJE3a48W8kCPTu0Dfd-EDCNNLWBJ2sRKjk17bGOQ
-
-One does not simply learn git: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdltx925phiPYsw72GpjM30TBMn30YLTi8kAlf-N2sC_kTQNTiFQ
-
-## Why use Git
-
-- Colaborate with others (you)
-
-- Reproducible workflow
+http://r-pkgs.had.co.nz/git.html
