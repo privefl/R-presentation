@@ -121,14 +121,14 @@ knitr::include_graphics("https://www.tacomaworld.com/attachments/i-also-like-to-
 
 Have you ever:
 
-- Made a change to code, realised it was a mistake and wanted to revert back?
-- Lost code or had a backup that was too old?
+- **Made a change to code, realised it was a mistake and wanted to revert back?**
+- **Lost code or had a backup that was too old?**
 - Had to maintain multiple versions of a product?
 - Wanted to see the difference between two (or more) versions of your code?
 - Wanted to prove that a particular change broke or fixed a piece of code?
 - Wanted to review the history of some code?
-- Wanted to submit a change to someone else's code?
-- Wanted to share your code, or let other people work on your code?
+- **Wanted to submit a change to someone else's code?**
+- **Wanted to share your code, or let other people work on your code?**
 - Wanted to see how much work is being done, and where, when and by whom?
 - Wanted to experiment with a new feature without interfering with working code?
 
@@ -196,16 +196,6 @@ knitr::include_graphics("webshot-mosaic-github.png")
 
 ---
 
-## Why should you use version control?
-
-### Because Master Yoda says so
-
-```{r, out.width="55%"}
-knitr::include_graphics("https://memegenerator.net/img/instances/28137756.jpg")
-```
-
----
-
 ## Why should you use version control? 
 
 ### February session: Best coding practices
@@ -253,8 +243,8 @@ We will focus on using R Markdown & GitHub in order to easily make websites, pre
 
 <br>
 
-```{r, out.width="100%"}
-knitr::include_graphics("https://memegenerator.net/img/instances/79811268.jpg")
+```{r, out.width="90%"}
+knitr::include_graphics("meme-merge-conflicts.jpg")
 ```
 
 ---
