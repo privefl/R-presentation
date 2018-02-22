@@ -55,7 +55,6 @@ class: center, middle, inverse
 <li>Enhanced data import tools based on the <a href="https://github.com/hadley/readr">readr</a>, <a href="https://github.com/hadley/readxl">readxl</a> and <a href="https://github.com/hadley/haven">haven</a> packages.</li>
 <li>Performance profiling via integration with the <a href="https://github.com/rstudio/profvis">profvis</a> package.</li>
 <li>Authoring tools for R Markdown <a href="http://rmarkdown.rstudio.com/rmarkdown_websites.html">websites</a> and the <a href="https://bookdown.org/">bookdown</a> package.</li>
-<li>Many other miscellaneous enhancements and bug fixes.</li>
 </ul>
 
 - Version 1.1.383 (October 9th, 2017)
@@ -102,11 +101,9 @@ knitr::include_graphics("https://csgillespie.github.io/efficientR/figures/f0_web
 
 class: center, middle, inverse
 
-background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHH9QYVUjA3IV0ptLQRXVAUBGBH-qXD7pG7wnj_34mwkTKS4NH0w)
-background-position: 50% 80%
-background-size: 40%
-
 # Version control (Git)
+
+## tracks changes to your code
 
 ---
 
@@ -114,7 +111,7 @@ background-size: 40%
 
 <br>
 
-```{r, out.width="80%"}
+```{r, out.width="75%"}
 knitr::include_graphics("https://www.tacomaworld.com/attachments/i-also-like-to-live-dangerously-jpg.760853/")
 ```
 
@@ -124,14 +121,14 @@ knitr::include_graphics("https://www.tacomaworld.com/attachments/i-also-like-to-
 
 Have you ever:
 
-- Made a change to code, realised it was a mistake and wanted to revert back?
-- Lost code or had a backup that was too old?
+- **Made a change to code, realised it was a mistake and wanted to revert back?**
+- **Lost code or had a backup that was too old?**
 - Had to maintain multiple versions of a product?
 - Wanted to see the difference between two (or more) versions of your code?
 - Wanted to prove that a particular change broke or fixed a piece of code?
 - Wanted to review the history of some code?
-- Wanted to submit a change to someone else's code?
-- Wanted to share your code, or let other people work on your code?
+- **Wanted to submit a change to someone else's code?**
+- **Wanted to share your code, or let other people work on your code?**
 - Wanted to see how much work is being done, and where, when and by whom?
 - Wanted to experiment with a new feature without interfering with working code?
 
@@ -194,26 +191,16 @@ knitr::include_graphics("git.svg")
 ### To get a nice mosaic on GitHub
 
 ```{r, out.width="80%"}
-webshot::webshot("https://github.com/privefl", delay = 1)
-```
-
----
-
-## Why should you use version control?
-
-### Because Master Yoda says so
-
-```{r, out.width="55%"}
-knitr::include_graphics("https://memegenerator.net/img/instances/28137756.jpg")
+knitr::include_graphics("webshot-mosaic-github.png")
 ```
 
 ---
 
 ## Why should you use version control? 
 
-### Next session: Best coding practices
+### February session: Best coding practices
 
-On February 08, 2018 by A. Arnaud & J. Arbel
+A. Arnaud & J. Arbel will focus on
 
 - coding style
 
@@ -221,11 +208,10 @@ On February 08, 2018 by A. Arnaud & J. Arbel
 
 <br>
 
-### Next session: Make your personal webpage with R
+### June session: Make your personal webpage with R
 
-On June 14, 2018 by F. Privé & M. Richard
+We will focus on using R Markdown & GitHub in order to easily make websites, presentations & reports, and make them available online.
 
-Use R Markdown & GitHub to make websites, presentations & reports easily available online.
 
 
 ---
@@ -244,11 +230,12 @@ Use R Markdown & GitHub to make websites, presentations & reports easily availab
 
 ## 3 main commands: commit, push, and pull
 
-- commit: add your latest contribution/modification
-
-- push: merge your modifications with the main project
-
 - pull: update your local project with the latest version of the main project
+
+- commit: snapshot of your code at a specified point in time
+
+- push: merge your local modifications with the main project
+
 
 ---
 
@@ -256,8 +243,8 @@ Use R Markdown & GitHub to make websites, presentations & reports easily availab
 
 <br>
 
-```{r, out.width="100%"}
-knitr::include_graphics("https://memegenerator.net/img/instances/79811268.jpg")
+```{r, out.width="90%"}
+knitr::include_graphics("meme-merge-conflicts.jpg")
 ```
 
 ---
@@ -288,9 +275,11 @@ knitr::include_graphics("https://hikaruzone.files.wordpress.com/2015/10/in-case-
 knitr::include_graphics("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdltx925phiPYsw72GpjM30TBMn30YLTi8kAlf-N2sC_kTQNTiFQ")
 ```
 
-- [Git cheatsheet](https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf)
+- [H. Wickham's book](http://r-pkgs.had.co.nz/git.html)
 
 - [Happy Git and GitHub for the useR](http://happygitwithr.com/)
+
+- [Git cheatsheet](https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf)
 
 - [When things go wrong](https://github.com/k88hudson/git-flight-rules)
 
@@ -303,6 +292,8 @@ knitr::include_graphics("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ
 class: center, middle, inverse
 
 # Demo: RStudio & GitHub
+
+## [Also, video from Nicholas Reich](https://www.youtube.com/watch?v=YxZ8J2rqhEM)
 
 ---
 
