@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fast code: R(cpp)</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Florian Privé &amp; Alexis Arnaud" />
+    <meta name="date" content="2018-03-15" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="libs/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Fast code: R(cpp)
+## <a href="https://privefl.github.io/R-presentation/Rcpp.html" class="uri">https://privefl.github.io/R-presentation/Rcpp.html</a>
+### Florian Privé &amp; Alexis Arnaud
+### March 15, 2018
+
+---
+
+
+
+
+
+
+class: center, middle, inverse
+
+# Rcpp
+
+---
+
+## How I see Rcpp?
+
+&lt;br&gt;
+
+Rcpp lives between R and C++, bringing 
+
+- the *performance of C++* and
+
+- the *convenience of R*.
+
+&lt;br&gt;
+
+As 
+
+- I love *performance* and 
+
+- I also enjoy *simplicity*, 
+
+Rcpp may be my favorite R package.
+
+.footnote[I often speak about Rcpp as if it was a programming language.]
+
+---
+
+## Using Rcpp with RStudio
+
+&lt;img src="http://li-kan.com/image/post/Rcpp/create_file.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+Learn more at https://support.rstudio.com/hc/en-us/articles/200486088-Using-Rcpp-with-RStudio.
+
+---
+
+## First example: testing if number is odd
+
+In R:
+
+
+```r
+is_odd_r &lt;- function(n = 10) {
+  n %% 2 == 1
+}
+```
+
+In Rcpp:
+
+
+```cpp
+// [[Rcpp::export]]
+bool is_odd_cpp(int n = 10) {
+  bool v = (n % 2 == 1);
+  return v;
+}
+```
+
+
+```r
+c(is_odd_r(),   is_odd_cpp(), 
+  is_odd_r(21), is_odd_cpp(21),
+  is_odd_r(42), is_odd_cpp(42))
+```
+
+```
+## [1] FALSE FALSE  TRUE  TRUE FALSE FALSE
+```
+
+---
+
+## C++ function explained
+
+### C++ is statically typed
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="rcpp-graphical.png" alt="Graphical annotation of the &amp;lt;em&amp;gt;is_odd_cpp&amp;lt;/em&amp;gt; function.&amp;lt;br/&amp;gt;&amp;lt;small&amp;gt;https://doi.org/10.7287/peerj.preprints.3188v1&amp;lt;/small&amp;gt;" width="80%" /&gt;
+&lt;p class="caption"&gt;Graphical annotation of the &lt;em&gt;is_odd_cpp&lt;/em&gt; function.&lt;br/&gt;&lt;small&gt;https://doi.org/10.7287/peerj.preprints.3188v1&lt;/small&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+.footnote[You don't really need `v` here.]
+
+---
+
+## Whole Rcpp file
+
+&lt;img src="rcpp-file.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Source: compile the Rcpp function and execute the block of R code.]
+
+---
+
+## Second example: sum of a vector
+
+
+```r
+sumR &lt;- function(x) {
+  total &lt;- 0
+  for (i in seq_along(x)) {
+    total &lt;- total + x[i]
+  }
+  total
+}
+```
+
+
+```cpp
+#include &lt;Rcpp.h&gt;
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double sumC1(const NumericVector&amp; x) {
+  
+  int n = x.size();
+  double total = 0;
+  for (int i = 0; i &lt; n; i++) {
+    total += x[i];
+  }
+  
+  return total;
+}
+```
+
+---
+
+## Rcpp Sugar
+
+With [Rcpp Sugar](http://dirk.eddelbuettel.com/code/rcpp/Rcpp-sugar.pdf), you have accessed to some R-like vectorized functions:
+
+
+```cpp
+#include &lt;Rcpp.h&gt;
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double sumCS(const NumericVector&amp; x) {
+  return sum(x);
+}
+```
+
+---
+
+## Yet other possibilities
+
+
+```cpp
+#include &lt;Rcpp.h&gt;
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double sumC2(const NumericVector&amp; x) {
+  
+  double total = 0;
+  NumericVector::const_iterator it;
+  for (it = x.begin(); it != x.end(); it++) {
+    total += *it;
+  }
+  return total;
+}
+
+// [[Rcpp::export]]
+double sumC3(const NumericVector&amp; x) {
+  return std::accumulate(x.begin(), x.end(), 0.0);
+}
+```
+
+---
+
+## Microbenchmark
+
+
+```r
+x &lt;- runif(1e5)
+
+microbenchmark::microbenchmark(
+  "R LOOP" = sumR(x),
+  "R VEC"  = sum(x),
+  "C LOOP" = sumC1(x),
+  "C VEC"  = sumCS(x),
+  "C IT"   = sumC2(x),
+  "C STD"  = sumC3(x)
+)
+```
+
+```
+## Unit: microseconds
+##    expr      min        lq       mean    median        uq      max neval
+##  R LOOP 3401.619 3421.7330 3625.28313 3469.1900 3600.7010 5906.405   100
+##   R VEC   84.019   84.7180   90.83912   86.1850   89.7125  146.598   100
+##  C LOOP   84.718   86.2195   95.31667   87.7565   89.8160  682.769   100
+##   C VEC   85.068   85.8705   94.40654   87.5115   89.7465  660.280   100
+##    C IT  252.477  253.4895  281.72076  256.6325  266.4450 1014.306   100
+##   C STD   85.416   86.2550   96.80497   87.5820   92.0165  749.398   100
+```
+
+---
+
+## Use of C++ code when needed
+
+More infos [there](http://adv-r.had.co.nz/Rcpp.html).
+
+Typical bottlenecks that C++ can address include:
+
+- Recursive functions, or problems which involve calling functions **millions of times**. 
+The overhead of calling a function in C++ is much lower than that in R.
+
+- Loops that **can’t be easily vectorised** because subsequent iterations depend on previous ones.
+
+- Problems that require **advanced data structures** and algorithms that R doesn’t provide. Through the standard template library (STL), C++ has efficient implementations of many important data structures, from ordered maps to double-ended queues.
+
+---
+
+## Third example: Gibbs sampler
+
+
+```r
+gibbs_r &lt;- function(N, thin) {
+  
+  mat &lt;- matrix(nrow = 2, ncol = N)
+  x &lt;- y &lt;- 0
+
+  for (i in 1:N) {
+    for (j in 1:thin) {
+      x &lt;- rgamma(1, 3, y * y + 4)
+      y &lt;- rnorm(1, 1 / (x + 1), 1 / sqrt(2 * (x + 1)))
+    }
+    mat[, i] &lt;- c(x, y)
+  }
+  
+  mat
+}
+```
+
+&lt;br&gt;
+
+This function is difficult to vectorize because iterations depend on previous ones.
+
+---
+
+### Recode it in Rcpp
+
+
+```cpp
+#include &lt;Rcpp.h&gt;
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericMatrix gibbs_cpp(int N, int thin) {
+  
+  NumericMatrix mat(2, N);
+  double x = 0, y = 0;
+
+  for(int i = 0; i &lt; N; i++) {
+    for(int j = 0; j &lt; thin; j++) {
+      x = rgamma(1, 3, 1 / (y * y + 4))[0];
+      y = rnorm(1, 1 / (x + 1), 1 / sqrt(2 * (x + 1)))[0];
+    }
+    mat(0, i) = x;
+    mat(1, i) = y;
+  }
+
+  return(mat);
+}
+```
+
+There is not much difference with the previous R version!
+
+---
+
+### Microbenchmark
+
+
+```r
+microbenchmark::microbenchmark(
+  gibbs_r(100, 10),
+  gibbs_cpp(100, 10),
+  gibbs_r(1000, 10),
+  gibbs_cpp(1000, 10)
+)
+```
+
+```
+## Unit: microseconds
+##                 expr       min         lq       mean    median         uq
+##     gibbs_r(100, 10)  3200.685  3662.1265  4757.8520  4354.078  4644.6180
+##   gibbs_cpp(100, 10)   229.429   252.9305   279.6339   261.312   275.0005
+##    gibbs_r(1000, 10) 36778.891 39952.3725 44088.4365 41359.534 42905.7145
+##  gibbs_cpp(1000, 10)  2355.537  2495.7775  2755.4866  2543.025  2618.3840
+##        max neval
+##  49578.767   100
+##   1139.181   100
+##  96332.944   100
+##   6361.770   100
+```
+
+---
+
+## Other Rcpp code examples
+
+See [these examples](https://github.com/hadley/adv-r/tree/master/extras/cpp) from the [Advanced R book](https://adv-r.hadley.nz/):
+
+&lt;img src="Rcpp_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Available "math" functions
+
+&lt;img src="Rcpp_files/figure-html/unnamed-chunk-16-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+class: center, middle, inverse
+
+# Thanks!
+
+&lt;br&gt;
+
+Presentation available at
+
+https://privefl.github.io/R-presentation/Rcpp.html
+
+&lt;br&gt;
+
+<i class="fa  fa-twitter "></i> [privefl](https://twitter.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fa  fa-github "></i> [privefl](https://github.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fa  fa-stack-overflow "></i> [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
+
+.footnote[Slides created via R package [**xaringan**](https://github.com/yihui/xaringan).]
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

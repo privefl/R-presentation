@@ -1,0 +1,320 @@
+---
+title: "Fast code: R(cpp)"
+subtitle: "https://privefl.github.io/R-presentation/Rcpp.html"
+author: "Florian Privé & Alexis Arnaud"
+date: "March 15, 2018"
+output:
+  xaringan::moon_reader:
+    includes:
+      after_body: include_twitter.html
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, fig.align = "center", dev = "svg",
+                      out.width = "80%")
+options(width = 80)
+```
+
+
+
+class: center, middle, inverse
+
+# Rcpp
+
+---
+
+## How I see Rcpp?
+
+<br>
+
+Rcpp lives between R and C++, bringing 
+
+- the *performance of C++* and
+
+- the *convenience of R*.
+
+<br>
+
+As 
+
+- I love *performance* and 
+
+- I also enjoy *simplicity*, 
+
+Rcpp may be my favorite R package.
+
+.footnote[I often speak about Rcpp as if it was a programming language.]
+
+---
+
+## Using Rcpp with RStudio
+
+```{r}
+knitr::include_graphics("http://li-kan.com/image/post/Rcpp/create_file.png")
+```
+
+Learn more at https://support.rstudio.com/hc/en-us/articles/200486088-Using-Rcpp-with-RStudio.
+
+---
+
+## First example: testing if number is odd
+
+In R:
+
+```{r, echo=TRUE}
+is_odd_r <- function(n = 10) {
+  n %% 2 == 1
+}
+```
+
+In Rcpp:
+
+```{Rcpp, echo=TRUE}
+// [[Rcpp::export]]
+bool is_odd_cpp(int n = 10) {
+  bool v = (n % 2 == 1);
+  return v;
+}
+```
+
+```{r, echo=TRUE}
+c(is_odd_r(),   is_odd_cpp(), 
+  is_odd_r(21), is_odd_cpp(21),
+  is_odd_r(42), is_odd_cpp(42))
+```
+
+---
+
+## C++ function explained
+
+### C++ is statically typed
+
+```{r, fig.cap="Graphical annotation of the <em>is_odd_cpp</em> function.<br/><small>https://doi.org/10.7287/peerj.preprints.3188v1</small>"}
+knitr::include_graphics("rcpp-graphical.png")
+```
+
+.footnote[You don't really need `v` here.]
+
+---
+
+## Whole Rcpp file
+
+```{r, out.width="80%"}
+knitr::include_graphics("rcpp-file.png")
+```
+
+.footnote[Source: compile the Rcpp function and execute the block of R code.]
+
+---
+
+## Second example: sum of a vector
+
+```{r, echo=TRUE}
+sumR <- function(x) {
+  total <- 0
+  for (i in seq_along(x)) {
+    total <- total + x[i]
+  }
+  total
+}
+```
+
+```{Rcpp, echo=TRUE}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double sumC1(const NumericVector& x) {
+  
+  int n = x.size();
+  double total = 0;
+  for (int i = 0; i < n; i++) {
+    total += x[i];
+  }
+  
+  return total;
+}
+```
+
+---
+
+## Rcpp Sugar
+
+With [Rcpp Sugar](http://dirk.eddelbuettel.com/code/rcpp/Rcpp-sugar.pdf), you have accessed to some R-like vectorized functions:
+
+```{Rcpp, echo=TRUE}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double sumCS(const NumericVector& x) {
+  return sum(x);
+}
+```
+
+---
+
+## Yet other possibilities
+
+```{Rcpp, echo=TRUE}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double sumC2(const NumericVector& x) {
+  
+  double total = 0;
+  NumericVector::const_iterator it;
+  for (it = x.begin(); it != x.end(); it++) {
+    total += *it;
+  }
+  return total;
+}
+
+// [[Rcpp::export]]
+double sumC3(const NumericVector& x) {
+  return std::accumulate(x.begin(), x.end(), 0.0);
+}
+```
+
+---
+
+## Microbenchmark
+
+```{r, echo=TRUE}
+x <- runif(1e5)
+
+microbenchmark::microbenchmark(
+  "R LOOP" = sumR(x),
+  "R VEC"  = sum(x),
+  "C LOOP" = sumC1(x),
+  "C VEC"  = sumCS(x),
+  "C IT"   = sumC2(x),
+  "C STD"  = sumC3(x)
+)
+```
+
+---
+
+## Use of C++ code when needed
+
+More infos [there](http://adv-r.had.co.nz/Rcpp.html).
+
+Typical bottlenecks that C++ can address include:
+
+- Recursive functions, or problems which involve calling functions **millions of times**. 
+The overhead of calling a function in C++ is much lower than that in R.
+
+- Loops that **can’t be easily vectorised** because subsequent iterations depend on previous ones.
+
+- Problems that require **advanced data structures** and algorithms that R doesn’t provide. Through the standard template library (STL), C++ has efficient implementations of many important data structures, from ordered maps to double-ended queues.
+
+---
+
+## Third example: Gibbs sampler
+
+```{r, echo=TRUE}
+gibbs_r <- function(N, thin) {
+  
+  mat <- matrix(nrow = 2, ncol = N)
+  x <- y <- 0
+
+  for (i in 1:N) {
+    for (j in 1:thin) {
+      x <- rgamma(1, 3, y * y + 4)
+      y <- rnorm(1, 1 / (x + 1), 1 / sqrt(2 * (x + 1)))
+    }
+    mat[, i] <- c(x, y)
+  }
+  
+  mat
+}
+```
+
+<br>
+
+This function is difficult to vectorize because iterations depend on previous ones.
+
+---
+
+### Recode it in Rcpp
+
+```{Rcpp, echo=TRUE}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericMatrix gibbs_cpp(int N, int thin) {
+  
+  NumericMatrix mat(2, N);
+  double x = 0, y = 0;
+
+  for(int i = 0; i < N; i++) {
+    for(int j = 0; j < thin; j++) {
+      x = rgamma(1, 3, 1 / (y * y + 4))[0];
+      y = rnorm(1, 1 / (x + 1), 1 / sqrt(2 * (x + 1)))[0];
+    }
+    mat(0, i) = x;
+    mat(1, i) = y;
+  }
+
+  return(mat);
+}
+```
+
+There is not much difference with the previous R version!
+
+---
+
+### Microbenchmark
+
+```{r, echo=TRUE}
+microbenchmark::microbenchmark(
+  gibbs_r(100, 10),
+  gibbs_cpp(100, 10),
+  gibbs_r(1000, 10),
+  gibbs_cpp(1000, 10)
+)
+```
+
+---
+
+## Other Rcpp code examples
+
+See [these examples](https://github.com/hadley/adv-r/tree/master/extras/cpp) from the [Advanced R book](https://adv-r.hadley.nz/):
+
+```{r}
+webshot::webshot("https://github.com/hadley/adv-r/blob/master/extras/cpp")
+```
+
+---
+
+## Available "math" functions
+
+```{r}
+webshot::webshot("https://github.com/RcppCore/Rcpp/blob/master/inst/include/Rcpp/Rmath.h")
+```
+
+
+---
+
+class: center, middle, inverse
+
+# Thanks!
+
+<br>
+
+Presentation available at
+
+https://privefl.github.io/R-presentation/Rcpp.html
+
+<br>
+
+`r icon::fa("twitter")` [privefl](https://twitter.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("github")` [privefl](https://github.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("stack-overflow")` [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
+
+.footnote[Slides created via R package [**xaringan**](https://github.com/yihui/xaringan).]
