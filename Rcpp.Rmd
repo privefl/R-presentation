@@ -18,6 +18,7 @@ output:
 knitr::opts_chunk$set(echo = FALSE, fig.align = "center", dev = "svg",
                       out.width = "80%")
 options(width = 80)
+Sys.setenv(LANGUAGE = "en")
 ```
 
 
@@ -25,6 +26,28 @@ options(width = 80)
 class: center, middle, inverse
 
 # Rcpp
+
+---
+
+## Resources
+
+### Rcpp
+
+- [Advanced R](https://adv-r.hadley.nz/rcpp.html)
+
+- [Rcpp for everyone](https://teuder.github.io/rcpp4everyone_en/)
+
+- [Unofficial Rcpp API Documentation](https://thecoatlessprofessor.com/programming/unofficial-rcpp-api-documentation/)
+
+- [Rcpp Gallery](http://gallery.rcpp.org/)
+
+### RcppArmadillo (linear algebra)
+
+- [RcppArmadillo cheatsheet](https://github.com/petewerner/misc/wiki/RcppArmadillo-cheatsheet)
+
+- [Armadillo documentation](http://arma.sourceforge.net/docs.html)
+
+- [Fix OS X Mavericks "-lgfortran" and "-lquadmath" installation errors](https://thecoatlessprofessor.com/programming/rcpp-rcpparmadillo-and-os-x-mavericks--lgfortran-and--lquadmath-error/)
 
 ---
 
@@ -74,7 +97,7 @@ is_odd_r <- function(n = 10) {
 
 In Rcpp:
 
-```{Rcpp, echo=TRUE}
+```{Rcpp, echo=TRUE, cache=TRUE}
 // [[Rcpp::export]]
 bool is_odd_cpp(int n = 10) {
   bool v = (n % 2 == 1);
@@ -124,7 +147,7 @@ sumR <- function(x) {
 }
 ```
 
-```{Rcpp, echo=TRUE}
+```{Rcpp, echo=TRUE, cache=TRUE}
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -143,11 +166,32 @@ double sumC1(const NumericVector& x) {
 
 ---
 
+The C++ version is similar, but:
+
+* To find the length of the vector, we use the `.size()` method (or `.length()`),   which returns an integer. C++ methods are called with `.` (i.e., a full stop).
+  
+* The `for` statement has a different syntax: `for(init; check; increment)`. 
+  This loop is initialised by creating a new variable called `i` with value 0.
+  Before each iteration we check that `i < n`, and terminate the loop if it's 
+  not. After each iteration, we increment the value of `i` by one, using the
+  special prefix operator `++` which increases the value of `i` by 1.
+
+* In C++, vector indices start at 0. I'll say this again because it's so 
+  important: __IN C++, VECTOR INDICES START AT 0__! This is a very common 
+  source of bugs when converting R functions to C++.
+
+* Use `=` for assignment, not `<-`.
+
+* C++ provides operators that modify in-place: `total += x[i]` is equivalent to 
+  `total = total + x[i]`. Similar in-place operators are `-=`, `*=`, and `/=`.
+
+---
+
 ## Rcpp Sugar
 
 With [Rcpp Sugar](http://dirk.eddelbuettel.com/code/rcpp/Rcpp-sugar.pdf), you have accessed to some R-like vectorized functions:
 
-```{Rcpp, echo=TRUE}
+```{Rcpp, echo=TRUE, cache=TRUE}
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -157,11 +201,13 @@ double sumCS(const NumericVector& x) {
 }
 ```
 
+There are many [R functions available in Rcpp](https://thecoatlessprofessor.com/programming/unofficial-rcpp-api-documentation/#sugar).
+
 ---
 
 ## Yet other possibilities
 
-```{Rcpp, echo=TRUE}
+```{Rcpp, echo=TRUE, cache=TRUE}
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -197,6 +243,152 @@ microbenchmark::microbenchmark(
   "C IT"   = sumC2(x),
   "C STD"  = sumC3(x)
 )
+```
+
+---
+
+## Which R functions does this implement? (1/5)
+
+```{Rcpp, echo=TRUE, cache=TRUE}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double f1(NumericVector x) {
+  
+  int n = x.size();
+  double y = 0;
+
+  for (int i = 0; i < n; i++) {
+    y += x[i];
+  }
+  
+  return y / n;
+}
+```
+
+---
+
+## Which R functions does this implement? (2/5)
+
+```{Rcpp, echo=TRUE, cache=TRUE}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericVector f2(NumericVector x) {
+  
+  int n = x.size();
+  NumericVector out(n);
+
+  out[0] = x[0];
+  for (int i = 1; i < n; i++) {
+    out[i] = out[i - 1] + x[i];
+  }
+  
+  return out;
+}
+```
+
+---
+
+## Which R functions does this implement? (3/5)
+
+```{Rcpp, echo=TRUE, cache=TRUE}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+bool f3(LogicalVector x) {
+  
+  int n = x.size();
+
+  for (int i = 0; i < n; i++) {
+    if (x[i]) return true;
+  }
+  
+  return false;
+}
+```
+
+---
+
+## Which R functions does this implement? (4/5)
+
+```{Rcpp, echo=TRUE, cache=TRUE}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericVector f4(List x) {
+  
+  int n = x.size();
+  NumericVector res(n);
+
+  for (int i = 0; i < n; i++) {
+    res[i] = mean( as<NumericVector>(x[i]) );
+  }
+  
+  return res;
+}
+```
+
+---
+
+## Which R functions does this implement? (5/5)
+
+```{Rcpp, echo=TRUE, cache=TRUE}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericVector f5(NumericVector x, NumericVector y) {
+  
+  // Recycling
+  int n = std::max(x.size(), y.size());
+  NumericVector x1 = rep_len(x, n);
+  NumericVector y1 = rep_len(y, n);
+
+  NumericVector out(n);
+
+  for (int i = 0; i < n; i++) {
+    out[i] = std::min(x1[i], y1[i]);
+  }
+
+  return out;
+}
+```
+
+---
+
+## Which R functions does this implement? Answers
+
+```{r, echo=TRUE}
+x <- runif(100)
+stopifnot(isTRUE(all.equal(f1(x), mean(x))))
+```
+
+```{r, echo=TRUE}
+stopifnot(isTRUE(all.equal(f2(x), cumsum(x))))
+```
+
+```{r, echo=TRUE}
+x2 <- rep(FALSE, 10)
+stopifnot(isTRUE(all.equal(f3(x2), any(x2))))
+x2[1] <- TRUE
+stopifnot(isTRUE(all.equal(f3(x2), any(x2))))
+x2[] <- TRUE
+stopifnot(isTRUE(all.equal(f3(x2), any(x2))))
+```
+
+```{r, echo=TRUE}
+x3 <- lapply(1:10, runif)
+stopifnot(isTRUE(all.equal(f4(x3), sapply(x3, mean))))
+```
+
+```{r, echo=TRUE}
+x4 <- runif(11)
+stopifnot(isTRUE(all.equal(f5(x, x4), pmin(x, x4))))
 ```
 
 ---
@@ -244,7 +436,7 @@ This function is difficult to vectorize because iterations depend on previous on
 
 ### Recode it in Rcpp
 
-```{Rcpp, echo=TRUE}
+```{Rcpp, echo=TRUE, cache=TRUE}
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -286,18 +478,85 @@ microbenchmark::microbenchmark(
 
 ## Other Rcpp code examples
 
-See [these examples](https://github.com/hadley/adv-r/tree/master/extras/cpp) from the [Advanced R book](https://adv-r.hadley.nz/):
-
+<a href="https://github.com/hadley/adv-r/blob/master/extras/cpp" target="_blank">
 ```{r}
 webshot::webshot("https://github.com/hadley/adv-r/blob/master/extras/cpp")
+```
+</a>
+
+---
+
+## Two traps in one
+
+```{Rcpp, echo=TRUE, cache=TRUE}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+void copy_vec(NumericVector x) {
+  NumericVector y = x;
+  y[0] = 100;
+}
+```
+
+```{r, echo=TRUE}
+x2 <- runif(10)
+copy_vec(x2)
+x2
+x1 <- 1:10
+copy_vec(x1)
+x1
 ```
 
 ---
 
-## Available "math" functions
+## Two traps in one, explanation
 
-```{r}
-webshot::webshot("https://github.com/RcppCore/Rcpp/blob/master/inst/include/Rcpp/Rmath.h")
+- R objects are always passed by reference in Rcpp (even without the `&`). Use `clone()` to get a copy.
+
+- But if e.g. passing a vector of type integer (`1:10`) as a NumericVector (type double), the vector will be copied (and casted to type double).
+
+```{Rcpp, echo=TRUE, cache=TRUE}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+void copy_vec2(NumericVector x) {
+  NumericVector y = clone(x);
+  y[0] = 100;
+}
+```
+
+```{r, echo=TRUE}
+x2 <- runif(10)
+copy_vec2(x2)
+x2
+```
+
+---
+
+## Yet another trap (of C++)
+
+```{Rcpp, echo=TRUE, cache=TRUE}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double int_div() {
+  int x = 2, y = 3;
+  double z = x / y;
+  return z;
+}
+
+// [[Rcpp::export]]
+double int_div2() {
+  int x = 2, y = 3;
+  return (double)x / y;
+}
+```
+
+```{r, echo=TRUE}
+c(int_div(), int_div2())
 ```
 
 

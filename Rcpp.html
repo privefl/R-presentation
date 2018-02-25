@@ -5,8 +5,7 @@
     <meta charset="utf-8">
     <meta name="author" content="Florian Privé &amp; Alexis Arnaud" />
     <meta name="date" content="2018-03-15" />
-    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/example.css" rel="stylesheet" />
     <link href="libs/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
   </head>
   <body>
@@ -28,6 +27,28 @@ class: center, middle, inverse, title-slide
 class: center, middle, inverse
 
 # Rcpp
+
+---
+
+## Resources
+
+### Rcpp
+
+- [Advanced R](https://adv-r.hadley.nz/rcpp.html)
+
+- [Rcpp for everyone](https://teuder.github.io/rcpp4everyone_en/)
+
+- [Unofficial Rcpp API Documentation](https://thecoatlessprofessor.com/programming/unofficial-rcpp-api-documentation/)
+
+- [Rcpp Gallery](http://gallery.rcpp.org/)
+
+### RcppArmadillo (linear algebra)
+
+- [RcppArmadillo cheatsheet](https://github.com/petewerner/misc/wiki/RcppArmadillo-cheatsheet)
+
+- [Armadillo documentation](http://arma.sourceforge.net/docs.html)
+
+- [Fix OS X Mavericks "-lgfortran" and "-lquadmath" installation errors](https://thecoatlessprofessor.com/programming/rcpp-rcpparmadillo-and-os-x-mavericks--lgfortran-and--lquadmath-error/)
 
 ---
 
@@ -152,6 +173,27 @@ double sumC1(const NumericVector&amp; x) {
 
 ---
 
+The C++ version is similar, but:
+
+* To find the length of the vector, we use the `.size()` method (or `.length()`),   which returns an integer. C++ methods are called with `.` (i.e., a full stop).
+  
+* The `for` statement has a different syntax: `for(init; check; increment)`. 
+  This loop is initialised by creating a new variable called `i` with value 0.
+  Before each iteration we check that `i &lt; n`, and terminate the loop if it's 
+  not. After each iteration, we increment the value of `i` by one, using the
+  special prefix operator `++` which increases the value of `i` by 1.
+
+* In C++, vector indices start at 0. I'll say this again because it's so 
+  important: __IN C++, VECTOR INDICES START AT 0__! This is a very common 
+  source of bugs when converting R functions to C++.
+
+* Use `=` for assignment, not `&lt;-`.
+
+* C++ provides operators that modify in-place: `total += x[i]` is equivalent to 
+  `total = total + x[i]`. Similar in-place operators are `-=`, `*=`, and `/=`.
+
+---
+
 ## Rcpp Sugar
 
 With [Rcpp Sugar](http://dirk.eddelbuettel.com/code/rcpp/Rcpp-sugar.pdf), you have accessed to some R-like vectorized functions:
@@ -166,6 +208,8 @@ double sumCS(const NumericVector&amp; x) {
   return sum(x);
 }
 ```
+
+There are many [R functions available in Rcpp](https://thecoatlessprofessor.com/programming/unofficial-rcpp-api-documentation/#sugar).
 
 ---
 
@@ -213,13 +257,173 @@ microbenchmark::microbenchmark(
 
 ```
 ## Unit: microseconds
-##    expr      min        lq       mean    median        uq      max neval
-##  R LOOP 3401.619 3421.7330 3625.28313 3469.1900 3600.7010 5906.405   100
-##   R VEC   84.019   84.7180   90.83912   86.1850   89.7125  146.598   100
-##  C LOOP   84.718   86.2195   95.31667   87.7565   89.8160  682.769   100
-##   C VEC   85.068   85.8705   94.40654   87.5115   89.7465  660.280   100
-##    C IT  252.477  253.4895  281.72076  256.6325  266.4450 1014.306   100
-##   C STD   85.416   86.2550   96.80497   87.5820   92.0165  749.398   100
+##    expr      min       lq       mean    median        uq      max neval cld
+##  R LOOP 3928.685 4191.899 4422.94922 4342.5440 4568.5115 6825.039   100   c
+##   R VEC   77.805   79.461   86.54304   83.5995   85.7520  164.882   100 a  
+##  C LOOP   79.792   80.620   95.39975   83.9310   89.2285  677.736   100 a  
+##   C VEC   80.123   80.455   94.31362   85.0900   92.7040  652.905   100 a  
+##    C IT  264.870  265.698  294.18796  267.1880  287.5500  989.290   100  b 
+##   C STD   78.468   80.455   97.32990   81.7790   85.9175 1145.894   100 a
+```
+
+---
+
+## Which R functions does this implement? (1/5)
+
+
+```cpp
+#include &lt;Rcpp.h&gt;
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double f1(NumericVector x) {
+  
+  int n = x.size();
+  double y = 0;
+
+  for (int i = 0; i &lt; n; i++) {
+    y += x[i];
+  }
+  
+  return y / n;
+}
+```
+
+---
+
+## Which R functions does this implement? (2/5)
+
+
+```cpp
+#include &lt;Rcpp.h&gt;
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericVector f2(NumericVector x) {
+  
+  int n = x.size();
+  NumericVector out(n);
+
+  out[0] = x[0];
+  for (int i = 1; i &lt; n; i++) {
+    out[i] = out[i - 1] + x[i];
+  }
+  
+  return out;
+}
+```
+
+---
+
+## Which R functions does this implement? (3/5)
+
+
+```cpp
+#include &lt;Rcpp.h&gt;
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+bool f3(LogicalVector x) {
+  
+  int n = x.size();
+
+  for (int i = 0; i &lt; n; i++) {
+    if (x[i]) return true;
+  }
+  
+  return false;
+}
+```
+
+---
+
+## Which R functions does this implement? (4/5)
+
+
+```cpp
+#include &lt;Rcpp.h&gt;
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericVector f4(List x) {
+  
+  int n = x.size();
+  NumericVector res(n);
+
+  for (int i = 0; i &lt; n; i++) {
+    res[i] = mean( as&lt;NumericVector&gt;(x[i]) );
+  }
+  
+  return res;
+}
+```
+
+---
+
+## Which R functions does this implement? (5/5)
+
+
+```cpp
+#include &lt;Rcpp.h&gt;
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericVector f5(NumericVector x, NumericVector y) {
+  
+  // Recycling
+  int n = std::max(x.size(), y.size());
+  NumericVector x1 = rep_len(x, n);
+  NumericVector y1 = rep_len(y, n);
+
+  NumericVector out(n);
+
+  for (int i = 0; i &lt; n; i++) {
+    out[i] = std::min(x1[i], y1[i]);
+  }
+
+  return out;
+}
+```
+
+---
+
+## Which R functions does this implement? Answers
+
+
+```r
+x &lt;- runif(100)
+stopifnot(isTRUE(all.equal(f1(x), mean(x))))
+```
+
+
+```r
+stopifnot(isTRUE(all.equal(f2(x), cumsum(x))))
+```
+
+
+```r
+x2 &lt;- rep(FALSE, 10)
+stopifnot(isTRUE(all.equal(f3(x2), any(x2))))
+x2[1] &lt;- TRUE
+stopifnot(isTRUE(all.equal(f3(x2), any(x2))))
+x2[] &lt;- TRUE
+stopifnot(isTRUE(all.equal(f3(x2), any(x2))))
+```
+
+
+```r
+x3 &lt;- lapply(1:10, runif)
+stopifnot(isTRUE(all.equal(f4(x3), sapply(x3, mean))))
+```
+
+
+```r
+x4 &lt;- runif(11)
+stopifnot(isTRUE(all.equal(f5(x, x4), pmin(x, x4))))
+```
+
+```
+## Warning in pmin(x, x4): an argument will be fractionally recycled
 ```
 
 ---
@@ -310,31 +514,127 @@ microbenchmark::microbenchmark(
 
 ```
 ## Unit: microseconds
-##                 expr       min         lq       mean    median         uq
-##     gibbs_r(100, 10)  3200.685  3662.1265  4757.8520  4354.078  4644.6180
-##   gibbs_cpp(100, 10)   229.429   252.9305   279.6339   261.312   275.0005
-##    gibbs_r(1000, 10) 36778.891 39952.3725 44088.4365 41359.534 42905.7145
-##  gibbs_cpp(1000, 10)  2355.537  2495.7775  2755.4866  2543.025  2618.3840
-##        max neval
-##  49578.767   100
-##   1139.181   100
-##  96332.944   100
-##   6361.770   100
+##                 expr       min         lq       mean    median        uq
+##     gibbs_r(100, 10)  3056.931  3221.6480  4050.2671  3521.117  5109.509
+##   gibbs_cpp(100, 10)   209.579   238.7145   254.4277   246.164   263.215
+##    gibbs_r(1000, 10) 36485.850 38314.6125 42180.2316 38819.189 39407.697
+##  gibbs_cpp(1000, 10)  2259.011  2343.4385  2574.3616  2440.778  2615.757
+##         max neval cld
+##   15529.332   100  b 
+##     402.271   100 a  
+##  147122.402   100   c
+##    4932.874   100 ab
 ```
 
 ---
 
 ## Other Rcpp code examples
 
-See [these examples](https://github.com/hadley/adv-r/tree/master/extras/cpp) from the [Advanced R book](https://adv-r.hadley.nz/):
-
-&lt;img src="Rcpp_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;a href="https://github.com/hadley/adv-r/blob/master/extras/cpp" target="_blank"&gt;
+&lt;img src="Rcpp_files/figure-html/unnamed-chunk-25-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;/a&gt;
 
 ---
 
-## Available "math" functions
+## Two traps in one
 
-&lt;img src="Rcpp_files/figure-html/unnamed-chunk-16-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+```cpp
+#include &lt;Rcpp.h&gt;
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+void copy_vec(NumericVector x) {
+  NumericVector y = x;
+  y[0] = 100;
+}
+```
+
+
+```r
+x2 &lt;- runif(10)
+copy_vec(x2)
+x2
+```
+
+```
+##  [1] 1.000000e+02 2.800139e-01 7.037642e-01 8.331847e-02 4.322862e-01
+##  [6] 5.122568e-03 6.033713e-01 2.419494e-02 5.343699e-01 7.640610e-01
+```
+
+```r
+x1 &lt;- 1:10
+copy_vec(x1)
+x1
+```
+
+```
+##  [1]  1  2  3  4  5  6  7  8  9 10
+```
+
+---
+
+## Two traps in one, explanation
+
+- R objects are always passed by reference in Rcpp (even without the `&amp;`). Use `clone()` to get a copy.
+
+- But if e.g. passing a vector of type integer (`1:10`) as a NumericVector (type double), the vector will be copied (and casted to type double).
+
+
+```cpp
+#include &lt;Rcpp.h&gt;
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+void copy_vec2(NumericVector x) {
+  NumericVector y = clone(x);
+  y[0] = 100;
+}
+```
+
+
+```r
+x2 &lt;- runif(10)
+copy_vec2(x2)
+x2
+```
+
+```
+##  [1] 0.3264166 0.1571657 0.8829253 0.8761071 0.9989693 0.5420591 0.4623538
+##  [8] 0.6239972 0.2195481 0.4516819
+```
+
+---
+
+## Yet another trap (of C++)
+
+
+```cpp
+#include &lt;Rcpp.h&gt;
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double int_div() {
+  int x = 2, y = 3;
+  double z = x / y;
+  return z;
+}
+
+// [[Rcpp::export]]
+double int_div2() {
+  int x = 2, y = 3;
+  return (double)x / y;
+}
+```
+
+
+```r
+c(int_div(), int_div2())
+```
+
+```
+## [1] 0.0000000 0.6666667
+```
 
 
 ---
@@ -361,15 +661,8 @@ https://privefl.github.io/R-presentation/Rcpp.html
 "highlightLines": true,
 "countIncrementalSlides": false
 });
-if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
-  window.dispatchEvent(new Event('resize'));
-});
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
-  if (!r) return;
-  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
-  d.head.appendChild(s);
-})();</script>
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
+(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 <script type="text/x-mathjax-config">
