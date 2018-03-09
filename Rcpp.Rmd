@@ -1,7 +1,7 @@
 ---
-title: "Fast code: R(cpp)"
+title: "Rcpp"
 subtitle: "https://privefl.github.io/R-presentation/Rcpp.html"
-author: "Florian Privé & Alexis Arnaud"
+author: "Florian Privé"
 date: "March 15, 2018"
 output:
   xaringan::moon_reader:
@@ -17,13 +17,13 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, fig.align = "center", dev = "svg",
                       out.width = "80%")
-options(width = 80)
+options(width = 70)
 Sys.setenv(LANGUAGE = "en")
 ```
 
 class: center, middle, inverse
 
-# Rcpp
+# Introduction
 
 ---
 
@@ -35,9 +35,9 @@ class: center, middle, inverse
 
 - [Rcpp for everyone](https://teuder.github.io/rcpp4everyone_en/)
 
-- [Unofficial Rcpp API Documentation](https://thecoatlessprofessor.com/programming/unofficial-rcpp-api-documentation/)
-
 - [Rcpp Gallery](http://gallery.rcpp.org/)
+
+<br>
 
 ### RcppArmadillo (linear algebra)
 
@@ -53,7 +53,7 @@ class: center, middle, inverse
 
 <br>
 
-Rcpp lives between R and C++, bringing 
+Rcpp lives between R and C++, so that you can get 
 
 - the *performance of C++* and
 
@@ -67,9 +67,9 @@ As
 
 - I also enjoy *simplicity*, 
 
-Rcpp may be my favorite R package.
+Rcpp might be my favorite R package.
 
-.footnote[I often speak about Rcpp as if it was a programming language.]
+.footnote[I often speak about Rcpp as if it were a programming language.]
 
 ---
 
@@ -83,7 +83,7 @@ Learn more at https://support.rstudio.com/hc/en-us/articles/200486088-Using-Rcpp
 
 ---
 
-## First example: testing if number is odd
+## First main example: testing if number is odd
 
 In R:
 
@@ -129,11 +129,11 @@ knitr::include_graphics("rcpp-graphical.png")
 knitr::include_graphics("rcpp-file.png")
 ```
 
-.footnote[Source: compile the Rcpp function and execute the block of R code.]
+.footnote[<mark>Source</mark>: compile the Rcpp function and execute the block of R code.]
 
 ---
 
-## Second example: sum of a vector
+## Second main example: sum of a vector
 
 ```{r, echo=TRUE}
 sumR <- function(x) {
@@ -199,7 +199,7 @@ double sumCS(const NumericVector& x) {
 }
 ```
 
-There are many [R functions available in Rcpp](https://thecoatlessprofessor.com/programming/unofficial-rcpp-api-documentation/#sugar).
+There are many [R-like functions available in Rcpp](https://teuder.github.io/rcpp4everyone_en/210_rcpp_functions.html).
 
 ---
 
@@ -208,6 +208,7 @@ There are many [R functions available in Rcpp](https://thecoatlessprofessor.com/
 ```{Rcpp, echo=TRUE, cache=TRUE}
 #include <Rcpp.h>
 using namespace Rcpp;
+
 
 // [[Rcpp::export]]
 double sumC2(const NumericVector& x) {
@@ -219,6 +220,7 @@ double sumC2(const NumericVector& x) {
   }
   return total;
 }
+
 
 // [[Rcpp::export]]
 double sumC3(const NumericVector& x) {
@@ -267,6 +269,12 @@ htmlTable::htmlTable(
 <br>
 
 There are also `List` and `DataFrame` (but prefer using `List`).
+
+---
+
+class: center, middle, inverse
+
+# Quiz
 
 ---
 
@@ -369,13 +377,13 @@ NumericVector f5(NumericVector x, NumericVector y) {
   
   // Recycling
   int n = std::max(x.size(), y.size());
-  NumericVector x1 = rep_len(x, n);
-  NumericVector y1 = rep_len(y, n);
+  NumericVector x_rep = rep_len(x, n);
+  NumericVector y_rep = rep_len(y, n);
 
   NumericVector out(n);
 
   for (int i = 0; i < n; i++) {
-    out[i] = std::min(x1[i], y1[i]);
+    out[i] = std::min(x_rep[i], y_rep[i]);
   }
 
   return out;
@@ -416,9 +424,17 @@ stopifnot(isTRUE(all.equal(f5(x, x4), pmin(x, x4))))
 
 ---
 
+class: center, middle, inverse
+
+# More
+
+---
+
 ## Use of C++ code when needed
 
-More infos [there](http://adv-r.had.co.nz/Rcpp.html).
+.footnote[More infos [there](http://adv-r.had.co.nz/Rcpp.html).]
+
+<br>
 
 Typical bottlenecks that C++ can address include:
 
@@ -431,7 +447,7 @@ The overhead of calling a function in C++ is much lower than that in R.
 
 ---
 
-## Third example: Gibbs sampler
+## Third main example: Gibbs sampler
 
 ```{r, echo=TRUE}
 gibbs_r <- function(N, thin) {
@@ -453,7 +469,7 @@ gibbs_r <- function(N, thin) {
 
 <br>
 
-This function is difficult to vectorize because iterations depend on previous ones.
+This function can't be vectorized because iterations depend on previous ones.
 
 ---
 
@@ -471,7 +487,7 @@ NumericMatrix gibbs_cpp(int N, int thin) {
 
   for(int i = 0; i < N; i++) {
     for(int j = 0; j < thin; j++) {
-      x = rgamma(1, 3, 1 / (y * y + 4))[0];
+      x = rgamma(1, 3, 1 / (y * y + 4))[0]; // 3rd param -> inverse
       y = rnorm(1, 1 / (x + 1), 1 / sqrt(2 * (x + 1)))[0];
     }
     mat(0, i) = x;
@@ -499,7 +515,7 @@ microbenchmark::microbenchmark(
 
 ---
 
-## Other Rcpp code examples
+## Other examples of Rcpp code
 
 <a href="https://github.com/hadley/adv-r/blob/master/extras/cpp" target="_blank">
 ```{r}
@@ -606,6 +622,68 @@ double int_div2() {
 c(int_div(), int_div2())
 ```
 
+---
+
+class: center, middle, inverse
+
+# Rcpp in a R package
+
+
+---
+
+## Create a package (in RStudio)
+
+```{r, echo=TRUE, eval=FALSE}
+# In a new RStudio project, run
+usethis::use_description()
+usethis::use_namespace()
+usethis::use_package_doc()
+usethis::use_roxygen_md()
+```
+
+**Restart RStudio** and change the following options:
+
+```{r, out.width="50%"}
+knitr::include_graphics("build-doc.png")
+```
+
+---
+
+## Add Rcpp to your package
+
+```{r, echo=TRUE, eval=FALSE}
+usethis::use_rcpp()
+```
+
+```{r, echo=TRUE, eval=FALSE}
+✔ Adding 'Rcpp' to LinkingTo field in DESCRIPTION
+✔ Adding 'Rcpp' to Imports field in DESCRIPTION
+✔ Creating 'src/'
+✔ Adding '*.o', '*.so', '*.dll' to 'src/.gitignore'
+● Include the following roxygen tags somewhere in your package
+  #' @useDynLib testpkg, .registration = TRUE
+  #' @importFrom Rcpp sourceCpp
+  NULL
+● Run document()  ## forget that
+```
+
++ create a new Rcpp file and save it in `src/`.
+
+.footnote[Put the 2 roxygen tags in the `R/testpkg-package.R`.]
+
+---
+
+## Build your package and learn more
+
+Use Ctrl/Cmd + Shift + B to document and build your package.
+
+Learn more with
+
+<a href="http://r-pkgs.had.co.nz/" target="_blank">
+```{r}
+webshot::webshot("http://r-pkgs.had.co.nz/")
+```
+</a>
 
 ---
 

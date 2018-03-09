@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Fast code: R(cpp)</title>
+    <title>Rcpp</title>
     <meta charset="utf-8">
-    <meta name="author" content="Florian Privé &amp; Alexis Arnaud" />
+    <meta name="author" content="Florian Privé" />
     <meta name="date" content="2018-03-15" />
-    <link href="libs/remark-css-0.0.1/example.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <link href="libs/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Fast code: R(cpp)
+# Rcpp
 ## <a href="https://privefl.github.io/R-presentation/Rcpp.html" class="uri">https://privefl.github.io/R-presentation/Rcpp.html</a>
-### Florian Privé &amp; Alexis Arnaud
+### Florian Privé
 ### March 15, 2018
 
 ---
@@ -24,7 +25,7 @@ class: center, middle, inverse, title-slide
 
 class: center, middle, inverse
 
-# Rcpp
+# Introduction
 
 ---
 
@@ -36,9 +37,9 @@ class: center, middle, inverse
 
 - [Rcpp for everyone](https://teuder.github.io/rcpp4everyone_en/)
 
-- [Unofficial Rcpp API Documentation](https://thecoatlessprofessor.com/programming/unofficial-rcpp-api-documentation/)
-
 - [Rcpp Gallery](http://gallery.rcpp.org/)
+
+&lt;br&gt;
 
 ### RcppArmadillo (linear algebra)
 
@@ -54,7 +55,7 @@ class: center, middle, inverse
 
 &lt;br&gt;
 
-Rcpp lives between R and C++, bringing 
+Rcpp lives between R and C++, so that you can get 
 
 - the *performance of C++* and
 
@@ -68,9 +69,9 @@ As
 
 - I also enjoy *simplicity*, 
 
-Rcpp may be my favorite R package.
+Rcpp might be my favorite R package.
 
-.footnote[I often speak about Rcpp as if it was a programming language.]
+.footnote[I often speak about Rcpp as if it were a programming language.]
 
 ---
 
@@ -82,7 +83,7 @@ Learn more at https://support.rstudio.com/hc/en-us/articles/200486088-Using-Rcpp
 
 ---
 
-## First example: testing if number is odd
+## First main example: testing if number is odd
 
 In R:
 
@@ -134,11 +135,11 @@ c(is_odd_r(),   is_odd_cpp(),
 
 &lt;img src="rcpp-file.png" width="80%" style="display: block; margin: auto;" /&gt;
 
-.footnote[Source: compile the Rcpp function and execute the block of R code.]
+.footnote[&lt;mark&gt;Source&lt;/mark&gt;: compile the Rcpp function and execute the block of R code.]
 
 ---
 
-## Second example: sum of a vector
+## Second main example: sum of a vector
 
 
 ```r
@@ -207,7 +208,7 @@ double sumCS(const NumericVector&amp; x) {
 }
 ```
 
-There are many [R functions available in Rcpp](https://thecoatlessprofessor.com/programming/unofficial-rcpp-api-documentation/#sugar).
+There are many [R-like functions available in Rcpp](https://teuder.github.io/rcpp4everyone_en/210_rcpp_functions.html).
 
 ---
 
@@ -217,6 +218,7 @@ There are many [R functions available in Rcpp](https://thecoatlessprofessor.com/
 ```cpp
 #include &lt;Rcpp.h&gt;
 using namespace Rcpp;
+
 
 // [[Rcpp::export]]
 double sumC2(const NumericVector&amp; x) {
@@ -228,6 +230,7 @@ double sumC2(const NumericVector&amp; x) {
   }
   return total;
 }
+
 
 // [[Rcpp::export]]
 double sumC3(const NumericVector&amp; x) {
@@ -255,13 +258,20 @@ microbenchmark::microbenchmark(
 
 ```
 ## Unit: microseconds
-##    expr      min       lq       mean    median        uq      max neval cld
-##  R LOOP 3959.476 4136.939 4332.82056 4256.6270 4496.5005 7050.178   100   c
-##   R VEC   79.130   79.296   89.67519   79.7920   86.9105  161.570   100 a  
-##  C LOOP   78.468   80.454   94.73744   80.7855   91.5455  721.109   100 a  
-##   C VEC   79.792   80.454   98.18413   80.6200   86.2485 1078.684   100 a  
-##    C IT  264.870  265.532  296.44262  270.9950  288.7085  954.526   100  b 
-##   C STD   80.123   80.454   93.30059   80.7860   85.4205  751.238   100 a
+##    expr      min        lq       mean    median        uq      max
+##  R LOOP 3138.806 3318.0885 3472.91459 3401.1295 3437.2725 7534.963
+##   R VEC   79.829   83.6355   87.49496   86.6740   88.7685  118.730
+##  C LOOP   81.156   85.8005   94.97696   87.8610   89.7115  696.388
+##   C VEC   81.016   86.0100   93.53197   87.7210   88.5240  675.087
+##    C IT  239.416  252.6510  269.09819  260.1250  264.9085 1061.448
+##   C STD   80.877   84.8925   96.30674   87.9305   89.6425  920.438
+##  neval
+##    100
+##    100
+##    100
+##    100
+##    100
+##    100
 ```
 
 ---
@@ -270,46 +280,52 @@ microbenchmark::microbenchmark(
 
 &lt;br&gt;
 
-<table class='gmisc_table' style='border-collapse: collapse; margin-top: 1em; margin-bottom: 1em; margin-left: auto; margin-right: auto' >
-<thead>
-<tr>
-<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; border-right: 1px solid black; text-align: center;'>R</th>
-<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Rcpp (scalar)</th>
-<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Rcpp (vector)</th>
-<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Rcpp (matrix)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style='padding: 10px 20px 10px 20px; border-right: 1px solid black; text-align: center;'>logical</td>
-<td style='padding: 10px 20px 10px 20px; text-align: center;'>bool</td>
-<td style='padding: 10px 20px 10px 20px; text-align: center;'>LogicalVector</td>
-<td style='padding: 10px 20px 10px 20px; text-align: center;'>LogicalMatrix</td>
-</tr>
-<tr>
-<td style='padding: 10px 20px 10px 20px; border-right: 1px solid black; text-align: center;'>integer</td>
-<td style='padding: 10px 20px 10px 20px; text-align: center;'>int</td>
-<td style='padding: 10px 20px 10px 20px; text-align: center;'>IntegerVector</td>
-<td style='padding: 10px 20px 10px 20px; text-align: center;'>IntegerMatrix</td>
-</tr>
-<tr>
-<td style='padding: 10px 20px 10px 20px; border-right: 1px solid black; text-align: center;'>double</td>
-<td style='padding: 10px 20px 10px 20px; text-align: center;'>double</td>
-<td style='padding: 10px 20px 10px 20px; text-align: center;'>NumericVector</td>
-<td style='padding: 10px 20px 10px 20px; text-align: center;'>NumericMatrix</td>
-</tr>
-<tr>
-<td style='padding: 10px 20px 10px 20px; border-bottom: 2px solid grey; border-right: 1px solid black; text-align: center;'>character</td>
-<td style='padding: 10px 20px 10px 20px; border-bottom: 2px solid grey; text-align: center;'>String</td>
-<td style='padding: 10px 20px 10px 20px; border-bottom: 2px solid grey; text-align: center;'>CharacterVector</td>
-<td style='padding: 10px 20px 10px 20px; border-bottom: 2px solid grey; text-align: center;'>CharacterMatrix</td>
-</tr>
-</tbody>
-</table>
+&lt;table class='gmisc_table' style='border-collapse: collapse; margin-top: 1em; margin-bottom: 1em; margin-left: auto; margin-right: auto' &gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style='border-bottom: 1px solid grey; border-top: 2px solid grey; border-right: 1px solid black; text-align: center;'&gt;R&lt;/th&gt;
+&lt;th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'&gt;Rcpp (scalar)&lt;/th&gt;
+&lt;th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'&gt;Rcpp (vector)&lt;/th&gt;
+&lt;th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'&gt;Rcpp (matrix)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style='padding: 10px 20px 10px 20px; border-right: 1px solid black; text-align: center;'&gt;logical&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;bool&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;LogicalVector&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;LogicalMatrix&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style='padding: 10px 20px 10px 20px; border-right: 1px solid black; text-align: center;'&gt;integer&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;int&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;IntegerVector&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;IntegerMatrix&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style='padding: 10px 20px 10px 20px; border-right: 1px solid black; text-align: center;'&gt;double&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;double&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;NumericVector&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;NumericMatrix&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style='padding: 10px 20px 10px 20px; border-bottom: 2px solid grey; border-right: 1px solid black; text-align: center;'&gt;character&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; border-bottom: 2px solid grey; text-align: center;'&gt;String&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; border-bottom: 2px solid grey; text-align: center;'&gt;CharacterVector&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; border-bottom: 2px solid grey; text-align: center;'&gt;CharacterMatrix&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
 &lt;br&gt;
 
 There are also `List` and `DataFrame` (but prefer using `List`).
+
+---
+
+class: center, middle, inverse
+
+# Quiz
 
 ---
 
@@ -417,13 +433,13 @@ NumericVector f5(NumericVector x, NumericVector y) {
   
   // Recycling
   int n = std::max(x.size(), y.size());
-  NumericVector x1 = rep_len(x, n);
-  NumericVector y1 = rep_len(y, n);
+  NumericVector x_rep = rep_len(x, n);
+  NumericVector y_rep = rep_len(y, n);
 
   NumericVector out(n);
 
   for (int i = 0; i &lt; n; i++) {
-    out[i] = std::min(x1[i], y1[i]);
+    out[i] = std::min(x_rep[i], y_rep[i]);
   }
 
   return out;
@@ -473,9 +489,17 @@ stopifnot(isTRUE(all.equal(f5(x, x4), pmin(x, x4))))
 
 ---
 
+class: center, middle, inverse
+
+# More
+
+---
+
 ## Use of C++ code when needed
 
-More infos [there](http://adv-r.had.co.nz/Rcpp.html).
+.footnote[More infos [there](http://adv-r.had.co.nz/Rcpp.html).]
+
+&lt;br&gt;
 
 Typical bottlenecks that C++ can address include:
 
@@ -484,11 +508,11 @@ The overhead of calling a function in C++ is much lower than that in R.
 
 - Loops that **can’t be easily vectorised** because subsequent iterations depend on previous ones.
 
-- Problems that require **advanced data structures** and algorithms that R doesn’t provide. Through the standard template library (STL), C++ has efficient implementations of many important data structures, from ordered maps to double-ended queues.
+- Problems that require **advanced data structures** and algorithms that R doesn’t provide. Through the standard template library (STL), C++ has efficient implementations of many important data structures, from ordered maps to double-ended queues. See [this chapter](https://adv-r.hadley.nz/rcpp.html#stl).
 
 ---
 
-## Third example: Gibbs sampler
+## Third main example: Gibbs sampler
 
 
 ```r
@@ -511,7 +535,7 @@ gibbs_r &lt;- function(N, thin) {
 
 &lt;br&gt;
 
-This function is difficult to vectorize because iterations depend on previous ones.
+This function can't be vectorized because iterations depend on previous ones.
 
 ---
 
@@ -530,7 +554,7 @@ NumericMatrix gibbs_cpp(int N, int thin) {
 
   for(int i = 0; i &lt; N; i++) {
     for(int j = 0; j &lt; thin; j++) {
-      x = rgamma(1, 3, 1 / (y * y + 4))[0];
+      x = rgamma(1, 3, 1 / (y * y + 4))[0]; // 3rd param -&gt; inverse
       y = rnorm(1, 1 / (x + 1), 1 / sqrt(2 * (x + 1)))[0];
     }
     mat(0, i) = x;
@@ -559,21 +583,21 @@ microbenchmark::microbenchmark(
 
 ```
 ## Unit: microseconds
-##                 expr       min        lq       mean    median         uq
-##     gibbs_r(100, 10)  3039.384  3239.195  4092.6795  3467.977  5188.3080
-##   gibbs_cpp(100, 10)   216.531   237.721   261.4633   250.633   266.1945
-##    gibbs_r(1000, 10) 36197.472 38634.277 42508.1837 39292.810 39872.0480
-##  gibbs_cpp(1000, 10)  2252.389  2391.942  2566.6206  2472.894  2644.5620
-##         max neval cld
-##   11669.181   100  b 
-##     450.610   100 a  
-##  150523.996   100   c
-##    4480.277   100 ab
+##                 expr       min         lq       mean     median
+##     gibbs_r(100, 10)  3092.571  3440.5205  4476.3115  4195.1900
+##   gibbs_cpp(100, 10)   220.839   247.8325   258.6879   258.6225
+##    gibbs_r(1000, 10) 36381.495 38726.5540 42639.1580 40850.0075
+##  gibbs_cpp(1000, 10)  2243.162  2405.6480  2493.3494  2464.1050
+##          uq       max neval
+##   4572.2630 46529.288   100
+##    269.4835   345.156   100
+##  42542.8545 83864.254   100
+##   2552.0700  3545.143   100
 ```
 
 ---
 
-## Other Rcpp code examples
+## Other examples of Rcpp code
 
 &lt;a href="https://github.com/hadley/adv-r/blob/master/extras/cpp" target="_blank"&gt;
 &lt;img src="Rcpp_files/figure-html/unnamed-chunk-26-1.png" width="80%" style="display: block; margin: auto;" /&gt;
@@ -637,8 +661,8 @@ x2
 ```
 
 ```
-##  [1] 100.0000000   0.9462354   0.9927251   0.7258655   0.7427234   0.6394591
-##  [7]   0.1603984   0.3347575   0.3893750   0.2275801
+##  [1] 100.00000000   0.08333304   0.63204809   0.16397996   0.45504817
+##  [6]   0.18900169   0.27341996   0.01693553   0.36999306   0.28353824
 ```
 
 ```r
@@ -679,8 +703,8 @@ x2
 ```
 
 ```
-##  [1] 0.58495384 0.93645571 0.35702787 0.36767888 0.04819894 0.36308697
-##  [7] 0.84160093 0.09573603 0.72204076 0.52385095
+##  [1] 0.08778575 0.06827137 0.20001904 0.92785979 0.35420080 0.96781683
+##  [7] 0.98145374 0.57127225 0.23096659 0.89754860
 ```
 
 ---
@@ -715,6 +739,67 @@ c(int_div(), int_div2())
 ## [1] 0.0000000 0.6666667
 ```
 
+---
+
+class: center, middle, inverse
+
+# Rcpp in a R package
+
+
+---
+
+## Create a package (in RStudio)
+
+
+```r
+# In a new RStudio project, run
+usethis::use_description()
+usethis::use_namespace()
+usethis::use_package_doc()
+usethis::use_roxygen_md()
+```
+
+**Restart RStudio** and change the following options:
+
+&lt;img src="build-doc.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Add Rcpp to your package
+
+
+```r
+usethis::use_rcpp()
+```
+
+
+```r
+✔ Adding 'Rcpp' to LinkingTo field in DESCRIPTION
+✔ Adding 'Rcpp' to Imports field in DESCRIPTION
+✔ Creating 'src/'
+✔ Adding '*.o', '*.so', '*.dll' to 'src/.gitignore'
+● Include the following roxygen tags somewhere in your package
+  #' @useDynLib testpkg, .registration = TRUE
+  #' @importFrom Rcpp sourceCpp
+  NULL
+● Run document()  ## forget that
+```
+
++ create a new Rcpp file and save it in `src/`.
+
+.footnote[Put the 2 roxygen tags in the `R/testpkg-package.R`.]
+
+---
+
+## Build your package and learn more
+
+Use Ctrl/Cmd + Shift + B to document and build your package.
+
+Learn more with
+
+&lt;a href="http://r-pkgs.had.co.nz/" target="_blank"&gt;
+&lt;img src="Rcpp_files/figure-html/unnamed-chunk-39-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;/a&gt;
 
 ---
 
@@ -740,8 +825,15 @@ https://privefl.github.io/R-presentation/Rcpp.html
 "highlightLines": true,
 "countIncrementalSlides": false
 });
-if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
-(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 <script type="text/x-mathjax-config">
