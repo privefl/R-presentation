@@ -259,12 +259,12 @@ microbenchmark::microbenchmark(
 ```
 ## Unit: microseconds
 ##    expr      min        lq       mean    median        uq      max
-##  R LOOP 3138.806 3318.0885 3472.91459 3401.1295 3437.2725 7534.963
-##   R VEC   79.829   83.6355   87.49496   86.6740   88.7685  118.730
-##  C LOOP   81.156   85.8005   94.97696   87.8610   89.7115  696.388
-##   C VEC   81.016   86.0100   93.53197   87.7210   88.5240  675.087
-##    C IT  239.416  252.6510  269.09819  260.1250  264.9085 1061.448
-##   C STD   80.877   84.8925   96.30674   87.9305   89.6425  920.438
+##  R LOOP 3134.336 3250.7265 3378.87982 3305.4825 3346.9330 6336.627
+##   R VEC   79.969   82.5180   85.80910   84.7530   87.2675  113.841
+##  C LOOP   80.947   84.5440   94.45761   86.0805   88.5250  797.519
+##   C VEC   81.016   84.5785   97.40682   86.9880   90.3755  942.089
+##    C IT  239.557  246.3310  264.97422  254.4670  262.5690  938.877
+##   C STD   80.877   84.8930   94.15796   86.7435   89.1885  708.121
 ##  neval
 ##    100
 ##    100
@@ -584,15 +584,15 @@ microbenchmark::microbenchmark(
 ```
 ## Unit: microseconds
 ##                 expr       min         lq       mean     median
-##     gibbs_r(100, 10)  3092.571  3440.5205  4476.3115  4195.1900
-##   gibbs_cpp(100, 10)   220.839   247.8325   258.6879   258.6225
-##    gibbs_r(1000, 10) 36381.495 38726.5540 42639.1580 40850.0075
-##  gibbs_cpp(1000, 10)  2243.162  2405.6480  2493.3494  2464.1050
+##     gibbs_r(100, 10)  3087.822  3429.0660  4005.6045  4023.5205
+##   gibbs_cpp(100, 10)   222.724   242.0355   252.8665   251.8485
+##    gibbs_r(1000, 10) 35784.143 36916.6185 41434.4586 37874.3515
+##  gibbs_cpp(1000, 10)  2199.162  2353.6160  2514.9205  2443.9205
 ##          uq       max neval
-##   4572.2630 46529.288   100
-##    269.4835   345.156   100
-##  42542.8545 83864.254   100
-##   2552.0700  3545.143   100
+##   4479.5135  5507.542   100
+##    262.4645   285.093   100
+##  41734.1625 86141.988   100
+##   2513.8315  5771.751   100
 ```
 
 ---
@@ -661,8 +661,8 @@ x2
 ```
 
 ```
-##  [1] 100.00000000   0.08333304   0.63204809   0.16397996   0.45504817
-##  [6]   0.18900169   0.27341996   0.01693553   0.36999306   0.28353824
+##  [1] 100.0000000   0.1722009   0.4502539   0.4578256   0.6040037
+##  [6]   0.5078291   0.8727088   0.2593041   0.7335699   0.1477003
 ```
 
 ```r
@@ -703,8 +703,8 @@ x2
 ```
 
 ```
-##  [1] 0.08778575 0.06827137 0.20001904 0.92785979 0.35420080 0.96781683
-##  [7] 0.98145374 0.57127225 0.23096659 0.89754860
+##  [1] 0.4789577 0.4457252 0.1286255 0.3970528 0.4123097 0.8911669
+##  [7] 0.4383508 0.0320609 0.3473946 0.4415643
 ```
 
 ---
@@ -787,19 +787,81 @@ usethis::use_rcpp()
 
 + create a new Rcpp file and save it in `src/`.
 
-.footnote[Put the 2 roxygen tags in the `R/testpkg-package.R`.]
+.footnote[Put the two roxygen tags in the `R/testpkg-package.R`.]
 
 ---
 
 ## Build your package and learn more
 
-Use Ctrl/Cmd + Shift + B to document and build your package.
+Use `Ctrl/Cmd + Shift + B` to document and build your package.
 
-Learn more with
+**Learn more** with
 
 &lt;a href="http://r-pkgs.had.co.nz/" target="_blank"&gt;
 &lt;img src="Rcpp_files/figure-html/unnamed-chunk-39-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 &lt;/a&gt;
+
+---
+
+## Last example: your turn
+
+&lt;br&gt;
+
+
+```r
+fun_r &lt;- function(x) {
+  
+  n &lt;- length(x)
+  y &lt;- numeric(n); y[1] &lt;- 1
+  
+  for (i in 2:n) {
+    y[i] &lt;- y[i - 1]^2 + x[i]
+  }
+  
+  y
+}
+```
+
+Will this R function always work?
+
+Can you vectorize this function to avoid the loop and make it faster?
+
+If not, recode it with Rcpp.
+
+---
+
+## Microbenchmark of one possible solution
+
+
+
+
+```r
+x &lt;- rnorm(1e6)
+all.equal(fun_r(x), fun_cpp(x))
+```
+
+```
+## [1] TRUE
+```
+
+```r
+microbenchmark::microbenchmark(
+  fun_r(x), 
+  fun_cpp(x)
+)
+```
+
+```
+## Unit: milliseconds
+##        expr       min       lq      mean    median        uq
+##    fun_r(x) 84.435556 84.97958 86.023576 85.274943 86.259879
+##  fun_cpp(x)  4.900762  5.01352  5.529058  5.141364  6.296539
+##        max neval
+##  127.29497   100
+##    6.63897   100
+```
+
+
 
 ---
 

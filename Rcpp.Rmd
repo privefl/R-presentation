@@ -669,21 +669,78 @@ usethis::use_rcpp()
 
 + create a new Rcpp file and save it in `src/`.
 
-.footnote[Put the 2 roxygen tags in the `R/testpkg-package.R`.]
+.footnote[Put the two roxygen tags in the `R/testpkg-package.R`.]
 
 ---
 
 ## Build your package and learn more
 
-Use Ctrl/Cmd + Shift + B to document and build your package.
+Use `Ctrl/Cmd + Shift + B` to document and build your package.
 
-Learn more with
+**Learn more** with
 
 <a href="http://r-pkgs.had.co.nz/" target="_blank">
 ```{r}
 webshot::webshot("http://r-pkgs.had.co.nz/")
 ```
 </a>
+
+---
+
+## Last example: your turn
+
+<br>
+
+```{r, echo=TRUE}
+fun_r <- function(x) {
+  
+  n <- length(x)
+  y <- numeric(n); y[1] <- 1
+  
+  for (i in 2:n) {
+    y[i] <- y[i - 1]^2 + x[i]
+  }
+  
+  y
+}
+```
+
+Will this R function always work?
+
+Can you vectorize this function to avoid the loop and make it faster?
+
+If not, recode it with Rcpp.
+
+---
+
+## Microbenchmark of one possible solution
+
+```{Rcpp, echo=FALSE}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericVector fun_cpp(const NumericVector& x) {
+  
+  int n = x.length();
+  NumericVector y(n); y[0] = 1;
+  for (int i = 1; i < n; i++) {
+    y[i] = pow(y[i - 1], 2) + x[i];
+  }
+  return y;
+}
+```
+
+```{r, echo=TRUE}
+x <- rnorm(1e6)
+all.equal(fun_r(x), fun_cpp(x))
+microbenchmark::microbenchmark(
+  fun_r(x), 
+  fun_cpp(x)
+)
+```
+
+
 
 ---
 
