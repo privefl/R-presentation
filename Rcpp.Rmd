@@ -392,7 +392,7 @@ NumericVector f5(NumericVector x, NumericVector y) {
 
 ---
 
-## Which R functions does this implement? Answers
+## Which R functions does this implement? (answers)
 
 ```{r, echo=TRUE}
 x <- runif(100)
@@ -626,7 +626,7 @@ c(int_div(), int_div2())
 
 class: center, middle, inverse
 
-# Rcpp in a R package
+# Rcpp in an R package
 
 
 ---
@@ -705,11 +705,13 @@ fun_r <- function(x) {
 }
 ```
 
-Will this R function always work?
+1. Will this R function always work?
 
-Can you vectorize this function to avoid the loop and make it faster?
+1. Can you vectorize this function to avoid the loop and make it faster?
 
-If not, recode it with Rcpp.
+1. If not, recode it with Rcpp.
+
+1. Benchmark the two versions after having checked the results.
 
 ---
 
