@@ -169,7 +169,7 @@ double sumC1(const NumericVector& x) {
 * To find the length of the vector, we use the `.size()` method (or `.length()`),   which returns an integer. C++ methods are called with `.` (i.e., a full stop).
   
 * The `for` statement has a different syntax: `for(init; check; increment)`. 
-    + This loop is initialised by creating a new variable called `i` with value 0.
+    + This loop is initialised by creating a new variable of type integer called `i` with value 0.
     + Before each iteration we check that `i < n`, and terminate the loop if it's not. 
     + After each iteration, we increment the value of `i` by one, using the special prefix operator `++` which increases the value of `i` by 1.
 
@@ -177,9 +177,7 @@ double sumC1(const NumericVector& x) {
   important: __IN C++, VECTOR INDICES START AT 0__! This is a very common 
   source of bugs when converting R functions to C++.
 
-* Use `=` for assignment, not `<-`.
-
-* C++ provides operators that modify in-place: `total += x[i]` is equivalent to 
+* Use `=` for assignment, not `<-`. C++ provides operators that modify in-place: `total += x[i]` is equivalent to 
   `total = total + x[i]`. Similar in-place operators are `-=`, `*=`, and `/=`.
 
 ---
