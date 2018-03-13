@@ -173,12 +173,9 @@ double sumC1(const NumericVector& x) {
     + Before each iteration we check that `i < n`, and terminate the loop if it's not. 
     + After each iteration, we increment the value of `i` by one, using the special prefix operator `++` which increases the value of `i` by 1.
 
-* In C++, vector indices start at 0. I'll say this again because it's so 
-  important: <mark>__IN C++, VECTOR INDICES START AT 0__</mark>! This is a very common 
-  source of bugs when converting R functions to C++.
+* In C++, vector indices start at 0. I'll say this again because it's so important: <mark>__IN C++, VECTOR INDICES START AT 0!__</mark> This is a very common source of bugs when converting R functions to C++.
 
-* Use `=` for assignment, not `<-`. C++ provides operators that modify in-place: `total += x[i]` is equivalent to 
-  <mark>`total = total + x[i]`</mark>. Similar in-place operators are `-=`, `*=`, and `/=`.
+* Use `=` for assignment, not `<-`. C++ provides operators that modify in-place: <mark>`total += x[i]`</mark> is equivalent to `total = total + x[i]`. Similar in-place operators are `-=`, `*=`, and `/=`.
 
 ---
 
@@ -429,7 +426,7 @@ class: center, middle, inverse
 
 ## Use of C++ code when needed
 
-.footnote[More infos [there](http://adv-r.had.co.nz/Rcpp.html).]
+.footnote[More infos [there](http://adv-r.had.co.nz/Rcpp.html) and you can learn more on the performance of R code in [my course](https://privefl.github.io/advr38book/performance.html).]
 
 <br>
 
