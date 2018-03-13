@@ -172,15 +172,14 @@ double sumC1(const NumericVector&amp; x) {
 
 ---
 
-The C++ version is similar, but:
+### The C++ version is similar, but:
 
 * To find the length of the vector, we use the `.size()` method (or `.length()`),   which returns an integer. C++ methods are called with `.` (i.e., a full stop).
   
 * The `for` statement has a different syntax: `for(init; check; increment)`. 
-  This loop is initialised by creating a new variable called `i` with value 0.
-  Before each iteration we check that `i &lt; n`, and terminate the loop if it's 
-  not. After each iteration, we increment the value of `i` by one, using the
-  special prefix operator `++` which increases the value of `i` by 1.
+    + This loop is initialised by creating a new variable called `i` with value 0.
+    + Before each iteration we check that `i &lt; n`, and terminate the loop if it's not. 
+    + After each iteration, we increment the value of `i` by one, using the special prefix operator `++` which increases the value of `i` by 1.
 
 * In C++, vector indices start at 0. I'll say this again because it's so 
   important: __IN C++, VECTOR INDICES START AT 0__! This is a very common 
@@ -258,13 +257,13 @@ microbenchmark::microbenchmark(
 
 ```
 ## Unit: microseconds
-##    expr      min        lq       mean   median        uq       max
-##  R LOOP 3322.279 3415.9365 4826.48850 3566.199 6316.3385 20897.829
-##   R VEC   84.299   86.2545   95.15796   92.296  101.8290   117.474
-##  C LOOP   85.417   88.1405  101.77966   91.388   96.2415   903.048
-##   C VEC   85.486   88.0005  100.76068   90.480   94.3215   910.940
-##    C IT  252.896  257.2955  314.28572  274.861  384.4075  1055.442
-##   C STD   85.346   85.9750   98.71640   88.385   93.2390   868.127
+##    expr      min        lq      mean    median        uq      max
+##  R LOOP 3001.837 3102.5290 3310.8859 3250.5705 3486.1570 5376.650
+##   R VEC   91.927   94.8890  103.6054   97.8540  106.9405  173.679
+##  C LOOP  125.020  127.7610  147.7600  131.1230  151.2045  808.760
+##   C VEC  123.835  127.2625  143.7992  131.2125  143.1380  729.969
+##    C IT  308.961  316.0225  344.9654  325.0215  360.0040  944.306
+##   C STD  122.895  127.7815  145.7904  131.3170  140.4170  681.639
 ##  neval
 ##    100
 ##    100
@@ -583,16 +582,16 @@ microbenchmark::microbenchmark(
 
 ```
 ## Unit: microseconds
-##                 expr       min         lq       mean    median
-##     gibbs_r(100, 10)  3471.669  3651.2315  4960.2896  4867.551
-##   gibbs_cpp(100, 10)   239.207   261.1025   290.8812   268.680
-##    gibbs_r(1000, 10) 42920.242 45001.1615 51630.6118 45783.943
-##  gibbs_cpp(1000, 10)  2434.247  2520.3620  2886.6290  2584.336
+##                 expr       min        lq       mean     median
+##     gibbs_r(100, 10)  3624.499  4365.572  4965.1754  4973.5645
+##   gibbs_cpp(100, 10)   260.789   283.832   325.1694   302.4155
+##    gibbs_r(1000, 10) 44437.027 46293.943 50953.5668 47961.6445
+##  gibbs_cpp(1000, 10)  2654.087  2829.534  3079.8159  3009.9040
 ##          uq       max neval
-##   5158.7900 20441.067   100
-##    278.9815   532.261   100
-##  48061.8845 91165.947   100
-##   2818.0605  5905.009   100
+##   5343.4965 12645.614   100
+##    332.7435  1180.029   100
+##  50476.0090 97345.944   100
+##   3201.9930  4762.671   100
 ```
 
 ---
@@ -661,8 +660,8 @@ x2
 ```
 
 ```
-##  [1] 100.00000000   0.03166629   0.40923260   0.76132681   0.25111982
-##  [6]   0.66250847   0.64999990   0.71858145   0.51268528   0.26933139
+##  [1] 100.00000000   0.28188509   0.71264218   0.14727970   0.09946108
+##  [6]   0.21814044   0.96308114   0.33862493   0.23039822   0.53863855
 ```
 
 ```r
@@ -703,8 +702,8 @@ x2
 ```
 
 ```
-##  [1] 0.46587723 0.93969321 0.62770081 0.69734820 0.66582260 0.40385890
-##  [7] 0.67050189 0.22055389 0.04483662 0.71878591
+##  [1] 0.0694892 0.2790356 0.4407384 0.7403375 0.3330019 0.8664117
+##  [7] 0.6815712 0.5619346 0.6291148 0.8877121
 ```
 
 ---
@@ -855,12 +854,12 @@ microbenchmark::microbenchmark(
 
 ```
 ## Unit: milliseconds
-##        expr       min        lq       mean    median         uq
-##    fun_r(x) 90.379675 92.716843 131.727114 151.35789 154.182414
-##  fun_cpp(x)  5.207364  5.391117   7.069542   5.76131   6.842662
-##        max neval
-##  163.93173   100
-##   56.73624   100
+##        expr       min        lq     mean    median        uq
+##    fun_r(x) 80.440452 82.643794 88.02441 83.575003 86.021123
+##  fun_cpp(x)  5.594481  5.892015  6.47971  6.283948  7.012338
+##         max neval
+##  145.856149   100
+##    8.422774   100
 ```
 
 
