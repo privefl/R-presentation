@@ -172,21 +172,21 @@ double sumC1(const NumericVector&amp; x) {
 
 ---
 
-### The C++ version is similar, but:
+### The C++ version is similar, but
 
-* To find the length of the vector, we use the `.size()` method (or `.length()`),   which returns an integer. C++ methods are called with `.` (i.e., a full stop).
+* To find the length of the vector, we use the &lt;mark&gt;`.size()`&lt;/mark&gt; method (or `.length()`),   which returns an integer. C++ methods are called with `.` (i.e., a full stop).
   
-* The `for` statement has a different syntax: `for(init; check; increment)`. 
+* The `for` statement has a different syntax: &lt;mark&gt;`for(init; check; increment)`&lt;/mark&gt;. 
     + This loop is initialised by creating a new variable of type integer called `i` with value 0.
     + Before each iteration we check that `i &lt; n`, and terminate the loop if it's not. 
     + After each iteration, we increment the value of `i` by one, using the special prefix operator `++` which increases the value of `i` by 1.
 
 * In C++, vector indices start at 0. I'll say this again because it's so 
-  important: __IN C++, VECTOR INDICES START AT 0__! This is a very common 
+  important: &lt;mark&gt;__IN C++, VECTOR INDICES START AT 0__&lt;/mark&gt;! This is a very common 
   source of bugs when converting R functions to C++.
 
 * Use `=` for assignment, not `&lt;-`. C++ provides operators that modify in-place: `total += x[i]` is equivalent to 
-  `total = total + x[i]`. Similar in-place operators are `-=`, `*=`, and `/=`.
+  &lt;mark&gt;`total = total + x[i]`&lt;/mark&gt;. Similar in-place operators are `-=`, `*=`, and `/=`.
 
 ---
 
@@ -256,12 +256,12 @@ microbenchmark::microbenchmark(
 ```
 ## Unit: microseconds
 ##    expr      min        lq      mean    median        uq      max
-##  R LOOP 3011.113 3117.3280 3333.8732 3247.2745 3477.2520 5539.486
-##   R VEC   94.453   94.7990  105.8179   97.5940  112.3105  173.417
-##  C LOOP  126.734  127.9880  149.5227  131.1015  158.1520  642.948
-##   C VEC  126.697  127.3550  147.3437  130.5030  148.2055  720.572
-##    C IT  314.826  316.1010  356.5081  328.7325  370.1835 1041.552
-##   C STD  126.694  127.1135  147.5835  130.5705  148.1650  916.085
+##  R LOOP 3013.015 3147.5945 3452.9386 3264.2805 3618.9870 7244.556
+##   R VEC   92.510   94.8150  106.3400   97.7135  112.4595  223.093
+##  C LOOP  126.710  127.8240  152.5347  132.0280  154.7245  858.490
+##   C VEC  123.981  127.1690  148.3653  128.4320  145.8370  805.695
+##    C IT  309.267  315.8290  358.5808  323.1295  372.4660 1431.719
+##   C STD  122.859  127.7995  146.8430  130.8365  136.5895  997.246
 ##  neval
 ##    100
 ##    100
@@ -580,16 +580,16 @@ microbenchmark::microbenchmark(
 
 ```
 ## Unit: microseconds
-##                 expr       min        lq       mean    median
-##     gibbs_r(100, 10)  3716.451  4435.740  5636.1500  5292.723
-##   gibbs_cpp(100, 10)   269.506   305.925   343.1232   323.192
-##    gibbs_r(1000, 10) 45627.027 48855.855 55822.4023 50690.774
-##  gibbs_cpp(1000, 10)  2728.328  2989.754  3298.6627  3161.159
-##          uq        max neval
-##   5698.3695  45174.791   100
-##    342.3345   1149.023   100
-##  55647.5820 131635.629   100
-##   3268.8285   9173.056   100
+##                 expr       min        lq       mean     median
+##     gibbs_r(100, 10)  3691.603  4376.397  6068.2031  5117.7255
+##   gibbs_cpp(100, 10)   263.561   291.911   324.9905   316.2185
+##    gibbs_r(1000, 10) 43660.147 46841.078 52016.0298 48978.2850
+##  gibbs_cpp(1000, 10)  2658.414  2903.908  3174.2731  3175.2225
+##          uq       max neval
+##   5859.7460 51984.304   100
+##    342.0065   494.423   100
+##  55257.7150 99935.912   100
+##   3287.4720  4586.522   100
 ```
 
 ---
@@ -658,8 +658,8 @@ x2
 ```
 
 ```
-##  [1] 100.0000000   0.4201869   0.6734540   0.2941103   0.2801587
-##  [6]   0.8917427   0.5574607   0.2804040   0.2994634   0.1802935
+##  [1] 100.0000000   0.5999905   0.2608611   0.9151573   0.9890567
+##  [6]   0.7495810   0.4464289   0.3648639   0.4570026   0.4956138
 ```
 
 ```r
@@ -700,8 +700,8 @@ x2
 ```
 
 ```
-##  [1] 0.4820464 0.1407208 0.7516490 0.9170786 0.9641638 0.6968401
-##  [7] 0.3986794 0.4548947 0.2330081 0.8491093
+##  [1] 0.7149302 0.4583183 0.3045761 0.3362652 0.9630829 0.4049794
+##  [7] 0.3095384 0.9719145 0.4108113 0.4156217
 ```
 
 ---
@@ -852,12 +852,12 @@ microbenchmark::microbenchmark(
 
 ```
 ## Unit: milliseconds
-##        expr       min        lq      mean    median        uq
-##    fun_r(x) 81.450944 84.437344 92.668735 87.789890 94.604955
-##  fun_cpp(x)  5.415475  6.119008  7.501907  6.841133  7.609098
+##        expr       min        lq      mean    median       uq
+##    fun_r(x) 81.048904 83.665088 88.686365 85.442031 89.83533
+##  fun_cpp(x)  5.546213  6.034154  7.174596  6.455901  7.39808
 ##        max neval
-##  144.75961   100
-##   50.10302   100
+##  126.76221   100
+##   48.22587   100
 ```
 
 
