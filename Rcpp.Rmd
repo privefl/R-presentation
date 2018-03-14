@@ -37,6 +37,8 @@ class: center, middle, inverse
 
 - [Rcpp Gallery](http://gallery.rcpp.org/)
 
+- [Rcpp FAQ](https://cloud.r-project.org/web/packages/Rcpp/vignettes/Rcpp-FAQ.pdf)
+
 <br>
 
 ### RcppArmadillo (linear algebra)
