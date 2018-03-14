@@ -109,9 +109,9 @@ bool is_odd_cpp(int n = 10) {
 
 
 ```r
-c(is_odd_r(),   is_odd_cpp(), 
-  is_odd_r(21), is_odd_cpp(21),
-  is_odd_r(42), is_odd_cpp(42))
+c(is_odd_r(),     is_odd_cpp(), 
+  is_odd_r(21),   is_odd_cpp(21),
+  is_odd_r(42),   is_odd_cpp(42))
 ```
 
 ```
@@ -254,13 +254,13 @@ microbenchmark::microbenchmark(
 
 ```
 ## Unit: microseconds
-##    expr      min       lq       mean    median        uq      max
-##  R LOOP 3510.361 3522.024 3576.26268 3538.6460 3570.8430 5924.842
-##   R VEC   86.603   87.091   88.74287   87.3020   88.4190  122.082
-##  C LOOP   87.721   88.279   99.08354   89.5715   91.4220  947.676
-##   C VEC   87.511   88.349  100.56274   89.6760   91.4915 1044.266
-##    C IT  259.949  261.834  272.81706  263.1965  267.0020  955.148
-##   C STD   87.860   88.349   98.00234   89.6060   90.8985  816.514
+##    expr      min        lq      mean    median        uq      max
+##  R LOOP 3018.332 3112.3425 3297.7601 3235.0115 3349.8820 5102.905
+##   R VEC   94.443   94.8025  104.5203   96.6755  103.0250  177.170
+##  C LOOP  126.784  127.6760  150.1593  131.0165  156.7535  640.346
+##   C VEC  126.742  127.3315  144.0347  129.6760  144.9810  677.343
+##    C IT  314.866  316.2795  356.4333  320.4420  362.6280 1287.038
+##   C STD  126.725  127.4795  148.1023  129.9560  153.7625  703.345
 ##  neval
 ##    100
 ##    100
@@ -279,36 +279,36 @@ microbenchmark::microbenchmark(
 &lt;table class='gmisc_table' style='border-collapse: collapse; margin-top: 1em; margin-bottom: 1em; margin-left: auto; margin-right: auto' &gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th style='border-bottom: 1px solid grey; border-top: 2px solid grey; border-right: 1px solid black; text-align: center;'&gt;R&lt;/th&gt;
+&lt;th style='border-bottom: 1px solid grey; border-top: 2px solid grey; border-left: 1px solid black; border-right: 1px solid black; text-align: center;'&gt;R&lt;/th&gt;
 &lt;th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'&gt;Rcpp (scalar)&lt;/th&gt;
 &lt;th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'&gt;Rcpp (vector)&lt;/th&gt;
-&lt;th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'&gt;Rcpp (matrix)&lt;/th&gt;
+&lt;th style='border-bottom: 1px solid grey; border-top: 2px solid grey; border-right: 1px solid black; text-align: center;'&gt;Rcpp (matrix)&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td style='padding: 10px 20px 10px 20px; border-right: 1px solid black; text-align: center;'&gt;logical&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; border-left: 1px solid black; border-right: 1px solid black; text-align: center;'&gt;logical&lt;/td&gt;
 &lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;bool&lt;/td&gt;
 &lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;LogicalVector&lt;/td&gt;
-&lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;LogicalMatrix&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; border-right: 1px solid black; text-align: center;'&gt;LogicalMatrix&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td style='padding: 10px 20px 10px 20px; border-right: 1px solid black; text-align: center;'&gt;integer&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; border-left: 1px solid black; border-right: 1px solid black; text-align: center;'&gt;integer&lt;/td&gt;
 &lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;int&lt;/td&gt;
 &lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;IntegerVector&lt;/td&gt;
-&lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;IntegerMatrix&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; border-right: 1px solid black; text-align: center;'&gt;IntegerMatrix&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td style='padding: 10px 20px 10px 20px; border-right: 1px solid black; text-align: center;'&gt;double&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; border-left: 1px solid black; border-right: 1px solid black; text-align: center;'&gt;double&lt;/td&gt;
 &lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;double&lt;/td&gt;
 &lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;NumericVector&lt;/td&gt;
-&lt;td style='padding: 10px 20px 10px 20px; text-align: center;'&gt;NumericMatrix&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; border-right: 1px solid black; text-align: center;'&gt;NumericMatrix&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td style='padding: 10px 20px 10px 20px; border-bottom: 2px solid grey; border-right: 1px solid black; text-align: center;'&gt;character&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; border-bottom: 2px solid grey; border-left: 1px solid black; border-right: 1px solid black; text-align: center;'&gt;character&lt;/td&gt;
 &lt;td style='padding: 10px 20px 10px 20px; border-bottom: 2px solid grey; text-align: center;'&gt;String&lt;/td&gt;
 &lt;td style='padding: 10px 20px 10px 20px; border-bottom: 2px solid grey; text-align: center;'&gt;CharacterVector&lt;/td&gt;
-&lt;td style='padding: 10px 20px 10px 20px; border-bottom: 2px solid grey; text-align: center;'&gt;CharacterMatrix&lt;/td&gt;
+&lt;td style='padding: 10px 20px 10px 20px; border-bottom: 2px solid grey; border-right: 1px solid black; text-align: center;'&gt;CharacterMatrix&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -502,7 +502,7 @@ Typical bottlenecks that C++ can address include:
 - Recursive functions, or problems which involve calling functions **millions of times**. 
 The overhead of calling a function in C++ is much lower than that in R.
 
-- Loops that **can’t be easily vectorised** because subsequent iterations depend on previous ones.
+- Loops that **can’t be easily vectorized** because subsequent iterations depend on previous ones.
 
 - Problems that require **advanced data structures** and algorithms that R doesn’t provide. Through the standard template library (STL), C++ has efficient implementations of many important data structures, from ordered maps to double-ended queues. See [this chapter](https://adv-r.hadley.nz/rcpp.html#stl).
 
@@ -578,17 +578,17 @@ microbenchmark::microbenchmark(
 ```
 
 ```
-## Unit: milliseconds
-##                 expr       min        lq      mean    median
-##     gibbs_r(100, 10)  3.094946  3.430323  3.884799  3.916418
-##   gibbs_cpp(100, 10)  1.339486  1.475153  2.306475  1.959257
-##    gibbs_r(1000, 10) 35.960770 37.427681 41.528904 38.522303
-##  gibbs_cpp(1000, 10) 16.879933 17.730528 21.471749 18.594745
-##         uq      max neval
-##   4.293492  4.83092   100
-##   2.235340 41.61225   100
-##  41.769712 88.50625   100
-##  19.632027 79.99470   100
+## Unit: microseconds
+##                 expr       min        lq       mean    median
+##     gibbs_r(100, 10)  3728.388  4268.569  4997.7848  4915.191
+##   gibbs_cpp(100, 10)   258.074   284.933   311.6433   305.897
+##    gibbs_r(1000, 10) 44167.642 46414.724 51599.1005 48353.628
+##  gibbs_cpp(1000, 10)  2642.494  2893.390  3115.5140  2998.657
+##         uq       max neval
+##   5422.884 12241.356   100
+##    335.231   479.788   100
+##  49931.635 99049.087   100
+##   3192.266  5055.345   100
 ```
 
 ---
@@ -657,8 +657,8 @@ x2
 ```
 
 ```
-##  [1] 100.00000000   0.61768146   0.09457167   0.09752323   0.02877912
-##  [6]   0.30163628   0.35478211   0.98920776   0.32199186   0.44512096
+##  [1] 100.00000000   0.91905291   0.30167791   0.48024702   0.06066511
+##  [6]   0.45984627   0.48576869   0.66749942   0.67787377   0.21145147
 ```
 
 ```r
@@ -699,8 +699,8 @@ x2
 ```
 
 ```
-##  [1] 0.7272569 0.6361080 0.1902484 0.9756713 0.6859188 0.1356761
-##  [7] 0.3155403 0.5330545 0.4012663 0.7485199
+##  [1] 0.87369643 0.28461994 0.23416995 0.94964702 0.95052901 0.08344181
+##  [7] 0.06457583 0.02107182 0.40215324 0.78409735
 ```
 
 ---
@@ -851,12 +851,12 @@ microbenchmark::microbenchmark(
 
 ```
 ## Unit: milliseconds
-##        expr       min        lq     mean    median        uq
-##    fun_r(x) 85.422832 86.140591 90.16222 87.274673 91.144716
-##  fun_cpp(x)  4.917453  5.212114  6.56636  5.515365  6.765244
-##        max neval
-##  165.67762   100
-##   49.13723   100
+##        expr       min        lq      mean    median        uq
+##    fun_r(x) 81.268984 82.865902 85.645063 84.039362 85.734318
+##  fun_cpp(x)  5.546142  6.027972  6.809477  6.545704  7.476435
+##         max neval
+##  126.070263   100
+##    9.073947   100
 ```
 
 
