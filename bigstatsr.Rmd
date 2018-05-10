@@ -27,18 +27,24 @@ class: title-slide center middle inverse
 
 ## Florian Privé (@privefl)
 
-### eRum 2018
+### Grenoble RUG - May 24, 2018
 
 ---
 
-## About
+class: center middle inverse
 
-I'm a PhD Student (2016-2019) in **Predictive Human Genetics** in Grenoble.
+# Motivation
+
+---
+
+## My thesis work
+
+I'm a PhD Student (2016-2019) in **Predictive Human Genetics**.
 
 $$\boxed{\Large{\text{Disease} \sim \text{DNA mutations} + \cdots}}$$
 
-```{r}
-knitr::include_graphics("https://r-in-grenoble.github.io/cover.jpg")
+```{r, out.width="80%"}
+knitr::include_graphics("PRS.png")
 ```
 
 ---
@@ -63,7 +69,13 @@ knitr::include_graphics("https://media.giphy.com/media/3o7bueyxGydy48Lwgo/giphy.
 knitr::include_graphics("memory-solution.svg")
 ```
 
-.footnote[`FBM` is very similar to `filebacked.big.matrix` from package {bigmemory}.]
+.footnote[Format `FBM` is very similar to format `filebacked.big.matrix` from package {bigmemory} (details in [this vignette](https://privefl.github.io/bigstatsr/articles/bigstatsr-and-bigmemory.html)).]
+
+---
+
+class: center middle inverse
+
+# Simple accessors
 
 ---
 
