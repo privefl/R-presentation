@@ -14,7 +14,7 @@ output:
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(echo = FALSE, fig.align = 'center')
 
-files <- "test.bk"
+files <- c("test.bk", "test2.bk")
 stopifnot(all(
   sapply(files[file.exists(files)], file.remove)
 ))
@@ -118,22 +118,6 @@ knitr::include_graphics("split-apply-combine.svg")
 
 .footnote[Implemented in `big_apply()`.]
 
-<!-- --- -->
-
-<!-- ## Matrix operations -->
-
-<!-- - (cross-)products with matrices/vectors -->
-
-<!-- - special tricks for handling scaling ([vignette](https://privefl.github.io/bigstatsr/articles/operations-with-scaling.html) and [blog post](https://goo.gl/L8cNbo)) -->
-
-<!-- <br/> -->
-
-<!-- ### Example: computation of correlation of a 100,000 x 5000 matrix -->
-
-<!-- - `cor`: 22 minutes -->
-
-<!-- - `big_cor`: 1 minute -->
-
 ---
 
 ## Similar accessor as Rcpp matrices
@@ -163,6 +147,14 @@ NumericVector big_colsums(Environment BM) {
 
 ---
 
+class: center middle inverse
+
+# Some examples 
+
+# from my work
+
+---
+
 ## Partial Singular Value Decomposition
 
 15K $\times$ 100K -- 10 first PCs -- 6 cores -- **1 min** (vs 2h in base R)
@@ -189,26 +181,114 @@ knitr::include_graphics("density-scores.svg")
 
 ---
 
-## Other functions
+class: center middle inverse
+
+# Let us try 
+
+# some functions
+
+---
+
+## Create an FBM object
+
+```{r, echo=TRUE}
+X <- FBM(10e3, 1000, backingfile = "test2")
+object.size(X)
+file.size(X$backingfile)  ## 8 x 1e4 x 1e3
+
+typeof(X)
+```
+
+---
+
+## Fill it with random values
+
+```{r, out.width='65%'}
+knitr::include_graphics("split-apply-combine.svg")
+```
+
+```{r, echo=TRUE}
+big_apply(X, a.FUN = function(X, ind) {
+  X[, ind] <- rnorm(nrow(X) * length(ind))
+  NULL  ## Here, you don't want to return anything
+}, a.combine = 'c')
+```
+
+```{r, echo=TRUE}
+X[, 1]
+```
+
+---
+
+## Correlation matrix
+
+```{r, echo=TRUE}
+mat <- X[]
+system.time(corr1 <- cor(mat))
+```
+
+```{r, echo=TRUE}
+system.time(corr2 <- big_cor(X))
+all.equal(corr1, corr2[])
+```
+
+---
+
+## Partial SVD
+
+```{r, echo=TRUE, out.width="50%"}
+system.time(svd1 <- svd(scale(mat), nu = 10, nv = 10))
+```
+
+```{r, echo=TRUE}
+# Quadratic in the smallest dimension, linear in the other one
+system.time(svd2 <- big_SVD(X, fun.scaling = big_scale(), k = 10))
+```
+
+```{r, echo=TRUE}
+# Linear in both dimensions
+# Extremely useful if both dimensions are very large
+system.time(svd3 <- big_randomSVD(X, fun.scaling = big_scale(), k = 10))
+```
+
+---
+
+## Matrix operations
+
+- (cross-)products with matrices/vectors
+
+- special tricks for handling scaling ([vignette](https://privefl.github.io/bigstatsr/articles/operations-with-scaling.html) and [blog post](https://goo.gl/L8cNbo))
+
+<br/>
+
+### Example: computation of correlation of a 100,000 x 5000 matrix
+
+- `cor`: 22 minutes
+
+- `big_cor`: 1 minute
+
+<!-- --- -->
+
+<!-- ## Other functions -->
 
 
-- matrix operations
+<!-- - matrix operations -->
 
-- association of each variable with an output
+<!-- - association of each variable with an output -->
 
-- plotting functions
+<!-- - plotting functions -->
 
-- read from text files
+<!-- - read from text files -->
 
-- many other functions..
+<!-- - many other functions.. -->
 
-<br>
+<!-- <br> -->
 
-### Parallel
+<!-- ### Parallel -->
 
-- most of the functions are parallelized (memory-mapping makes it easy!)
+<!-- - most of the functions are parallelized (memory-mapping makes it easy!) -->
 
-- you can parallelize you own functions with `big_parallelize()`
+<!-- - you can parallelize you own functions with `big_parallelize()` -->
 
 <!-- --- -->
 
@@ -228,6 +308,12 @@ knitr::include_graphics("density-scores.svg")
 <!-- knitr::include_graphics("smile-08.jpg") -->
 <!-- ``` -->
 
+
+---
+
+class: center middle inverse
+
+# Conclusion
 
 ---
 
