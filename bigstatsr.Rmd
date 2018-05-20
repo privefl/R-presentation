@@ -310,7 +310,7 @@ plot(pred, y[ind.test], pch = 20); abline(0, 1, col = "red")
 
 class: center middle inverse
 
-# Use case: 
+# Toy case: 
 
 ## Compute the sums of each column
 
