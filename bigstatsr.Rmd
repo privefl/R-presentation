@@ -12,7 +12,7 @@ output:
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(echo = FALSE, fig.align = 'center')
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', dev = "svg")
 
 files <- c("test.bk", "test2.bk")
 stopifnot(all(
@@ -215,7 +215,7 @@ big_apply(X, a.FUN = function(X, ind) {
 ```
 
 ```{r, echo=TRUE}
-X[, 1]
+X[1:5, 1]
 ```
 
 ---
@@ -253,61 +253,215 @@ system.time(svd3 <- big_randomSVD(X, fun.scaling = big_scale(), k = 10))
 
 ---
 
-## Matrix operations
+## Multiple association
 
-- (cross-)products with matrices/vectors
+```{r}
+set.seed(1)
+```
 
-- special tricks for handling scaling ([vignette](https://privefl.github.io/bigstatsr/articles/operations-with-scaling.html) and [blog post](https://goo.gl/L8cNbo))
+```{r, echo=TRUE}
+M <- 100 # number of causal variables
+set <- sample(ncol(X), M)
+y <- scale(X[, set]) %*% rnorm(M)
+y <- y + rnorm(length(y), sd = 2 * sd(y))
 
-<br/>
+ind.train <- sort(sample(nrow(X), size = 0.8 * nrow(X)))
+ind.test <- setdiff(rows_along(X), ind.train)
 
-### Example: computation of correlation of a 100,000 x 5000 matrix
+mult_test <- big_univLinReg(X, y[ind.train], ind.train = ind.train, 
+                            covar.train = svd2$u[ind.train, ])
+str(mult_test)
+```
 
-- `cor`: 22 minutes
+---
 
-- `big_cor`: 1 minute
+### P-values
 
-<!-- --- -->
+```{r, echo=TRUE, fig.asp=0.8, out.width="80%"}
+hist(pval <- predict(mult_test, log10 = FALSE))
+```
 
-<!-- ## Other functions -->
+---
+
+### P-values
+
+```{r, echo=TRUE, fig.asp=0.6, out.width="85%"}
+library(ggplot2)
+plot(mult_test) + 
+  aes(color = cols_along(X) %in% set) +
+  labs(color = "Causal?")
+```
+
+---
+
+## Prediction
+
+```{r, echo=TRUE, out.width="60%", fig.asp=0.8}
+train <- big_spLinReg(X, y[ind.train], ind.train = ind.train, 
+                      covar.train = svd2$u[ind.train, ])
+preds <- predict(train, X = X, ind.row = ind.test, covar.row = svd2$u[ind.test, ])
+pred <- rowMeans(preds)
+plot(pred, y[ind.test], pch = 20); abline(0, 1, col = "red")
+```
 
 
-<!-- - matrix operations -->
 
-<!-- - association of each variable with an output -->
+---
 
-<!-- - plotting functions -->
+class: center middle inverse
 
-<!-- - read from text files -->
+# Use case: 
 
-<!-- - many other functions.. -->
+## Compute the sums of each column
 
-<!-- <br> -->
+---
 
-<!-- ### Parallel -->
+## Brute force solution
 
-<!-- - most of the functions are parallelized (memory-mapping makes it easy!) -->
+```{r, echo=TRUE}
+sums1 <- colSums(X[])  ## /!\ access all the data in memory
+```
 
-<!-- - you can parallelize you own functions with `big_parallelize()` -->
+</br>
 
-<!-- --- -->
+```{r, out.width='70%'}
+knitr::include_graphics("caution.jpg")
+```
 
-<!-- ## Bonus -->
+---
 
-<!-- ### When you earn 305 pts on Stack Overflow with your new package -->
+## Do it by blocks
 
-<!-- <br> -->
+```{r, echo=TRUE}
+sums2 <- big_apply(X, a.FUN = function(X, ind) colSums(X[, ind]), 
+                   a.combine = 'c')
 
-<!-- ```{r, out.width='85%'} -->
-<!-- knitr::include_graphics("bigstatsr-SO.png") -->
-<!-- ``` -->
+all.equal(sums2, sums1)
+```
 
-<!-- <br> -->
+<br>
 
-<!-- ```{r, out.width='20%'} -->
-<!-- knitr::include_graphics("smile-08.jpg") -->
-<!-- ``` -->
+```{r, out.width='80%'}
+knitr::include_graphics("split-apply-combine.svg")
+```
 
+---
+
+## Using Rcpp (1/3)
+
+```{Rcpp, echo=TRUE}
+// [[Rcpp::depends(bigstatsr, BH)]]
+#include <bigstatsr/BMAcc.h>
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericVector bigcolsums(Environment BM) {
+  
+  XPtr<FBM> xpBM = BM["address"];  // get the external pointer
+  BMAcc<double> macc(xpBM);        // create an accessor to the data
+  
+  size_t i, j, n = macc.nrow(), m = macc.ncol();
+  NumericVector res(m);  // vector of m zeros
+
+  for (j = 0; j < m; j++) 
+    for (i = 0; i < n; i++) 
+      res[j] += macc(i, j);
+
+  return res;
+}
+```
+
+---
+
+## Using Rcpp (1/3)
+
+```{r, echo=TRUE}
+sums3 <- bigcolsums(X)
+
+all.equal(sums3, sums1)
+```
+
+---
+
+## Using Rcpp (2/3): the bigstatsr way
+
+```{Rcpp, echo=TRUE, eval=FALSE}
+// [[Rcpp::depends(bigstatsr, BH)]]
+#include <bigstatsr/BMAcc.h>
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericVector bigcolsums2(Environment BM,
+*                         const IntegerVector& rowInd,
+*                         const IntegerVector& colInd) {
+  
+  XPtr<FBM> xpBM = BM["address"];
+* SubBMAcc<double> macc(xpBM, rowInd - 1, colInd - 1);
+  
+  size_t i, j, n = macc.nrow(), m = macc.ncol();
+  NumericVector res(m);  // vector of m zeros
+
+  for (j = 0; j < m; j++) 
+    for (i = 0; i < n; i++) 
+*     res[j] += macc(i, j);
+
+  return res;
+}
+```
+
+```{Rcpp}
+// [[Rcpp::depends(bigstatsr, BH)]]
+#include <bigstatsr/BMAcc.h>
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericVector bigcolsums2(Environment BM,
+                          const IntegerVector& rowInd,
+                          const IntegerVector& colInd) {
+  
+  XPtr<FBM> xpBM = BM["address"];
+  SubBMAcc<double> macc(xpBM, rowInd - 1, colInd - 1);
+  
+  size_t i, j, n = macc.nrow(), m = macc.ncol();
+  NumericVector res(m);  // vector of m zeros
+
+  for (j = 0; j < m; j++) 
+    for (i = 0; i < n; i++) 
+      res[j] += macc(i, j);
+
+  return res;
+}
+```
+
+---
+
+## Using Rcpp (2/3): the bigstatsr way
+
+```{r, echo=TRUE}
+sums4 <- bigcolsums2(X, rows_along(mat), cols_along(mat))
+
+all.equal(sums4, sums1)
+```
+
+```{r, echo=TRUE}
+sums5 <- bigcolsums2(X, rows_along(mat), 1:10)
+
+all.equal(sums5, sums1[1:10])
+```
+
+---
+
+## Using Rcpp (3/3): already implemented
+
+```{r, echo=TRUE}
+sums6 <- big_colstats(X)
+str(sums6)
+
+all.equal(sums6$sum, sums1)
+```
 
 ---
 
@@ -322,6 +476,19 @@ class: inverse, center, middle
 # I'm able  to run algorithms
 # on 100GB of data
 # in `r icon::fa_r()` on my computer 
+
+---
+
+## Advantages of using FBM objects
+
+- you can apply algorithms on 100GB of data,
+
+- you can easily parallelize your algorithms because the data on disk is shared,
+
+- you write more efficient algorithms,
+
+- you can use different types of data, for example, in my field, I’m storing my data with only 1 byte per element (rather than 8 bytes for a standard R matrix). See [the documentation of the FBM class](https://privefl.github.io/bigstatsr/reference/FBM-class.html) for details.
+
 
 ---
 
