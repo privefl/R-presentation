@@ -237,7 +237,7 @@ class: center, middle, inverse
 
 ```{r}
 myggplot <- function(..., coeff = 1) 
-  bigstatsr:::MY_THEME(ggplot(...), coeff = 1.2 * coeff)
+  ggplot(...) + bigstatsr::theme_bigstatsr(size.rel = 1.2 * coeff)
 ```
 
 ***
