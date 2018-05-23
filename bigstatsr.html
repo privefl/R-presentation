@@ -254,7 +254,7 @@ X[1:5, 1]
 ```
 
 ```
-## [1]  0.6920891 -0.9744949  0.9537099 -0.6279372 -1.2940262
+## [1] -0.7792814  0.4392367  0.4546336  0.1548599 -0.8497425
 ```
 
 ---
@@ -269,7 +269,7 @@ system.time(corr1 &lt;- cor(mat))
 
 ```
 ##    user  system elapsed 
-##   7.930   0.007   7.954
+##   7.655   0.006   7.662
 ```
 
 
@@ -279,7 +279,7 @@ system.time(corr2 &lt;- big_cor(X))
 
 ```
 ##    user  system elapsed 
-##   0.449   0.036   0.485
+##   0.453   0.037   0.490
 ```
 
 ```r
@@ -292,7 +292,7 @@ all.equal(corr1, corr2[])
 
 ---
 
-## Partial SVD
+## Partial Singular Value Decomposition
 
 
 ```r
@@ -301,7 +301,7 @@ system.time(svd1 &lt;- svd(scale(mat), nu = 10, nv = 10))
 
 ```
 ##    user  system elapsed 
-##   5.065   0.216   5.283
+##   4.958   0.241   5.199
 ```
 
 
@@ -316,7 +316,7 @@ system.time(svd2 &lt;- big_SVD(X, fun.scaling = big_scale(), k = 10))
 
 ```
 ##    user  system elapsed 
-##   0.716   0.031   0.747
+##   0.701   0.030   0.732
 ```
 
 
@@ -328,7 +328,7 @@ system.time(svd3 &lt;- big_randomSVD(X, fun.scaling = big_scale(), k = 10))
 
 ```
 ##    user  system elapsed 
-##   2.297   0.001   2.298
+##   2.178   0.000   2.179
 ```
 
 ---
@@ -344,33 +344,11 @@ set &lt;- sample(ncol(X), M)
 y &lt;- scale(X[, set]) %*% rnorm(M)
 y &lt;- y + rnorm(length(y), sd = 2 * sd(y))
 
-ind.train &lt;- sort(sample(nrow(X), size = 0.8 * nrow(X)))
-ind.test &lt;- setdiff(rows_along(X), ind.train)
-
-mult_test &lt;- big_univLinReg(X, y[ind.train], ind.train = ind.train, 
-                            covar.train = svd2$u[ind.train, ])
-str(mult_test)
-```
-
-```
-## Classes 'mhtest' and 'data.frame':	1000 obs. of  3 variables:
-##  $ estim  : num  0.3933 -0.1026 0.8391 0.1009 0.0191 ...
-##  $ std.err: num  0.243 0.24 0.239 0.24 0.238 ...
-##  $ score  : num  1.6156 -0.4278 3.5143 0.4199 0.0805 ...
-##  - attr(*, "transfo")=function (x)  
-##  - attr(*, "predict")=function (xtr)
-```
-
----
-
-### P-values
-
-
-```r
+mult_test &lt;- big_univLinReg(X, y, covar.train = svd2$u)
 hist(pval &lt;- predict(mult_test, log10 = FALSE))
 ```
 
-&lt;img src="bigstatsr_files/figure-html/unnamed-chunk-23-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="bigstatsr_files/figure-html/unnamed-chunk-22-1.svg" width="63%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -384,30 +362,47 @@ plot(mult_test) +
   labs(color = "Causal?")
 ```
 
-&lt;img src="bigstatsr_files/figure-html/unnamed-chunk-24-1.svg" width="85%" style="display: block; margin: auto;" /&gt;
+&lt;img src="bigstatsr_files/figure-html/unnamed-chunk-23-1.svg" width="85%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-## Prediction
+## Predictive models
 
 
 ```r
+# Split the indices in train/test sets
+ind.train &lt;- sort(sample(nrow(X), size = 0.8 * nrow(X)))
+ind.test &lt;- setdiff(rows_along(X), ind.train)
+
+# Train a linear model with elastic-net regularization
+# and automatic choice of hyper-parameter lambda
 train &lt;- big_spLinReg(X, y[ind.train], ind.train = ind.train, 
                       covar.train = svd2$u[ind.train, ])
-preds &lt;- predict(train, X = X, ind.row = ind.test, covar.row = svd2$u[ind.test, ])
+```
+
+---
+
+## Prediction on test set
+
+
+```r
+# Get K=10 predictions on the test set
+preds &lt;- predict(train, X = X, ind.row = ind.test, 
+                 covar.row = svd2$u[ind.test, ])
+# Average all the predictions
 pred &lt;- rowMeans(preds)
+# Plot true value vs prediction
 plot(pred, y[ind.test], pch = 20); abline(0, 1, col = "red")
 ```
 
-&lt;img src="bigstatsr_files/figure-html/unnamed-chunk-25-1.svg" width="60%" style="display: block; margin: auto;" /&gt;
-
+&lt;img src="bigstatsr_files/figure-html/unnamed-chunk-25-1.svg" width="55%" style="display: block; margin: auto;" /&gt;
 
 
 ---
 
 class: center middle inverse
 
-# Use case: 
+# Toy case: 
 
 ## Compute the sums of each column
 
@@ -557,8 +552,8 @@ str(sums6)
 
 ```
 ## 'data.frame':	1000 obs. of  2 variables:
-##  $ sum: num  -68.2 46.4 -30.9 -291.6 -221.3 ...
-##  $ var: num  0.996 0.993 0.997 1.009 0.999 ...
+##  $ sum: num  -51.44 99.55 5.56 93.25 -143.95 ...
+##  $ var: num  0.973 0.988 0.978 0.99 0.993 ...
 ```
 
 ```r
@@ -617,6 +612,12 @@ class: inverse, center, middle
 ## Contributors are welcomed!
 
 &lt;img src="cat-help.jpg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Make sure to grab an hex sticker
+
+&lt;img src="https://raw.githubusercontent.com/privefl/bigstatsr/master/bigstatsr.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
 

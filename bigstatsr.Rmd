@@ -234,7 +234,7 @@ all.equal(corr1, corr2[])
 
 ---
 
-## Partial SVD
+## Partial Singular Value Decomposition
 
 ```{r, echo=TRUE, out.width="50%"}
 system.time(svd1 <- svd(scale(mat), nu = 10, nv = 10))
@@ -259,25 +259,13 @@ system.time(svd3 <- big_randomSVD(X, fun.scaling = big_scale(), k = 10))
 set.seed(1)
 ```
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, fig.asp=0.7, out.width="63%"}
 M <- 100 # number of causal variables
 set <- sample(ncol(X), M)
 y <- scale(X[, set]) %*% rnorm(M)
 y <- y + rnorm(length(y), sd = 2 * sd(y))
 
-ind.train <- sort(sample(nrow(X), size = 0.8 * nrow(X)))
-ind.test <- setdiff(rows_along(X), ind.train)
-
-mult_test <- big_univLinReg(X, y[ind.train], ind.train = ind.train, 
-                            covar.train = svd2$u[ind.train, ])
-str(mult_test)
-```
-
----
-
-### P-values
-
-```{r, echo=TRUE, fig.asp=0.8, out.width="80%"}
+mult_test <- big_univLinReg(X, y, covar.train = svd2$u)
 hist(pval <- predict(mult_test, log10 = FALSE))
 ```
 
@@ -294,16 +282,32 @@ plot(mult_test) +
 
 ---
 
-## Prediction
+## Predictive models
 
 ```{r, echo=TRUE, out.width="60%", fig.asp=0.8}
+# Split the indices in train/test sets
+ind.train <- sort(sample(nrow(X), size = 0.8 * nrow(X)))
+ind.test <- setdiff(rows_along(X), ind.train)
+
+# Train a linear model with elastic-net regularization
+# and automatic choice of hyper-parameter lambda
 train <- big_spLinReg(X, y[ind.train], ind.train = ind.train, 
                       covar.train = svd2$u[ind.train, ])
-preds <- predict(train, X = X, ind.row = ind.test, covar.row = svd2$u[ind.test, ])
-pred <- rowMeans(preds)
-plot(pred, y[ind.test], pch = 20); abline(0, 1, col = "red")
 ```
 
+---
+
+## Prediction on test set
+
+```{r, echo=TRUE, out.width="55%", fig.asp=0.8}
+# Get K=10 predictions for the test set
+preds <- predict(train, X = X, ind.row = ind.test, 
+                 covar.row = svd2$u[ind.test, ])
+# Average all the predictions
+pred <- rowMeans(preds)
+# Plot true value vs prediction
+plot(pred, y[ind.test], pch = 20); abline(0, 1, col = "red")
+```
 
 
 ---
@@ -514,6 +518,14 @@ knitr::include_graphics("bty185.png")
 
 ```{r, out.width='80%'}
 knitr::include_graphics("cat-help.jpg")
+```
+
+---
+
+## Make sure to grab an hex sticker
+
+```{r, out.width='70%'}
+knitr::include_graphics("https://raw.githubusercontent.com/privefl/bigstatsr/master/bigstatsr.png")
 ```
 
 ---
