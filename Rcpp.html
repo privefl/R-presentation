@@ -7,7 +7,7 @@
     <meta name="date" content="2018-03-15" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
-    <link href="libs/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome-5.0.11/css/fontawesome-all.min.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -255,12 +255,12 @@ microbenchmark::microbenchmark(
 ```
 ## Unit: microseconds
 ##    expr      min        lq      mean    median        uq      max
-##  R LOOP 3018.332 3112.3425 3297.7601 3235.0115 3349.8820 5102.905
-##   R VEC   94.443   94.8025  104.5203   96.6755  103.0250  177.170
-##  C LOOP  126.784  127.6760  150.1593  131.0165  156.7535  640.346
-##   C VEC  126.742  127.3315  144.0347  129.6760  144.9810  677.343
-##    C IT  314.866  316.2795  356.4333  320.4420  362.6280 1287.038
-##   C STD  126.725  127.4795  148.1023  129.9560  153.7625  703.345
+##  R LOOP 3011.741 3120.9465 3427.0180 3333.0435 3567.9745 6539.369
+##   R VEC   94.535   94.7925  107.7183   97.8150  119.4990  161.905
+##  C LOOP  126.928  128.3625  152.3319  131.2900  157.0990 1048.438
+##   C VEC  127.010  127.8960  149.5685  131.4835  153.5225  875.355
+##    C IT  283.701  285.5730  323.4720  293.7015  344.2515 1126.623
+##   C STD  127.021  127.5110  149.7604  131.2360  157.0360  790.412
 ##  neval
 ##    100
 ##    100
@@ -579,16 +579,16 @@ microbenchmark::microbenchmark(
 
 ```
 ## Unit: microseconds
-##                 expr       min        lq       mean    median
-##     gibbs_r(100, 10)  3728.388  4268.569  4997.7848  4915.191
-##   gibbs_cpp(100, 10)   258.074   284.933   311.6433   305.897
-##    gibbs_r(1000, 10) 44167.642 46414.724 51599.1005 48353.628
-##  gibbs_cpp(1000, 10)  2642.494  2893.390  3115.5140  2998.657
+##                 expr       min         lq       mean    median
+##     gibbs_r(100, 10)  3874.772  4590.0610  5227.9596  5201.155
+##   gibbs_cpp(100, 10)   244.603   271.6625   306.4258   285.529
+##    gibbs_r(1000, 10) 47832.993 50077.0245 55029.9208 51193.546
+##  gibbs_cpp(1000, 10)  2524.100  2701.7555  2999.8113  2897.436
 ##         uq       max neval
-##   5422.884 12241.356   100
-##    335.231   479.788   100
-##  49931.635 99049.087   100
-##   3192.266  5055.345   100
+##   5712.733  7822.054   100
+##    308.803  1228.347   100
+##  54086.507 96511.306   100
+##   3150.553  4446.685   100
 ```
 
 ---
@@ -657,8 +657,8 @@ x2
 ```
 
 ```
-##  [1] 100.00000000   0.91905291   0.30167791   0.48024702   0.06066511
-##  [6]   0.45984627   0.48576869   0.66749942   0.67787377   0.21145147
+##  [1] 100.0000000   0.2141551   0.9758600   0.4368239   0.6164925
+##  [6]   0.6045934   0.7977633   0.3765584   0.5999117   0.2155159
 ```
 
 ```r
@@ -699,8 +699,8 @@ x2
 ```
 
 ```
-##  [1] 0.87369643 0.28461994 0.23416995 0.94964702 0.95052901 0.08344181
-##  [7] 0.06457583 0.02107182 0.40215324 0.78409735
+##  [1] 0.99290586 0.79324628 0.53300777 0.06261034 0.89626767 0.49939172
+##  [7] 0.23427955 0.32377472 0.15492356 0.42202812
 ```
 
 ---
@@ -852,11 +852,11 @@ microbenchmark::microbenchmark(
 ```
 ## Unit: milliseconds
 ##        expr       min        lq      mean    median        uq
-##    fun_r(x) 81.268984 82.865902 85.645063 84.039362 85.734318
-##  fun_cpp(x)  5.546142  6.027972  6.809477  6.545704  7.476435
-##         max neval
-##  126.070263   100
-##    9.073947   100
+##    fun_r(x) 90.648164 94.042297 102.29452 99.059534 108.82827
+##  fun_cpp(x)  6.978074  7.470771   9.32281  8.270141  10.06478
+##        max neval
+##  156.95222   100
+##   51.97196   100
 ```
 
 
@@ -875,7 +875,7 @@ https://privefl.github.io/R-presentation/Rcpp.html
 
 &lt;br&gt;
 
-<i class="fa  fa-twitter "></i> [privefl](https://twitter.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fa  fa-github "></i> [privefl](https://github.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fa  fa-stack-overflow "></i> [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
+<i class="fab  fa-twitter "></i> [privefl](https://twitter.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-github "></i> [privefl](https://github.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-stack-overflow "></i> [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
 
 .footnote[Slides created via R package [**xaringan**](https://github.com/yihui/xaringan).]
     </textarea>
