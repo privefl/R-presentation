@@ -29,6 +29,10 @@ class: title-slide center middle inverse
 
 ### Grenoble RUG - May 24, 2018
 
+**Slides:** `https://privefl.github.io/R-presentation/bigstatsr.html`
+
+**Installation:** `devtools::install_github("privefl/bigstatsr")`
+
 ---
 
 class: center middle inverse
@@ -590,7 +594,7 @@ class: inverse, center, middle
 
 <br/><br/>
 
-Presentation: https://privefl.github.io/eRum-2018/slides.html
+Presentation: https://privefl.github.io/R-presentation/bigstatsr.html
 
 Package's website: https://privefl.github.io/bigstatsr/
 

@@ -21,6 +21,10 @@ class: title-slide center middle inverse
 
 ### Grenoble RUG - May 24, 2018
 
+**Slides:** `https://privefl.github.io/R-presentation/bigstatsr.html`
+
+**Installation:** `devtools::install_github("privefl/bigstatsr")`
+
 ---
 
 class: center middle inverse
@@ -254,7 +258,7 @@ X[1:5, 1]
 ```
 
 ```
-## [1]  0.9210898  1.6542006  1.5457768 -0.6228721  0.6763390
+## [1]  0.5372871 -0.7843506  1.7548309 -2.1620595  0.3548868
 ```
 
 ---
@@ -269,7 +273,7 @@ system.time(corr1 &lt;- cor(mat))
 
 ```
 ##    user  system elapsed 
-##   7.860   0.008   7.869
+##   7.593   0.009   7.603
 ```
 
 
@@ -279,7 +283,7 @@ system.time(corr2 &lt;- big_cor(X))
 
 ```
 ##    user  system elapsed 
-##   0.524   0.036   0.560
+##   0.434   0.032   0.466
 ```
 
 ```r
@@ -301,7 +305,7 @@ system.time(svd1 &lt;- svd(scale(mat), nu = 10, nv = 10))
 
 ```
 ##    user  system elapsed 
-##   4.563   0.216   4.780
+##   4.650   0.212   4.867
 ```
 
 
@@ -316,7 +320,7 @@ system.time(svd2 &lt;- big_SVD(X, fun.scaling = big_scale(), k = 10))
 
 ```
 ##    user  system elapsed 
-##   0.729   0.021   0.750
+##   0.761   0.027   0.792
 ```
 
 
@@ -328,7 +332,7 @@ system.time(svd3 &lt;- big_randomSVD(X, fun.scaling = big_scale(), k = 10))
 
 ```
 ##    user  system elapsed 
-##   2.191   0.000   2.190
+##   2.039   0.000   2.040
 ```
 
 ---
@@ -558,8 +562,8 @@ str(sums6)
 
 ```
 ## 'data.frame':	1000 obs. of  2 variables:
-##  $ sum: num  19.5738 93.6688 -121.133 0.0175 1.1705 ...
-##  $ var: num  0.995 1.011 0.998 1.021 0.991 ...
+##  $ sum: num  -78.4 51.8 29.14 9.45 70.98 ...
+##  $ var: num  1.009 1.01 0.999 0.985 1.017 ...
 ```
 
 ```r
@@ -599,7 +603,7 @@ system.time(
 
 ```
 ##    user  system elapsed 
-##   9.690   0.004   9.699
+##   9.677   0.007   9.701
 ```
 
 ```r
@@ -611,7 +615,7 @@ system.time(
 
 ```
 ##    user  system elapsed 
-##   0.036   0.029   5.571
+##   0.036   0.031   6.001
 ```
 
 ---
@@ -632,7 +636,7 @@ system.time(
 
 ```
 ##    user  system elapsed 
-##   0.107   0.076   5.753
+##   0.125   0.072   5.679
 ```
 
 ```r
@@ -712,7 +716,7 @@ class: inverse, center, middle
 
 &lt;br/&gt;&lt;br/&gt;
 
-Presentation: https://privefl.github.io/eRum-2018/slides.html
+Presentation: https://privefl.github.io/R-presentation/bigstatsr.html
 
 Package's website: https://privefl.github.io/bigstatsr/
 
