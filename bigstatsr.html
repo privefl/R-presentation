@@ -254,7 +254,7 @@ X[1:5, 1]
 ```
 
 ```
-## [1] -0.7792814  0.4392367  0.4546336  0.1548599 -0.8497425
+## [1]  0.9210898  1.6542006  1.5457768 -0.6228721  0.6763390
 ```
 
 ---
@@ -269,7 +269,7 @@ system.time(corr1 &lt;- cor(mat))
 
 ```
 ##    user  system elapsed 
-##   7.655   0.006   7.662
+##   7.860   0.008   7.869
 ```
 
 
@@ -279,7 +279,7 @@ system.time(corr2 &lt;- big_cor(X))
 
 ```
 ##    user  system elapsed 
-##   0.453   0.037   0.490
+##   0.524   0.036   0.560
 ```
 
 ```r
@@ -301,7 +301,7 @@ system.time(svd1 &lt;- svd(scale(mat), nu = 10, nv = 10))
 
 ```
 ##    user  system elapsed 
-##   4.958   0.241   5.199
+##   4.563   0.216   4.780
 ```
 
 
@@ -316,7 +316,7 @@ system.time(svd2 &lt;- big_SVD(X, fun.scaling = big_scale(), k = 10))
 
 ```
 ##    user  system elapsed 
-##   0.701   0.030   0.732
+##   0.729   0.021   0.750
 ```
 
 
@@ -328,7 +328,7 @@ system.time(svd3 &lt;- big_randomSVD(X, fun.scaling = big_scale(), k = 10))
 
 ```
 ##    user  system elapsed 
-##   2.178   0.000   2.179
+##   2.191   0.000   2.190
 ```
 
 ---
@@ -345,19 +345,19 @@ y &lt;- scale(X[, set]) %*% rnorm(M)
 y &lt;- y + rnorm(length(y), sd = 2 * sd(y))
 
 mult_test &lt;- big_univLinReg(X, y, covar.train = svd2$u)
-hist(pval &lt;- predict(mult_test, log10 = FALSE))
+plot(mult_test)
 ```
 
 &lt;img src="bigstatsr_files/figure-html/unnamed-chunk-22-1.svg" width="63%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-### P-values
+## Multiple association
 
 
 ```r
 library(ggplot2)
-plot(mult_test) + 
+plot(mult_test, type = "Manhattan") + 
   aes(color = cols_along(X) %in% set) +
   labs(color = "Causal?")
 ```
@@ -366,7 +366,7 @@ plot(mult_test) +
 
 ---
 
-## Predictive models
+## Prediction
 
 
 ```r
@@ -380,22 +380,28 @@ train &lt;- big_spLinReg(X, y[ind.train], ind.train = ind.train,
                       covar.train = svd2$u[ind.train, ])
 ```
 
----
-
-## Prediction on test set
-
 
 ```r
-# Get K=10 predictions on the test set
+# Get K=10 predictions for the test set
 preds &lt;- predict(train, X = X, ind.row = ind.test, 
                  covar.row = svd2$u[ind.test, ])
 # Average all the predictions
 pred &lt;- rowMeans(preds)
-# Plot true value vs prediction
-plot(pred, y[ind.test], pch = 20); abline(0, 1, col = "red")
 ```
 
-&lt;img src="bigstatsr_files/figure-html/unnamed-chunk-25-1.svg" width="55%" style="display: block; margin: auto;" /&gt;
+---
+
+## Prediction
+
+
+```r
+# Plot true value vs prediction
+qplot(pred, y[ind.test]) + 
+  geom_abline(intercept = 0, slope = 1, color = "red") + 
+  theme_bigstatsr()
+```
+
+&lt;img src="bigstatsr_files/figure-html/unnamed-chunk-26-1.svg" width="60%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -404,7 +410,7 @@ class: center middle inverse
 
 # Toy case: 
 
-## Compute the sums of each column
+## Compute the sum for each column
 
 ---
 
@@ -453,8 +459,8 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 NumericVector bigcolsums(Environment BM) {
   
-  XPtr&lt;FBM&gt; xpBM = BM["address"];  // get the external pointer
-  BMAcc&lt;double&gt; macc(xpBM);        // create an accessor to the data
+  XPtr&lt;FBM&gt; xpBM = BM["address"]; // get the external pointer
+  BMAcc&lt;double&gt; macc(xpBM);       // create an accessor to the data
   
   size_t i, j, n = macc.nrow(), m = macc.ncol();
   NumericVector res(m);  // vector of m zeros
@@ -552,12 +558,85 @@ str(sums6)
 
 ```
 ## 'data.frame':	1000 obs. of  2 variables:
-##  $ sum: num  -51.44 99.55 5.56 93.25 -143.95 ...
-##  $ var: num  0.973 0.988 0.978 0.99 0.993 ...
+##  $ sum: num  19.5738 93.6688 -121.133 0.0175 1.1705 ...
+##  $ var: num  0.995 1.011 0.998 1.021 0.991 ...
 ```
 
 ```r
 all.equal(sums6$sum, sums1)
+```
+
+```
+## [1] TRUE
+```
+
+---
+
+class: center middle inverse
+
+# Parallelism
+
+---
+
+## Most of the functions are parallelized
+
+
+```r
+ind.rep &lt;- rep(cols_along(X), each = 100)  ## size: 100,000
+(NCORES &lt;- nb_cores())
+```
+
+```
+## [1] 2
+```
+
+```r
+system.time(
+  mult_test2 &lt;- big_univLinReg(X, y, covar.train = svd2$u,
+                               ind.col = ind.rep)
+)
+```
+
+```
+##    user  system elapsed 
+##   9.690   0.004   9.699
+```
+
+```r
+system.time(
+  mult_test3 &lt;- big_univLinReg(X, y, covar.train = svd2$u,
+                               ind.col = ind.rep, ncores = NCORES) 
+)
+```
+
+```
+##    user  system elapsed 
+##   0.036   0.029   5.571
+```
+
+---
+
+## Parallelize your own functions
+
+
+```r
+system.time(
+  mult_test4 &lt;- big_parallelize(
+    X, p.FUN = function(X, ind, y, covar) {
+      bigstatsr::big_univLinReg(X, y, covar.train = covar,
+                                ind.col = ind)
+    }, p.combine = "rbind", ind = ind.rep, 
+    ncores = NCORES, y = y, covar = svd2$u)
+)
+```
+
+```
+##    user  system elapsed 
+##   0.107   0.076   5.753
+```
+
+```r
+all.equal(mult_test4, mult_test3)
 ```
 
 ```
@@ -582,13 +661,15 @@ class: inverse, center, middle
 
 ## Advantages of using FBM objects
 
-- you can apply algorithms on 100GB of data,
+&lt;br&gt;
 
-- you can easily parallelize your algorithms because the data on disk is shared,
+- you can apply algorithms on **data larger than your RAM**,
 
-- you write more efficient algorithms,
+- you can easily **parallelize** your algorithms because the data on disk is shared,
 
-- you can use different types of data, for example, in my field, I’m storing my data with only 1 byte per element (rather than 8 bytes for a standard R matrix). See [the documentation of the FBM class](https://privefl.github.io/bigstatsr/reference/FBM-class.html) for details.
+- you write **more efficient algorithms** (you do less copies and think more about what you're doing),
+
+- you can use **different types of data**, for example, in my field, I’m storing my data with only 1 byte per element (rather than 8 bytes for a standard R matrix). See [the documentation of the FBM class](https://privefl.github.io/bigstatsr/reference/FBM-class.html) for details.
 
 
 ---
@@ -617,7 +698,9 @@ class: inverse, center, middle
 
 ## Make sure to grab an hex sticker
 
-&lt;img src="https://raw.githubusercontent.com/privefl/bigstatsr/master/bigstatsr.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;br&gt;
+
+&lt;img src="https://raw.githubusercontent.com/privefl/bigstatsr/master/bigstatsr.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 ---
 

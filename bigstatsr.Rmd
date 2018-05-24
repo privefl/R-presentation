@@ -266,23 +266,23 @@ y <- scale(X[, set]) %*% rnorm(M)
 y <- y + rnorm(length(y), sd = 2 * sd(y))
 
 mult_test <- big_univLinReg(X, y, covar.train = svd2$u)
-hist(pval <- predict(mult_test, log10 = FALSE))
+plot(mult_test)
 ```
 
 ---
 
-### P-values
+## Multiple association
 
 ```{r, echo=TRUE, fig.asp=0.6, out.width="85%"}
 library(ggplot2)
-plot(mult_test) + 
+plot(mult_test, type = "Manhattan") + 
   aes(color = cols_along(X) %in% set) +
   labs(color = "Causal?")
 ```
 
 ---
 
-## Predictive models
+## Prediction
 
 ```{r, echo=TRUE, out.width="60%", fig.asp=0.8}
 # Split the indices in train/test sets
@@ -295,18 +295,23 @@ train <- big_spLinReg(X, y[ind.train], ind.train = ind.train,
                       covar.train = svd2$u[ind.train, ])
 ```
 
----
-
-## Prediction on test set
-
-```{r, echo=TRUE, out.width="55%", fig.asp=0.8}
+```{r, echo=TRUE, out.width="60%", fig.asp=0.8}
 # Get K=10 predictions for the test set
 preds <- predict(train, X = X, ind.row = ind.test, 
                  covar.row = svd2$u[ind.test, ])
 # Average all the predictions
 pred <- rowMeans(preds)
+```
+
+---
+
+## Prediction
+
+```{r, echo=TRUE, out.width="60%", fig.asp=0.9}
 # Plot true value vs prediction
-plot(pred, y[ind.test], pch = 20); abline(0, 1, col = "red")
+qplot(pred, y[ind.test]) + 
+  geom_abline(intercept = 0, slope = 1, color = "red") + 
+  theme_bigstatsr()
 ```
 
 
@@ -316,7 +321,7 @@ class: center middle inverse
 
 # Toy case: 
 
-## Compute the sums of each column
+## Compute the sum for each column
 
 ---
 
@@ -362,8 +367,8 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 NumericVector bigcolsums(Environment BM) {
   
-  XPtr<FBM> xpBM = BM["address"];  // get the external pointer
-  BMAcc<double> macc(xpBM);        // create an accessor to the data
+  XPtr<FBM> xpBM = BM["address"]; // get the external pointer
+  BMAcc<double> macc(xpBM);       // create an accessor to the data
   
   size_t i, j, n = macc.nrow(), m = macc.ncol();
   NumericVector res(m);  // vector of m zeros
@@ -471,6 +476,47 @@ all.equal(sums6$sum, sums1)
 
 class: center middle inverse
 
+# Parallelism
+
+---
+
+## Most of the functions are parallelized
+
+```{r, echo=TRUE}
+ind.rep <- rep(cols_along(X), each = 100)  ## size: 100,000
+(NCORES <- nb_cores())
+
+system.time(
+  mult_test2 <- big_univLinReg(X, y, covar.train = svd2$u,
+                               ind.col = ind.rep)
+)
+
+system.time(
+  mult_test3 <- big_univLinReg(X, y, covar.train = svd2$u,
+                               ind.col = ind.rep, ncores = NCORES) 
+)
+```
+
+---
+
+## Parallelize your own functions
+
+```{r, echo=TRUE}
+system.time(
+  mult_test4 <- big_parallelize(
+    X, p.FUN = function(X, ind, y, covar) {
+      bigstatsr::big_univLinReg(X, y, covar.train = covar,
+                                ind.col = ind)
+    }, p.combine = "rbind", ind = ind.rep, 
+    ncores = NCORES, y = y, covar = svd2$u)
+)
+all.equal(mult_test4, mult_test3)
+```
+
+---
+
+class: center middle inverse
+
 # Conclusion
 
 ---
@@ -485,13 +531,15 @@ class: inverse, center, middle
 
 ## Advantages of using FBM objects
 
-- you can apply algorithms on 100GB of data,
+<br>
 
-- you can easily parallelize your algorithms because the data on disk is shared,
+- you can apply algorithms on **data larger than your RAM**,
 
-- you write more efficient algorithms,
+- you can easily **parallelize** your algorithms because the data on disk is shared,
 
-- you can use different types of data, for example, in my field, I’m storing my data with only 1 byte per element (rather than 8 bytes for a standard R matrix). See [the documentation of the FBM class](https://privefl.github.io/bigstatsr/reference/FBM-class.html) for details.
+- you write **more efficient algorithms** (you do less copies and think more about what you're doing),
+
+- you can use **different types of data**, for example, in my field, I’m storing my data with only 1 byte per element (rather than 8 bytes for a standard R matrix). See [the documentation of the FBM class](https://privefl.github.io/bigstatsr/reference/FBM-class.html) for details.
 
 
 ---
@@ -524,7 +572,9 @@ knitr::include_graphics("cat-help.jpg")
 
 ## Make sure to grab an hex sticker
 
-```{r, out.width='70%'}
+<br>
+
+```{r, out.width='50%'}
 knitr::include_graphics("https://raw.githubusercontent.com/privefl/bigstatsr/master/bigstatsr.png")
 ```
 
