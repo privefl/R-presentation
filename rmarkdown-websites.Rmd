@@ -1,0 +1,119 @@
+---
+title: "R Markdown Websites - Grenoble RUG"
+output:
+  xaringan::moon_reader:
+    seal: false
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: true
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', dev = "svg")
+```
+
+class: title-slide center middle inverse
+
+# Make your personal webpage with `r icon::fa("r-project")`
+
+<br>
+
+## Florian Privé and Magali Richard
+
+### Grenoble RUG - June 14, 2018
+
+---
+
+## R Markdown Websites
+
+<br>
+
+Documentation: https://rmarkdown.rstudio.com/rmarkdown_websites.html
+
+<br>
+
+### Examples
+
+- Website of Grenoble RUG: https://r-in-grenoble.github.io/
+
+- Website of Magali: http://membres-timc.imag.fr/Magali.Richard/
+
+- Website of Florian: https://privefl.github.io/
+
+---
+
+## Principle
+
+R Markdown websites:
+
+- A YAML file to define 
+
+    - the theme you use
+    
+    - the elements of your navigation bar
+    
+- One R Markdown file per page
+
+---
+
+## R Markdown
+
+Code chunks R + text in Markdown
+
+You can also write HTML: I use `<br>` all the time to get a blank line.
+
+[R Markdown (official website)](https://rmarkdown.rstudio.com/)
+
+[Introduction to R Markdown](http://r4ds.had.co.nz/r-markdown.html)
+
+### Markdown
+
+Markdown is a human-readable text format that can be converted in many languages (such as HTML or Word).
+
+[Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
+
+---
+
+## Time to make your website
+
+1. Go to this tutorial: https://github.com/privefl/rmarkdown-website-template (Short link: https://goo.gl/xksSUH)
+
+2. Follow the instructions with me
+
+3. Fill your website with your own content
+
+<br>
+
+For people who don't have a working configuration (RStudio, Git and GitHub), **I'll do it again in 15-20 minutes**.
+
+---
+
+## Another way: blogdown
+
+Blogdown is more powerful that R Markdown Websites but is harder to configure.
+
+- [Blogdown book (documentation)](https://bookdown.org/yihui/blogdown/)
+
+- [List of blog-posts to help you configure your site](https://maraaverick.rbind.io/2017/10/keeping-up-with-blogdown/)
+
+### Examples
+
+---
+
+class: inverse, center, middle
+
+# Thanks!
+
+<br/><br/>
+
+<br/>
+
+`r icon::fa("twitter")` [privefl](https://twitter.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("github")` [privefl](https://github.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("stack-overflow")` [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
+
+`r icon::fa("twitter")` [magg_richard](https://twitter.com/magg_richard) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("github")` [magrichard](https://github.com/magrichard)
+
+
+.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
