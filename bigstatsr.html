@@ -15,7 +15,7 @@
 
 class: title-slide center middle inverse
 
-# The <i class="fab  fa-r "></i> package {bigstatsr}:&lt;br/&gt;memory- and computation-efficient tools&lt;br/&gt;for big matrices stored on disk
+# The <i class="fab  fa-r-project "></i> package {bigstatsr}:&lt;br/&gt;memory- and computation-efficient tools&lt;br/&gt;for big matrices stored on disk
 
 ## Florian Privé (@privefl)
 
@@ -51,7 +51,7 @@ I'm a PhD Student (2016-2019) in **Predictive Human Genetics**.
  
 &lt;img src="https://media.giphy.com/media/3o7bueyxGydy48Lwgo/giphy.gif" width="55%" style="display: block; margin: auto;" /&gt;
 
-.footnote[But I still want to use <i class="fab  fa-r "></i>..]
+.footnote[But I still want to use <i class="fab  fa-r-project "></i>..]
 
 ---
 
@@ -258,7 +258,7 @@ X[1:5, 1]
 ```
 
 ```
-## [1]  0.5372871 -0.7843506  1.7548309 -2.1620595  0.3548868
+## [1]  0.5637649  0.8434502 -1.4822282 -0.7728573 -0.8514508
 ```
 
 ---
@@ -273,7 +273,7 @@ system.time(corr1 &lt;- cor(mat))
 
 ```
 ##    user  system elapsed 
-##   7.593   0.009   7.603
+##   9.170   0.012   9.191
 ```
 
 
@@ -283,7 +283,7 @@ system.time(corr2 &lt;- big_cor(X))
 
 ```
 ##    user  system elapsed 
-##   0.434   0.032   0.466
+##   0.557   0.041   0.619
 ```
 
 ```r
@@ -305,7 +305,7 @@ system.time(svd1 &lt;- svd(scale(mat), nu = 10, nv = 10))
 
 ```
 ##    user  system elapsed 
-##   4.650   0.212   4.867
+##   5.326   0.403   5.746
 ```
 
 
@@ -315,12 +315,8 @@ system.time(svd2 &lt;- big_SVD(X, fun.scaling = big_scale(), k = 10))
 ```
 
 ```
-## (1)
-```
-
-```
 ##    user  system elapsed 
-##   0.761   0.027   0.792
+##   1.900   0.129   2.071
 ```
 
 
@@ -332,7 +328,7 @@ system.time(svd3 &lt;- big_randomSVD(X, fun.scaling = big_scale(), k = 10))
 
 ```
 ##    user  system elapsed 
-##   2.039   0.000   2.040
+##   2.702   0.014   2.717
 ```
 
 ---
@@ -386,11 +382,9 @@ train &lt;- big_spLinReg(X, y[ind.train], ind.train = ind.train,
 
 
 ```r
-# Get K=10 predictions for the test set
-preds &lt;- predict(train, X = X, ind.row = ind.test, 
-                 covar.row = svd2$u[ind.test, ])
-# Average all the predictions
-pred &lt;- rowMeans(preds)
+# Get predictions for the test set
+pred &lt;- predict(train, X = X, ind.row = ind.test, 
+                covar.row = svd2$u[ind.test, ])
 ```
 
 ---
@@ -562,8 +556,8 @@ str(sums6)
 
 ```
 ## 'data.frame':	1000 obs. of  2 variables:
-##  $ sum: num  -78.4 51.8 29.14 9.45 70.98 ...
-##  $ var: num  1.009 1.01 0.999 0.985 1.017 ...
+##  $ sum: num  33.6 -165.3 -64.7 119.6 -80.1 ...
+##  $ var: num  1.007 0.999 1.011 1.006 0.989 ...
 ```
 
 ```r
@@ -603,7 +597,7 @@ system.time(
 
 ```
 ##    user  system elapsed 
-##   9.677   0.007   9.701
+##  11.458   0.004  11.469
 ```
 
 ```r
@@ -615,7 +609,7 @@ system.time(
 
 ```
 ##    user  system elapsed 
-##   0.036   0.031   6.001
+##   0.061   0.052   7.678
 ```
 
 ---
@@ -636,7 +630,7 @@ system.time(
 
 ```
 ##    user  system elapsed 
-##   0.125   0.072   5.679
+##   0.195   0.075   8.210
 ```
 
 ```r
@@ -659,7 +653,7 @@ class: inverse, center, middle
 
 # I'm able  to run algorithms
 # on 100GB of data
-# in <i class="fab  fa-r "></i> on my computer 
+# in <i class="fab  fa-r-project "></i> on my computer 
 
 ---
 

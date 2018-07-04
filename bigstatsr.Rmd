@@ -23,7 +23,7 @@ library(bigstatsr)
 
 class: title-slide center middle inverse
 
-# The `r icon::fa_r()` package {bigstatsr}:<br/>memory- and computation-efficient tools<br/>for big matrices stored on disk
+# The `r icon::fa_r_project()` package {bigstatsr}:<br/>memory- and computation-efficient tools<br/>for big matrices stored on disk
 
 ## Florian Privé (@privefl)
 
@@ -63,7 +63,7 @@ knitr::include_graphics("PRS.png")
 knitr::include_graphics("https://media.giphy.com/media/3o7bueyxGydy48Lwgo/giphy.gif")
 ```
 
-.footnote[But I still want to use `r icon::fa_r()`..]
+.footnote[But I still want to use `r icon::fa_r_project()`..]
 
 ---
 
@@ -300,11 +300,9 @@ train <- big_spLinReg(X, y[ind.train], ind.train = ind.train,
 ```
 
 ```{r, echo=TRUE, out.width="60%", fig.asp=0.8}
-# Get K=10 predictions for the test set
-preds <- predict(train, X = X, ind.row = ind.test, 
-                 covar.row = svd2$u[ind.test, ])
-# Average all the predictions
-pred <- rowMeans(preds)
+# Get predictions for the test set
+pred <- predict(train, X = X, ind.row = ind.test, 
+                covar.row = svd2$u[ind.test, ])
 ```
 
 ---
@@ -529,7 +527,7 @@ class: inverse, center, middle
 
 # I'm able  to run algorithms
 # on 100GB of data
-# in `r icon::fa_r()` on my computer 
+# in `r icon::fa_r_project()` on my computer 
 
 ---
 
