@@ -1,0 +1,67 @@
+---
+title: "What R can do - Grenoble RUG"
+output:
+  xaringan::moon_reader:
+    seal: false
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: true
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', dev = "svg")
+```
+
+class: title-slide center middle inverse
+
+# What `r icon::fa("r-project")` can do for you
+
+<br>
+
+## Florian Privé
+
+### Grenoble RUG - September 13, 2018
+
+---
+
+
+Can't know everything -> need community (grrr [Join the French-speaking R community](https://join.slack.com/t/r-grrr/shared_invite/enQtMzI4MzgwNTc4OTAxLWZlOGZiZTBiMWU0NDQ3OTYzOGE1YThiODgwZWNhNWEyYjI4ZDJiNmNhY2YyYWI5YzFiOTFkNDYxYzkwODUwNWM))
+Learn more with [this blog post](https://masalmon.eu/2018/07/22/wheretogethelp/)
+
+https://cran.r-project.org/web/views/
+https://github.com/rstudio/RStartHere
+
+- data analysis + stats + DL + DB
+
+- web scraping, shiny apps
+
+- HPC
+
+- RStudio 
+
+- visualization (ggplot, gganimate, rayshader)
+
+- GIS
+
+- Time series / Text / Images
+
+- learning resources
+
+- R Markdown
+
+---
+
+class: inverse, center, middle
+
+# Thanks!
+
+<br/><br/>
+
+<br/>
+
+`r icon::fa("twitter")` [privefl](https://twitter.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("github")` [privefl](https://github.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("stack-overflow")` [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
+
+.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
