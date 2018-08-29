@@ -56,6 +56,13 @@ class: title-slide center middle inverse
 
 ```r
 library(dplyr)
+```
+
+```
+Warning: package 'dplyr' was built under R version 3.4.4
+```
+
+```r
 (flights &lt;- nycflights13::flights)
 ```
 
@@ -63,16 +70,16 @@ library(dplyr)
 # A tibble: 336,776 x 19
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
- 1  2013     1     1      517            515         2      830
- 2  2013     1     1      533            529         4      850
- 3  2013     1     1      542            540         2      923
- 4  2013     1     1      544            545        -1     1004
- 5  2013     1     1      554            600        -6      812
- 6  2013     1     1      554            558        -4      740
- 7  2013     1     1      555            600        -5      913
- 8  2013     1     1      557            600        -3      709
- 9  2013     1     1      557            600        -3      838
-10  2013     1     1      558            600        -2      753
+ 1  2013     1     1      517            515        2.      830
+ 2  2013     1     1      533            529        4.      850
+ 3  2013     1     1      542            540        2.      923
+ 4  2013     1     1      544            545       -1.     1004
+ 5  2013     1     1      554            600       -6.      812
+ 6  2013     1     1      554            558       -4.      740
+ 7  2013     1     1      555            600       -5.      913
+ 8  2013     1     1      557            600       -3.      709
+ 9  2013     1     1      557            600       -3.      838
+10  2013     1     1      558            600       -2.      753
 # ... with 336,766 more rows, and 12 more variables:
 #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
 #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
@@ -82,19 +89,19 @@ library(dplyr)
 
 ---
 
-## Blabla
+## Data manipulation with {dplyr}
 
 R package {dplyr} aims to provide a function for each basic verb of data manipulation:
 
-- ``filter()`` (and ``slice()``)
+- `filter()`
 
 - `arrange()`
 
-- `select()` (and `rename()`)
+- `select()`
 
 - `distinct()`
 
-- `mutate()` (and `transmute()`)
+- `mutate()`
 
 - `summarise()`
 
@@ -102,11 +109,7 @@ R package {dplyr} aims to provide a function for each basic verb of data manipul
 
 ---
 
-## Blabla
-
----
-
-## Filter
+## Filtering observations
 
 
 ```r
@@ -114,19 +117,23 @@ filter(flights, month == 1, day == 1)
 ```
 
 ```
+Warning: package 'bindrcpp' was built under R version 3.4.4
+```
+
+```
 # A tibble: 842 x 19
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
- 1  2013     1     1      517            515         2      830
- 2  2013     1     1      533            529         4      850
- 3  2013     1     1      542            540         2      923
- 4  2013     1     1      544            545        -1     1004
- 5  2013     1     1      554            600        -6      812
- 6  2013     1     1      554            558        -4      740
- 7  2013     1     1      555            600        -5      913
- 8  2013     1     1      557            600        -3      709
- 9  2013     1     1      557            600        -3      838
-10  2013     1     1      558            600        -2      753
+ 1  2013     1     1      517            515        2.      830
+ 2  2013     1     1      533            529        4.      850
+ 3  2013     1     1      542            540        2.      923
+ 4  2013     1     1      544            545       -1.     1004
+ 5  2013     1     1      554            600       -6.      812
+ 6  2013     1     1      554            558       -4.      740
+ 7  2013     1     1      555            600       -5.      913
+ 8  2013     1     1      557            600       -3.      709
+ 9  2013     1     1      557            600       -3.      838
+10  2013     1     1      558            600       -2.      753
 # ... with 832 more rows, and 12 more variables:
 #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
 #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
@@ -135,6 +142,8 @@ filter(flights, month == 1, day == 1)
 ```
 
 ---
+
+## Sorting
 
 
 ```r
@@ -145,16 +154,16 @@ arrange(flights, desc(dep_delay))
 # A tibble: 336,776 x 19
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
- 1  2013     1     9      641            900      1301     1242
- 2  2013     6    15     1432           1935      1137     1607
- 3  2013     1    10     1121           1635      1126     1239
- 4  2013     9    20     1139           1845      1014     1457
- 5  2013     7    22      845           1600      1005     1044
- 6  2013     4    10     1100           1900       960     1342
- 7  2013     3    17     2321            810       911      135
- 8  2013     6    27      959           1900       899     1236
- 9  2013     7    22     2257            759       898      121
-10  2013    12     5      756           1700       896     1058
+ 1  2013     1     9      641            900     1301.     1242
+ 2  2013     6    15     1432           1935     1137.     1607
+ 3  2013     1    10     1121           1635     1126.     1239
+ 4  2013     9    20     1139           1845     1014.     1457
+ 5  2013     7    22      845           1600     1005.     1044
+ 6  2013     4    10     1100           1900      960.     1342
+ 7  2013     3    17     2321            810      911.      135
+ 8  2013     6    27      959           1900      899.     1236
+ 9  2013     7    22     2257            759      898.      121
+10  2013    12     5      756           1700      896.     1058
 # ... with 336,766 more rows, and 12 more variables:
 #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
 #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
@@ -163,6 +172,8 @@ arrange(flights, desc(dep_delay))
 ```
 
 ---
+
+## Adding/replacing variables
 
 
 ```r
@@ -174,16 +185,16 @@ mutate(flights, gain = arr_delay - dep_delay,
 # A tibble: 336,776 x 21
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
- 1  2013     1     1      517            515         2      830
- 2  2013     1     1      533            529         4      850
- 3  2013     1     1      542            540         2      923
- 4  2013     1     1      544            545        -1     1004
- 5  2013     1     1      554            600        -6      812
- 6  2013     1     1      554            558        -4      740
- 7  2013     1     1      555            600        -5      913
- 8  2013     1     1      557            600        -3      709
- 9  2013     1     1      557            600        -3      838
-10  2013     1     1      558            600        -2      753
+ 1  2013     1     1      517            515        2.      830
+ 2  2013     1     1      533            529        4.      850
+ 3  2013     1     1      542            540        2.      923
+ 4  2013     1     1      544            545       -1.     1004
+ 5  2013     1     1      554            600       -6.      812
+ 6  2013     1     1      554            558       -4.      740
+ 7  2013     1     1      555            600       -5.      913
+ 8  2013     1     1      557            600       -3.      709
+ 9  2013     1     1      557            600       -3.      838
+10  2013     1     1      558            600       -2.      753
 # ... with 336,766 more rows, and 14 more variables:
 #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
 #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
@@ -192,6 +203,8 @@ mutate(flights, gain = arr_delay - dep_delay,
 ```
 
 ---
+
+## Piping operations
 
 
 ```r
@@ -207,18 +220,65 @@ print(flights2, n = 6)
 # A tibble: 842 x 21
    year month   day dep_time sched_dep_time dep_delay arr_time
   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
-1  2013     1     1      848           1835       853     1001
-2  2013     1     1     2343           1724       379      314
-3  2013     1     1     1815           1325       290     2120
-4  2013     1     1     2205           1720       285       46
-5  2013     1     1     1842           1422       260     1958
-6  2013     1     1     2115           1700       255     2330
+1  2013     1     1      848           1835      853.     1001
+2  2013     1     1     2343           1724      379.      314
+3  2013     1     1     1815           1325      290.     2120
+4  2013     1     1     2205           1720      285.       46
+5  2013     1     1     1842           1422      260.     1958
+6  2013     1     1     2115           1700      255.     2330
 # ... with 836 more rows, and 14 more variables:
 #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
 #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
 #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
 #   time_hour &lt;dttm&gt;, gain &lt;dbl&gt;, speed &lt;dbl&gt;
 ```
+
+---
+
+## Summarizing by group
+
+
+```r
+flights %&gt;%
+  group_by(carrier) %&gt;%
+  summarize(avg_arr_delay = mean(arr_delay, na.rm = TRUE)) %&gt;%
+  arrange(desc(avg_arr_delay)) %&gt;%
+  left_join(nycflights13::airlines)
+```
+
+```
+Joining, by = "carrier"
+```
+
+```
+# A tibble: 16 x 3
+   carrier avg_arr_delay name                       
+   &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;                      
+ 1 F9             21.9   Frontier Airlines Inc.     
+ 2 FL             20.1   AirTran Airways Corporation
+ 3 EV             15.8   ExpressJet Airlines Inc.   
+ 4 YV             15.6   Mesa Airlines Inc.         
+ 5 OO             11.9   SkyWest Airlines Inc.      
+ 6 MQ             10.8   Envoy Air                  
+ 7 WN              9.65  Southwest Airlines Co.     
+ 8 B6              9.46  JetBlue Airways            
+ 9 9E              7.38  Endeavor Air Inc.          
+10 UA              3.56  United Air Lines Inc.      
+11 US              2.13  US Airways Inc.            
+12 VX              1.76  Virgin America             
+13 DL              1.64  Delta Air Lines Inc.       
+14 AA              0.364 American Airlines Inc.     
+15 HA             -6.92  Hawaiian Airlines Inc.     
+16 AS             -9.93  Alaska Airlines Inc.       
+```
+
+---
+
+## {dplyr} also works with databases
+
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/738885c8f54f3ab6118545469c28cd6635fcd656/96e0d/homepage/interact.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Learn more with [this webinar](https://www.rstudio.com/resources/videos/best-practices-for-working-with-databases-webinar/).]
 
 ---
 
@@ -285,12 +345,23 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   d.head.appendChild(s);
 })();</script>
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
   }
-});
+})();
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

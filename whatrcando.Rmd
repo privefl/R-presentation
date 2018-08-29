@@ -11,7 +11,8 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = "svg", comment = "")
+knitr::opts_chunk$set(fig.align = 'center', dev = "svg", out.width = "90%",
+                      echo = TRUE, comment = "")
 options(width = 70)
 ```
 
@@ -62,17 +63,19 @@ library(dplyr)
 
 ---
 
+## Data manipulation with {dplyr}
+
 R package {dplyr} aims to provide a function for each basic verb of data manipulation:
 
-- ``filter()`` (and ``slice()``)
+- `filter()`
 
 - `arrange()`
 
-- `select()` (and `rename()`)
+- `select()`
 
 - `distinct()`
 
-- `mutate()` (and `transmute()`)
+- `mutate()`
 
 - `summarise()`
 
@@ -80,9 +83,7 @@ R package {dplyr} aims to provide a function for each basic verb of data manipul
 
 ---
 
----
-
-## Filter
+## Filtering observations
 
 ```{r}
 filter(flights, month == 1, day == 1)
@@ -90,11 +91,15 @@ filter(flights, month == 1, day == 1)
 
 ---
 
+## Sorting
+
 ```{r}
 arrange(flights, desc(dep_delay))
 ```
 
 ---
+
+## Adding/replacing variables
 
 ```{r}
 mutate(flights, gain = arr_delay - dep_delay,
@@ -102,6 +107,8 @@ mutate(flights, gain = arr_delay - dep_delay,
 ```
 
 ---
+
+## Piping operations
 
 ```{r}
 flights2 <- flights %>%
@@ -111,6 +118,28 @@ flights2 <- flights %>%
          speed = distance / air_time * 60)
 print(flights2, n = 6)
 ```
+
+---
+
+## Summarizing by group
+
+```{r}
+flights %>%
+  group_by(carrier) %>%
+  summarize(avg_arr_delay = mean(arr_delay, na.rm = TRUE)) %>%
+  arrange(desc(avg_arr_delay)) %>%
+  left_join(nycflights13::airlines)
+```
+
+---
+
+## {dplyr} also works with databases
+
+```{r, echo=FALSE}
+knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/738885c8f54f3ab6118545469c28cd6635fcd656/96e0d/homepage/interact.png")
+```
+
+.footnote[Learn more with [this webinar](https://www.rstudio.com/resources/videos/best-practices-for-working-with-databases-webinar/).]
 
 ---
 
@@ -126,7 +155,7 @@ Learn more with [this blog post](https://masalmon.eu/2018/07/22/wheretogethelp/)
 https://cran.r-project.org/web/views/
 https://github.com/rstudio/RStartHere
 
-- data analysis + stats + DL + DB
+- stats + ML + DL
 
 - web scraping, shiny apps
 
