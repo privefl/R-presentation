@@ -12,7 +12,7 @@ output:
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', dev = "svg")
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', dev = "svg", comment = "")
 ```
 
 class: title-slide center middle inverse
@@ -27,6 +27,100 @@ class: title-slide center middle inverse
 
 ---
 
+## Contents
+
+- Statistics
+
+- Visualization
+
+- Data Science
+
+- High Performance Computing
+
+- Web
+
+- Reporting
+
+- RStudio IDE
+
+- Community
+
+- Learn R
+
+---
+
+# Data Science
+
+---
+
+## Data manipulation with {dplyr}
+
+```{r, collapse=TRUE}
+data(flights, package = "nycflights13")
+dim(flights)
+head(flights)
+```
+
+---
+
+```{r, message=FALSE}
+library(dplyr)
+```
+
+
+R package {dplyr} aims to provide a function for each basic verb of data manipulation:
+
+- ``filter()`` (and ``slice()``)
+
+- ``arrange()``
+
+- ``select()`` (and ``rename()``)
+
+- ``distinct()``
+
+- ``mutate()`` (and ``transmute()``)
+
+- ``summarise()``
+
+- and many others..
+
+---
+
+```{r}
+filter(flights, month == 1, day == 1)
+```
+
+---
+
+```{r}
+arrange(flights, desc(dep_delay))
+```
+
+---
+
+```{r}
+mutate(flights, gain = arr_delay - dep_delay,
+  speed = distance / air_time * 60)
+```
+
+---
+
+```{r}
+flights2 <- flights %>%
+  filter(month == 1, day == 1) %>%
+  arrange(desc(dep_delay)) %>%
+  mutate(gain = arr_delay - dep_delay,
+         speed = distance / air_time * 60)
+print(flights2, n = 6)
+```
+
+---
+
+## Where to learn R?
+
+
+
+---
 
 Can't know everything -> need community (grrr [Join the French-speaking R community](https://join.slack.com/t/r-grrr/shared_invite/enQtMzI4MzgwNTc4OTAxLWZlOGZiZTBiMWU0NDQ3OTYzOGE1YThiODgwZWNhNWEyYjI4ZDJiNmNhY2YyYWI5YzFiOTFkNDYxYzkwODUwNWM))
 Learn more with [this blog post](https://masalmon.eu/2018/07/22/wheretogethelp/)
@@ -51,6 +145,9 @@ https://github.com/rstudio/RStartHere
 - learning resources
 
 - R Markdown
+
+---
+
 
 ---
 
