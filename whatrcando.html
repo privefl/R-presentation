@@ -3,9 +3,9 @@
   <head>
     <title>What R can do - Grenoble RUG</title>
     <meta charset="utf-8">
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
-    <link href="libs/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="libs/font-awesome-5.0.12/css/fontawesome-all.min.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -54,146 +54,170 @@ class: title-slide center middle inverse
 ## Data manipulation with {dplyr}
 
 
-```
-[1] 336776     19
-  year month day dep_time sched_dep_time dep_delay arr_time sched_arr_time
-1 2013     1   1      517            515         2      830            819
-2 2013     1   1      533            529         4      850            830
-3 2013     1   1      542            540         2      923            850
-4 2013     1   1      544            545        -1     1004           1022
-5 2013     1   1      554            600        -6      812            837
-6 2013     1   1      554            558        -4      740            728
-  arr_delay carrier flight tailnum origin dest air_time distance hour
-1        11      UA   1545  N14228    EWR  IAH      227     1400    5
-2        20      UA   1714  N24211    LGA  IAH      227     1416    5
-3        33      AA   1141  N619AA    JFK  MIA      160     1089    5
-4       -18      B6    725  N804JB    JFK  BQN      183     1576    5
-5       -25      DL    461  N668DN    LGA  ATL      116      762    6
-6        12      UA   1696  N39463    EWR  ORD      150      719    5
-  minute           time_hour
-1     15 2013-01-01 05:00:00
-2     29 2013-01-01 05:00:00
-3     40 2013-01-01 05:00:00
-4     45 2013-01-01 05:00:00
-5      0 2013-01-01 06:00:00
-6     58 2013-01-01 05:00:00
+```r
+library(dplyr)
+(flights &lt;- nycflights13::flights)
 ```
 
+```
+# A tibble: 336,776 x 19
+    year month   day dep_time sched_dep_time dep_delay arr_time
+   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+ 1  2013     1     1      517            515         2      830
+ 2  2013     1     1      533            529         4      850
+ 3  2013     1     1      542            540         2      923
+ 4  2013     1     1      544            545        -1     1004
+ 5  2013     1     1      554            600        -6      812
+ 6  2013     1     1      554            558        -4      740
+ 7  2013     1     1      555            600        -5      913
+ 8  2013     1     1      557            600        -3      709
+ 9  2013     1     1      557            600        -3      838
+10  2013     1     1      558            600        -2      753
+# ... with 336,766 more rows, and 12 more variables:
+#   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+#   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+#   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
+#   time_hour &lt;dttm&gt;
+```
 
 ---
 
-
-```
-Warning: package 'dplyr' was built under R version 3.4.4
-```
-
+## Blabla
 
 R package {dplyr} aims to provide a function for each basic verb of data manipulation:
 
 - ``filter()`` (and ``slice()``)
 
-- ``arrange()``
+- `arrange()`
 
-- ``select()`` (and ``rename()``)
+- `select()` (and `rename()`)
 
-- ``distinct()``
+- `distinct()`
 
-- ``mutate()`` (and ``transmute()``)
+- `mutate()` (and `transmute()`)
 
-- ``summarise()``
+- `summarise()`
 
 - and many others..
 
 ---
 
+## Blabla
 
-```
-Warning: package 'bindrcpp' was built under R version 3.4.4
+---
+
+## Filter
+
+
+```r
+filter(flights, month == 1, day == 1)
 ```
 
 ```
 # A tibble: 842 x 19
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
- 1  2013     1     1      517            515        2.      830
- 2  2013     1     1      533            529        4.      850
- 3  2013     1     1      542            540        2.      923
- 4  2013     1     1      544            545       -1.     1004
- 5  2013     1     1      554            600       -6.      812
- 6  2013     1     1      554            558       -4.      740
- 7  2013     1     1      555            600       -5.      913
- 8  2013     1     1      557            600       -3.      709
- 9  2013     1     1      557            600       -3.      838
-10  2013     1     1      558            600       -2.      753
-# ... with 832 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
-#   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
-#   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
-#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+ 1  2013     1     1      517            515         2      830
+ 2  2013     1     1      533            529         4      850
+ 3  2013     1     1      542            540         2      923
+ 4  2013     1     1      544            545        -1     1004
+ 5  2013     1     1      554            600        -6      812
+ 6  2013     1     1      554            558        -4      740
+ 7  2013     1     1      555            600        -5      913
+ 8  2013     1     1      557            600        -3      709
+ 9  2013     1     1      557            600        -3      838
+10  2013     1     1      558            600        -2      753
+# ... with 832 more rows, and 12 more variables:
+#   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+#   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+#   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
+#   time_hour &lt;dttm&gt;
 ```
 
 ---
 
+
+```r
+arrange(flights, desc(dep_delay))
+```
 
 ```
 # A tibble: 336,776 x 19
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
- 1  2013     1     9      641            900     1301.     1242
- 2  2013     6    15     1432           1935     1137.     1607
- 3  2013     1    10     1121           1635     1126.     1239
- 4  2013     9    20     1139           1845     1014.     1457
- 5  2013     7    22      845           1600     1005.     1044
- 6  2013     4    10     1100           1900      960.     1342
- 7  2013     3    17     2321            810      911.      135
- 8  2013     6    27      959           1900      899.     1236
- 9  2013     7    22     2257            759      898.      121
-10  2013    12     5      756           1700      896.     1058
-# ... with 336,766 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
-#   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
-#   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
-#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+ 1  2013     1     9      641            900      1301     1242
+ 2  2013     6    15     1432           1935      1137     1607
+ 3  2013     1    10     1121           1635      1126     1239
+ 4  2013     9    20     1139           1845      1014     1457
+ 5  2013     7    22      845           1600      1005     1044
+ 6  2013     4    10     1100           1900       960     1342
+ 7  2013     3    17     2321            810       911      135
+ 8  2013     6    27      959           1900       899     1236
+ 9  2013     7    22     2257            759       898      121
+10  2013    12     5      756           1700       896     1058
+# ... with 336,766 more rows, and 12 more variables:
+#   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+#   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+#   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
+#   time_hour &lt;dttm&gt;
 ```
 
 ---
 
+
+```r
+mutate(flights, gain = arr_delay - dep_delay,
+  speed = distance / air_time * 60)
+```
 
 ```
 # A tibble: 336,776 x 21
     year month   day dep_time sched_dep_time dep_delay arr_time
    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
- 1  2013     1     1      517            515        2.      830
- 2  2013     1     1      533            529        4.      850
- 3  2013     1     1      542            540        2.      923
- 4  2013     1     1      544            545       -1.     1004
- 5  2013     1     1      554            600       -6.      812
- 6  2013     1     1      554            558       -4.      740
- 7  2013     1     1      555            600       -5.      913
- 8  2013     1     1      557            600       -3.      709
- 9  2013     1     1      557            600       -3.      838
-10  2013     1     1      558            600       -2.      753
-# ... with 336,766 more rows, and 14 more variables: sched_arr_time &lt;int&gt;,
-#   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
-#   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
-#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, gain &lt;dbl&gt;, speed &lt;dbl&gt;
+ 1  2013     1     1      517            515         2      830
+ 2  2013     1     1      533            529         4      850
+ 3  2013     1     1      542            540         2      923
+ 4  2013     1     1      544            545        -1     1004
+ 5  2013     1     1      554            600        -6      812
+ 6  2013     1     1      554            558        -4      740
+ 7  2013     1     1      555            600        -5      913
+ 8  2013     1     1      557            600        -3      709
+ 9  2013     1     1      557            600        -3      838
+10  2013     1     1      558            600        -2      753
+# ... with 336,766 more rows, and 14 more variables:
+#   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+#   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+#   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
+#   time_hour &lt;dttm&gt;, gain &lt;dbl&gt;, speed &lt;dbl&gt;
 ```
 
 ---
 
 
+```r
+flights2 &lt;- flights %&gt;%
+  filter(month == 1, day == 1) %&gt;%
+  arrange(desc(dep_delay)) %&gt;%
+  mutate(gain = arr_delay - dep_delay,
+         speed = distance / air_time * 60)
+print(flights2, n = 6)
+```
+
 ```
 # A tibble: 842 x 21
    year month   day dep_time sched_dep_time dep_delay arr_time
   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
-1  2013     1     1      848           1835      853.     1001
-2  2013     1     1     2343           1724      379.      314
-3  2013     1     1     1815           1325      290.     2120
-4  2013     1     1     2205           1720      285.       46
-5  2013     1     1     1842           1422      260.     1958
-6  2013     1     1     2115           1700      255.     2330
-# ... with 836 more rows, and 14 more variables: sched_arr_time &lt;int&gt;,
-#   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
-#   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
-#   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, gain &lt;dbl&gt;, speed &lt;dbl&gt;
+1  2013     1     1      848           1835       853     1001
+2  2013     1     1     2343           1724       379      314
+3  2013     1     1     1815           1325       290     2120
+4  2013     1     1     2205           1720       285       46
+5  2013     1     1     1842           1422       260     1958
+6  2013     1     1     2115           1700       255     2330
+# ... with 836 more rows, and 14 more variables:
+#   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+#   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+#   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
+#   time_hour &lt;dttm&gt;, gain &lt;dbl&gt;, speed &lt;dbl&gt;
 ```
 
 ---
@@ -261,23 +285,12 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   d.head.appendChild(s);
 })();</script>
 
-<script>
-(function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
-  for (i = 0; i < codes.length;) {
-    code = codes[i];
-    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
-      text = code.textContent;
-      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
-          /^\$\$(.|\s)+\$\$$/.test(text) ||
-          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
-        code.outerHTML = code.innerHTML;  // remove <code></code>
-        continue;
-      }
-    }
-    i++;
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
   }
-})();
+});
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

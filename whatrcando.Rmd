@@ -11,8 +11,8 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', dev = "svg", comment = "")
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dev = "svg", comment = "")
+options(width = 70)
 ```
 
 class: title-slide center middle inverse
@@ -55,36 +55,34 @@ class: title-slide center middle inverse
 
 ## Data manipulation with {dplyr}
 
-```{r, collapse=TRUE}
-data(flights, package = "nycflights13")
-dim(flights)
-head(flights)
+```{r, message=FALSE}
+library(dplyr)
+(flights <- nycflights13::flights)
 ```
 
 ---
-
-```{r, message=FALSE}
-library(dplyr)
-```
-
 
 R package {dplyr} aims to provide a function for each basic verb of data manipulation:
 
 - ``filter()`` (and ``slice()``)
 
-- ``arrange()``
+- `arrange()`
 
-- ``select()`` (and ``rename()``)
+- `select()` (and `rename()`)
 
-- ``distinct()``
+- `distinct()`
 
-- ``mutate()`` (and ``transmute()``)
+- `mutate()` (and `transmute()`)
 
-- ``summarise()``
+- `summarise()`
 
 - and many others..
 
 ---
+
+---
+
+## Filter
 
 ```{r}
 filter(flights, month == 1, day == 1)
