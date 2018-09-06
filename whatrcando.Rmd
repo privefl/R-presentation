@@ -14,6 +14,11 @@ output:
 knitr::opts_chunk$set(fig.align = 'center', dev = "svg", out.width = "90%",
                       echo = TRUE, comment = "")
 options(width = 70)
+library(ggplot2)
+library(gganimate)
+library(gapminder)
+library(ggalluvial)
+library(imager)
 ```
 
 class: title-slide center middle inverse
@@ -30,11 +35,11 @@ class: title-slide center middle inverse
 
 ## Contents
 
-- Statistics
+<br>
+
+- Statistics & Data Science
 
 - Visualization
-
-- Data Science
 
 - High Performance Computing
 
@@ -48,13 +53,72 @@ class: title-slide center middle inverse
 
 - Learn R
 
----
-
-# Data Science
+- Program for this year
 
 ---
 
-## Data manipulation with {dplyr}
+class: center middle inverse
+
+# Statistics & Data Science
+
+---
+
+## Statistics
+
+<br>
+
+> R provides a wide variety of statistical (linear and nonlinear modelling, classical statistical tests, time-series analysis, classification, clustering, …) and graphical techniques, and is highly extensible. The S language is often the vehicle of choice for research in statistical methodology, and R provides an Open Source route to participation in that activity.
+>
+> -- https://www.r-project.org/about.html
+
+---
+
+## CRAN task views
+
+<br>
+
+Browse https://cran.r-project.org/web/views/.
+
+> CRAN task views aim to provide some guidance which packages on CRAN are relevant for tasks related to a certain topic.
+
+They are so useful to discover packages that are used in a field of research.
+
+<br>
+
+## Bioconductor
+
+<br>
+
+Search engine: https://www.bioconductor.org/packages/devel/BiocViews.html
+
+---
+
+### Simple example
+
+```{r, out.width="80%", fig.asp=0.8}
+plot(iris, pch = 20, col = iris$Species)
+```
+
+---
+
+### Simple example
+
+```{r, out.width="80%", fig.asp=0.8}
+pca <- prcomp(iris[, -5], center = TRUE, scale. = TRUE)
+plot(pca$x, pch = 20, col = iris$Species)
+```
+
+---
+
+### Simple example (November session)
+
+```{r}
+summary(fit <- lm(Petal.Length ~ ., data = iris))
+```
+
+---
+
+## Data manipulation with {dplyr} (May session)
 
 ```{r, message=FALSE}
 library(dplyr)
@@ -102,8 +166,7 @@ arrange(flights, desc(dep_delay))
 ## Adding/replacing variables
 
 ```{r}
-mutate(flights, gain = arr_delay - dep_delay,
-  speed = distance / air_time * 60)
+mutate(flights, speed = distance / air_time * 60)
 ```
 
 ---
@@ -114,8 +177,7 @@ mutate(flights, gain = arr_delay - dep_delay,
 flights2 <- flights %>%
   filter(month == 1, day == 1) %>%
   arrange(desc(dep_delay)) %>%
-  mutate(gain = arr_delay - dep_delay,
-         speed = distance / air_time * 60)
+  mutate(speed = distance / air_time * 60)
 print(flights2, n = 6)
 ```
 
@@ -140,6 +202,116 @@ knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/738885c8f54f3ab61
 ```
 
 .footnote[Learn more with [this webinar](https://www.rstudio.com/resources/videos/best-practices-for-working-with-databases-webinar/).]
+
+---
+
+## Machine Learning & Deep Learning
+
+### Package {caret} (February session)
+
+The caret package (short for **C**lassification **A**nd **RE**gression **T**raining) is a set of functions that attempt to streamline the process for creating predictive models (see [the full documentation](http://topepo.github.io/caret/index.html)). The package contains tools for:
+
+- data splitting
+- pre-processing
+- feature selection
+- model tuning using resampling
+- variable importance estimation
+
+
+
+### Keras & Tenserflow in R (January session)
+
+Keras & Tenserflow are integrated in R
+
+- [Tenserflow for R](https://tensorflow.rstudio.com/)
+
+- [Tenserflow for R blog](https://blogs.rstudio.com/tensorflow/)
+
+---
+
+class: center middle inverse
+
+# Visualization
+
+---
+
+## Package {ggplot2} and extensions (June session)
+
+```{r, echo=FALSE, out.width="75%"}
+knitr::include_graphics("http://www.sthda.com/english/rpkgs/ggpubr/tools/README-ggpubr-box-plot-dot-plots-strip-charts-3.png")
+```
+
+---
+
+## Animate graphics with {gganimate}
+
+```{r, cache=TRUE, echo=FALSE, out.width="70%"}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.show = "animate")
+# Example from https://github.com/dgrtwo/gganimate
+
+ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
+  geom_point(alpha = 0.7, show.legend = FALSE) +
+  scale_colour_manual(values = country_colors) +
+  scale_size(range = c(2, 12)) +
+  scale_x_log10() +
+  facet_wrap(~continent) +
+  # Here comes the gganimate specific bits
+  labs(title = 'Year: {frame_time}', x = 'GDP per capita', y = 'life expectancy') +
+  transition_time(year) +
+  ease_aes('linear') + 
+  bigstatsr::theme_bigstatsr()
+```
+
+---
+
+## Fancy graphics: [alluvial diagrams](https://github.com/mbojan/alluvial)
+
+```{r, echo=FALSE, fig.asp=0.75}
+tit <- as.data.frame(Titanic, stringsAsFactors = FALSE)
+alluvial::alluvial(
+  tit[1:4], freq=tit$Freq,
+         col = ifelse(tit$Survived == "Yes", "orange", "grey"),
+         border = ifelse(tit$Survived == "Yes", "orange", "grey"),
+         hide = tit$Freq == 0,
+         cex = 0.7
+)
+```
+
+
+---
+
+## Image processing
+
+- {[magick](https://github.com/ropensci/magick)}
+
+- {[imager](https://github.com/dahtah/imager)} (October session)
+
+```{r, echo=FALSE}
+file <- system.file('extdata/parrots.png', package = 'imager')
+im <- load.image(file)
+save.video(imlist(
+  im, 
+  isoblur(im, 10),
+  grayscale(im),
+  imrotate(im, 30),
+  vanvliet(im, sigma = 4, order = 2, axis = "y"),
+  with(imgradient(im, "xy"), sqrt(x^2 + y^2))
+), "parrots.gif", fps = 1)
+```
+
+```{r, echo=FALSE, out.width="80%"}
+knitr::include_graphics("parrots.gif")
+```
+
+---
+
+class: center middle inverse
+
+# Reporting
+
+---
+
+https://keurcien.github.io/book/introduction.html
 
 ---
 
@@ -175,6 +347,7 @@ https://github.com/rstudio/RStartHere
 
 ---
 
+- R Graph Gallery: https://www.r-graph-gallery.com/
 
 ---
 
