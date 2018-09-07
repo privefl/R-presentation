@@ -2,6 +2,8 @@
 title: "What R can do - Grenoble RUG"
 output:
   xaringan::moon_reader:
+    includes:
+      after_body: include_twitter.html
     seal: false
     lib_dir: libs
     nature:
@@ -219,13 +221,13 @@ The caret package (short for **C**lassification **A**nd **RE**gression **T**rain
 
 
 
-### Keras & Tenserflow in R (January session)
+### Keras & Tensorflow in R (January session)
 
-Keras & Tenserflow are integrated in R
+Keras & Tensorflow are integrated in R
 
-- [Tenserflow for R](https://tensorflow.rstudio.com/)
+- [Tensorflow for R](https://tensorflow.rstudio.com/)
 
-- [Tenserflow for R blog](https://blogs.rstudio.com/tensorflow/)
+- [Tensorflow for R blog](https://blogs.rstudio.com/tensorflow/)
 
 ---
 
@@ -277,7 +279,7 @@ alluvial::alluvial(
 )
 ```
 
-.footnote[More fancy plot in [the R Graph Gallery](https://www.r-graph-gallery.com/).]
+.footnote[More nice plots in [the R Graph Gallery](https://www.r-graph-gallery.com/).]
 
 ---
 
@@ -312,7 +314,7 @@ class: center middle inverse
 
 ---
 
-## R Markdown
+## R Markdown (April session)
 
 - Reports (analysis, etc)
 
@@ -324,32 +326,151 @@ class: center middle inverse
 
 ---
 
+class: center middle inverse
 
+# Web
+
+---
+
+## Web scrapping
+
+```{r, message=FALSE}
+library(rvest)
+
+read_html("https://r-in-grenoble.github.io/sessions.html") %>%
+  html_nodes(".schedule") %>%
+  html_nodes(".center-title") %>%
+  html_text() %>%
+  gsub("\n", "", .) %>%
+  writeLines()
+```
+
+---
+
+## Shiny apps: web apps in R
+
+<br>
+
+- Example 1: [Airbnb visualization in New York](https://yuyuhan0306.shinyapps.io/airbnb_yuhan/)
+
+- Example 2: [Make pixel art models](https://florianprive.shinyapps.io/pixelart/)
+
+<br>
+
+[Learn more](https://privefl.github.io/advr38book/shiny.html)
+
+---
+
+class: center middle inverse
+
+# High Performance Computing
+
+---
+
+## [Integrate C++ code with {Rcpp}](https://privefl.github.io/R-presentation/Rcpp.html)
+
+
+<br>
+
+Rcpp lives between R and C++, so that you can get 
+
+- the *performance of C++* and
+
+- the *convenience of R*.
+
+<br>
+
+As 
+
+- I love *performance* and 
+
+- I also enjoy *simplicity*, 
+
+Rcpp might be my favorite R package.
+
+---
+
+## Easy parallelism with {[future](https://github.com/HenrikBengtsson/future)}
+
+<br>
+
+<blockquote class="twitter-tweet" data-lang="en" align="center"><p lang="en" dir="ltr">future 1.0.0 on CRAN - cross-platform parallel evaluation via a single unified API <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://t.co/uxIozDAWHA">https://t.co/uxIozDAWHA</a> <a href="https://t.co/wV5vhcgpMJ">pic.twitter.com/wV5vhcgpMJ</a></p>&mdash; Henrik Bengtsson (@henrikbengtsson) <a href="https://twitter.com/henrikbengtsson/status/746906359484973057?ref_src=twsrc%5Etfw">26 juin 2016</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+---
+
+## Scalable reproducible workflow with {[drake](https://ropensci.github.io/drake/)} (December session)
+
+<br>
+
+```{r, echo=FALSE, out.width="85%"}
+knitr::include_graphics("https://ropensci.github.io/drake/images/graph.png")
+```
+
+
+---
+
+## Large matrices with {[bigstatsr](https://github.com/privefl/bigstatsr)}
+
+### Advantages of using FBM objects
+
+<br>
+
+- you can apply algorithms on **data larger than your RAM**,
+
+- you can easily **parallelize** your algorithms because the data on disk is shared,
+
+- you write **more efficient algorithms** (you do less copies and think more about what you're doing),
+
+- you can use **different types of data**, for example, in my field, I’m storing my data with only 1 byte per element (rather than 8 bytes for a standard R matrix). See [the documentation of the FBM class](https://privefl.github.io/bigstatsr/reference/FBM-class.html) for details.
+
+---
+
+class: center middle inverse
+
+# Where to learn R?
 
 ---
 
 ## Where to learn R?
 
+<br>
+
+- [An Introduction to R](https://colinfay.me/intro-to-r/) by the R core team
+
+- [Introduction to R](https://www.datacamp.com/courses/free-introduction-to-r) by DataCamp
+
+- [R for Data Science](http://r4ds.had.co.nz/index.html) by Garrett Grolemund & Hadley Wickham, and [some solutions](https://jrnold.github.io/r4ds-exercise-solutions/)
+
+- [Advanced R](http://adv-r.had.co.nz/) by Hadley Wickham, and [some solutions](https://bookdown.org/Tazinho/Advanced-R-Solutions/)
+
+- [Useful packages for Data Science](https://github.com/rstudio/RStartHere)
+
+- [CRAN Task Views](https://cran.r-project.org/web/views/)
+
+- Course: [Advanced R course](https://privefl.github.io/advr38book/index.html) for PhD students in Grenoble (and 5 other open spots). **In French, but may be in English if enough demands.**
+
+- Read code, documentation, blog posts, etc. And PRACTICE.
+
+- Learn from others; [join the French-speaking R community](https://join.slack.com/t/r-grrr/shared_invite/enQtMzI4MzgwNTc4OTAxLWZlOGZiZTBiMWU0NDQ3OTYzOGE1YThiODgwZWNhNWEyYjI4ZDJiNmNhY2YyYWI5YzFiOTFkNDYxYzkwODUwNWM)
 
 
 ---
 
-Can't know everything -> need community (grrr [Join the French-speaking R community](https://join.slack.com/t/r-grrr/shared_invite/enQtMzI4MzgwNTc4OTAxLWZlOGZiZTBiMWU0NDQ3OTYzOGE1YThiODgwZWNhNWEyYjI4ZDJiNmNhY2YyYWI5YzFiOTFkNDYxYzkwODUwNWM))
-Learn more with [this blog post](https://masalmon.eu/2018/07/22/wheretogethelp/)
+<blockquote class="twitter-tweet" data-lang="en" align="center" size="50%"><p lang="en" dir="ltr">New <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> post: &quot;Where to get help with your R question?&quot; <a href="https://t.co/ilIarU1518">https://t.co/ilIarU1518</a><br><br>❓❔⁉️ <a href="https://t.co/u0FB7FtAla">pic.twitter.com/u0FB7FtAla</a></p>&mdash; Maëlle Salmon 🐟 (@ma_salmon) <a href="https://twitter.com/ma_salmon/status/1021052562580045824?ref_src=twsrc%5Etfw">22 juillet 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-https://github.com/rstudio/RStartHere
+---
 
-- web scraping, shiny apps
 
-- HPC
 
 - RStudio 
 
 - GIS
 
 - Time series / Text / Images
-
-- learning resources
 
 - R Markdown
 
@@ -365,13 +486,25 @@ webshot::webshot("https://r-in-grenoble.github.io/sessions.html", selector = ".s
 
 ---
 
+class: center middle 
+
+# Thanks Grenoble Alpes Data Institute
+
+```{r, echo=FALSE, out.width="80%"}
+knitr::include_graphics("http://www.sciencespo-grenoble.fr/wp-content/uploads/2018/04/logo-data-institute.jpg")
+```
+
+## for food, ecocups and stickers
+
+---
+
 class: inverse, center, middle
 
 # Thanks!
 
-<br/><br/>
+<br>
 
-<br/>
+<br>
 
 `r icon::fa("twitter")` [privefl](https://twitter.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("github")` [privefl](https://github.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("stack-overflow")` [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
 

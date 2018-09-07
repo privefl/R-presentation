@@ -374,13 +374,13 @@ The caret package (short for **C**lassification **A**nd **RE**gression **T**rain
 
 
 
-### Keras &amp; Tenserflow in R (January session)
+### Keras &amp; Tensorflow in R (January session)
 
-Keras &amp; Tenserflow are integrated in R
+Keras &amp; Tensorflow are integrated in R
 
-- [Tenserflow for R](https://tensorflow.rstudio.com/)
+- [Tensorflow for R](https://tensorflow.rstudio.com/)
 
-- [Tenserflow for R blog](https://blogs.rstudio.com/tensorflow/)
+- [Tensorflow for R blog](https://blogs.rstudio.com/tensorflow/)
 
 ---
 
@@ -406,7 +406,7 @@ class: center middle inverse
 
 &lt;img src="whatrcando_files/figure-html/unnamed-chunk-13-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
 
-.footnote[More fancy plot in [the R Graph Gallery](https://www.r-graph-gallery.com/).]
+.footnote[More nice plots in [the R Graph Gallery](https://www.r-graph-gallery.com/).]
 
 ---
 
@@ -428,7 +428,7 @@ class: center middle inverse
 
 ---
 
-## R Markdown
+## R Markdown (April session)
 
 - Reports (analysis, etc)
 
@@ -440,24 +440,157 @@ class: center middle inverse
 
 ---
 
+class: center middle inverse
 
+# Web
+
+---
+
+## Web scrapping
+
+
+```r
+library(rvest)
+
+read_html("https://r-in-grenoble.github.io/sessions.html") %&gt;%
+  html_nodes(".schedule") %&gt;%
+  html_nodes(".center-title") %&gt;%
+  html_text() %&gt;%
+  gsub("\n", "", .) %&gt;%
+  writeLines()
+```
+
+```
+What R can do for you
+Image processing with package {imager}
+Linear models in R
+Manage your workflow with package {drake}
+Deep Learning with package {tensorflow}
+Machine Learning with package {caret}
+Best coding practices
+R Markdown
+Data manipulation with package {dplyr}
+Data vizualisation with package {ggplot2}
+```
+
+---
+
+## Shiny apps: web apps in R
+
+&lt;br&gt;
+
+- Example 1: [Airbnb visualization in New York](https://yuyuhan0306.shinyapps.io/airbnb_yuhan/)
+
+- Example 2: [Make pixel art models](https://florianprive.shinyapps.io/pixelart/)
+
+&lt;br&gt;
+
+[Learn more](https://privefl.github.io/advr38book/shiny.html)
+
+---
+
+class: center middle inverse
+
+# High Performance Computing
+
+---
+
+## [Integrate C++ code with {Rcpp}](https://privefl.github.io/R-presentation/Rcpp.html)
+
+
+&lt;br&gt;
+
+Rcpp lives between R and C++, so that you can get 
+
+- the *performance of C++* and
+
+- the *convenience of R*.
+
+&lt;br&gt;
+
+As 
+
+- I love *performance* and 
+
+- I also enjoy *simplicity*, 
+
+Rcpp might be my favorite R package.
+
+---
+
+## Easy parallelism with {[future](https://github.com/HenrikBengtsson/future)}
+
+&lt;br&gt;
+
+&lt;blockquote class="twitter-tweet" data-lang="en" align="center"&gt;&lt;p lang="en" dir="ltr"&gt;future 1.0.0 on CRAN - cross-platform parallel evaluation via a single unified API &lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt; &lt;a href="https://t.co/uxIozDAWHA"&gt;https://t.co/uxIozDAWHA&lt;/a&gt; &lt;a href="https://t.co/wV5vhcgpMJ"&gt;pic.twitter.com/wV5vhcgpMJ&lt;/a&gt;&lt;/p&gt;&amp;mdash; Henrik Bengtsson (@henrikbengtsson) &lt;a href="https://twitter.com/henrikbengtsson/status/746906359484973057?ref_src=twsrc%5Etfw"&gt;26 juin 2016&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+
+
+
+---
+
+## Scalable reproducible workflow with {[drake](https://ropensci.github.io/drake/)} (December session)
+
+&lt;br&gt;
+
+&lt;img src="https://ropensci.github.io/drake/images/graph.png" width="85%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Large matrices with {[bigstatsr](https://github.com/privefl/bigstatsr)}
+
+### Advantages of using FBM objects
+
+&lt;br&gt;
+
+- you can apply algorithms on **data larger than your RAM**,
+
+- you can easily **parallelize** your algorithms because the data on disk is shared,
+
+- you write **more efficient algorithms** (you do less copies and think more about what you're doing),
+
+- you can use **different types of data**, for example, in my field, I’m storing my data with only 1 byte per element (rather than 8 bytes for a standard R matrix). See [the documentation of the FBM class](https://privefl.github.io/bigstatsr/reference/FBM-class.html) for details.
+
+---
+
+class: center middle inverse
+
+# Where to learn R?
 
 ---
 
 ## Where to learn R?
 
+&lt;br&gt;
+
+- [An Introduction to R](https://colinfay.me/intro-to-r/) by the R core team
+
+- [Introduction to R](https://www.datacamp.com/courses/free-introduction-to-r) by DataCamp
+
+- [R for Data Science](http://r4ds.had.co.nz/index.html) by Garrett Grolemund &amp; Hadley Wickham, and [some solutions](https://jrnold.github.io/r4ds-exercise-solutions/)
+
+- [Advanced R](http://adv-r.had.co.nz/) by Hadley Wickham, and [some solutions](https://bookdown.org/Tazinho/Advanced-R-Solutions/)
+
+- [Useful packages for Data Science](https://github.com/rstudio/RStartHere)
+
+- [CRAN Task Views](https://cran.r-project.org/web/views/)
+
+- Course: [Advanced R course](https://privefl.github.io/advr38book/index.html) for PhD students in Grenoble (and 5 other open spots). **In French, but may be in English if enough demands.**
+
+- Read code, documentation, blog posts, etc. And PRACTICE.
+
+- Learn from others; [join the French-speaking R community](https://join.slack.com/t/r-grrr/shared_invite/enQtMzI4MzgwNTc4OTAxLWZlOGZiZTBiMWU0NDQ3OTYzOGE1YThiODgwZWNhNWEyYjI4ZDJiNmNhY2YyYWI5YzFiOTFkNDYxYzkwODUwNWM)
 
 
 ---
 
-Can't know everything -&gt; need community (grrr [Join the French-speaking R community](https://join.slack.com/t/r-grrr/shared_invite/enQtMzI4MzgwNTc4OTAxLWZlOGZiZTBiMWU0NDQ3OTYzOGE1YThiODgwZWNhNWEyYjI4ZDJiNmNhY2YyYWI5YzFiOTFkNDYxYzkwODUwNWM))
-Learn more with [this blog post](https://masalmon.eu/2018/07/22/wheretogethelp/)
+&lt;blockquote class="twitter-tweet" data-lang="en" align="center" size="50%"&gt;&lt;p lang="en" dir="ltr"&gt;New &lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt; post: &amp;quot;Where to get help with your R question?&amp;quot; &lt;a href="https://t.co/ilIarU1518"&gt;https://t.co/ilIarU1518&lt;/a&gt;&lt;br&gt;&lt;br&gt;❓❔⁉️ &lt;a href="https://t.co/u0FB7FtAla"&gt;pic.twitter.com/u0FB7FtAla&lt;/a&gt;&lt;/p&gt;&amp;mdash; Maëlle Salmon 🐟 (@ma_salmon) &lt;a href="https://twitter.com/ma_salmon/status/1021052562580045824?ref_src=twsrc%5Etfw"&gt;22 juillet 2018&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
 
-https://github.com/rstudio/RStartHere
+---
 
-- web scraping, shiny apps
 
-- HPC
 
 - RStudio 
 
@@ -475,7 +608,17 @@ https://github.com/rstudio/RStartHere
 
 &lt;br&gt;
 
-&lt;img src="whatrcando_files/figure-html/unnamed-chunk-16-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="whatrcando_files/figure-html/unnamed-chunk-18-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center middle 
+
+# Thanks Grenoble Alpes Data Institute
+
+&lt;img src="http://www.sciencespo-grenoble.fr/wp-content/uploads/2018/04/logo-data-institute.jpg" width="80%" style="display: block; margin: auto;" /&gt;
+
+## for food, ecocups and stickers
 
 ---
 
@@ -483,9 +626,9 @@ class: inverse, center, middle
 
 # Thanks!
 
-&lt;br/&gt;&lt;br/&gt;
+&lt;br&gt;
 
-&lt;br/&gt;
+&lt;br&gt;
 
 <i class="fab  fa-twitter "></i> [privefl](https://twitter.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-github "></i> [privefl](https://github.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-stack-overflow "></i> [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
 
@@ -506,6 +649,7 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
 })();</script>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
