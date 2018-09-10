@@ -75,6 +75,28 @@ class: center middle inverse
 
 ---
 
+## Work with many kinds of data
+
+<br>
+
+- tabular tidy data (see [this book](http://r4ds.had.co.nz/))
+
+- spatial (see [this book](https://bookdown.org/robinlovelace/geocompr/) and [this blog](https://statnmap.com/))
+
+- temporal (see [this book](https://otexts.org/fpp2/))
+
+- textual (see [this book](https://www.tidytextmining.com/))
+
+- networks (see [this book](https://sites.fas.harvard.edu/~airoldi/pub/books/BookDraft-CsardiNepuszAiroldi2016.pdf))
+
+- etc
+
+- etc
+
+- etc
+
+---
+
 ## CRAN task views
 
 <br>
@@ -221,13 +243,13 @@ The caret package (short for **C**lassification **A**nd **RE**gression **T**rain
 
 
 
-### Keras & Tensorflow in R (January session)
+### Keras & TensorFlow in R (January session)
 
-Keras & Tensorflow are integrated in R
+Keras & TensorFlow are integrated in R
 
-- [Tensorflow for R](https://tensorflow.rstudio.com/)
+- [TensorFlow for R](https://TensorFlow.rstudio.com/)
 
-- [Tensorflow for R blog](https://blogs.rstudio.com/tensorflow/)
+- [TensorFlow for R blog](https://blogs.rstudio.com/TensorFlow/)
 
 ---
 
@@ -316,7 +338,9 @@ class: center middle inverse
 
 ## R Markdown (April session)
 
-- Reports (analysis, etc)
+<br>
+
+- Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, beamer, etc.
 
 - HTML presentations (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/whatrcando.Rmd))
 
@@ -397,8 +421,6 @@ Rcpp might be my favorite R package.
 <blockquote class="twitter-tweet" data-lang="en" align="center"><p lang="en" dir="ltr">future 1.0.0 on CRAN - cross-platform parallel evaluation via a single unified API <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://t.co/uxIozDAWHA">https://t.co/uxIozDAWHA</a> <a href="https://t.co/wV5vhcgpMJ">pic.twitter.com/wV5vhcgpMJ</a></p>&mdash; Henrik Bengtsson (@henrikbengtsson) <a href="https://twitter.com/henrikbengtsson/status/746906359484973057?ref_src=twsrc%5Etfw">26 juin 2016</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-
-
 ---
 
 ## Scalable reproducible workflow with {[drake](https://ropensci.github.io/drake/)} (December session)
@@ -408,7 +430,6 @@ Rcpp might be my favorite R package.
 ```{r, echo=FALSE, out.width="85%"}
 knitr::include_graphics("https://ropensci.github.io/drake/images/graph.png")
 ```
-
 
 ---
 
@@ -425,6 +446,32 @@ knitr::include_graphics("https://ropensci.github.io/drake/images/graph.png")
 - you write **more efficient algorithms** (you do less copies and think more about what you're doing),
 
 - you can use **different types of data**, for example, in my field, I’m storing my data with only 1 byte per element (rather than 8 bytes for a standard R matrix). See [the documentation of the FBM class](https://privefl.github.io/bigstatsr/reference/FBM-class.html) for details.
+
+---
+
+class: center middle inverse
+
+# RStudio
+
+---
+
+## RStudio IDE really helps
+
+<br>
+
+- console / scripts / environment / plots
+
+- code diagnostics
+
+- projects (+ git panel)
+
+- viewer / debugger / profiler
+
+- interactive import / connection
+
+- integrated terminal / HTML viewer
+
+- support many programming languages
 
 ---
 
@@ -456,23 +503,10 @@ class: center middle inverse
 
 - Learn from others; [join the French-speaking R community](https://join.slack.com/t/r-grrr/shared_invite/enQtMzI4MzgwNTc4OTAxLWZlOGZiZTBiMWU0NDQ3OTYzOGE1YThiODgwZWNhNWEyYjI4ZDJiNmNhY2YyYWI5YzFiOTFkNDYxYzkwODUwNWM)
 
-
 ---
 
 <blockquote class="twitter-tweet" data-lang="en" align="center" size="50%"><p lang="en" dir="ltr">New <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> post: &quot;Where to get help with your R question?&quot; <a href="https://t.co/ilIarU1518">https://t.co/ilIarU1518</a><br><br>❓❔⁉️ <a href="https://t.co/u0FB7FtAla">pic.twitter.com/u0FB7FtAla</a></p>&mdash; Maëlle Salmon 🐟 (@ma_salmon) <a href="https://twitter.com/ma_salmon/status/1021052562580045824?ref_src=twsrc%5Etfw">22 juillet 2018</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
----
-
-
-
-- RStudio 
-
-- GIS
-
-- Time series / Text / Images
-
-- R Markdown
 
 ---
 
