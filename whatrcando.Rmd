@@ -33,6 +33,10 @@ class: title-slide center middle inverse
 
 ### Grenoble RUG - September 13, 2018
 
+<br>
+
+**Slides:** `bit.ly/RUGgre11`
+
 ---
 
 ## Contents
@@ -537,6 +541,8 @@ class: inverse, center, middle
 # Thanks!
 
 <br>
+
+**Slides:** `bit.ly/RUGgre11`
 
 <br>
 
