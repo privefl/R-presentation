@@ -420,10 +420,10 @@ Rcpp might be my favorite R package.
 
 ## Easy parallelism with {[future](https://github.com/HenrikBengtsson/future)}
 
-<br>
-
 <blockquote class="twitter-tweet" data-lang="en" align="center"><p lang="en" dir="ltr">future 1.0.0 on CRAN - cross-platform parallel evaluation via a single unified API <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://t.co/uxIozDAWHA">https://t.co/uxIozDAWHA</a> <a href="https://t.co/wV5vhcgpMJ">pic.twitter.com/wV5vhcgpMJ</a></p>&mdash; Henrik Bengtsson (@henrikbengtsson) <a href="https://twitter.com/henrikbengtsson/status/746906359484973057?ref_src=twsrc%5Etfw">26 juin 2016</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+.footnote[Also see [my intro to parallelism with {foreach}](https://privefl.github.io/blog/a-guide-to-parallelism-in-r/).]
 
 ---
 
