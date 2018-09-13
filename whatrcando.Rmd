@@ -487,8 +487,6 @@ class: center middle inverse
 
 ## Where to learn R?
 
-<br>
-
 - [An Introduction to R](https://colinfay.me/intro-to-r/) by the R core team
 
 - [Introduction to R](https://www.datacamp.com/courses/free-introduction-to-r) by DataCamp
@@ -505,7 +503,10 @@ class: center middle inverse
 
 - Read code, documentation, blog posts, etc. And PRACTICE.
 
-- Learn from others; [join the French-speaking R community](https://join.slack.com/t/r-grrr/shared_invite/enQtMzI4MzgwNTc4OTAxLWZlOGZiZTBiMWU0NDQ3OTYzOGE1YThiODgwZWNhNWEyYjI4ZDJiNmNhY2YyYWI5YzFiOTFkNDYxYzkwODUwNWM)
+- Learn from others
+
+    - [join the French-speaking R community](https://join.slack.com/t/r-grrr/shared_invite/enQtMzI4MzgwNTc4OTAxLWZlOGZiZTBiMWU0NDQ3OTYzOGE1YThiODgwZWNhNWEyYjI4ZDJiNmNhY2YyYWI5YzFiOTFkNDYxYzkwODUwNWM)
+    - [join the R-Ladies community](https://rladies-community-slack.herokuapp.com/)
 
 ---
 
