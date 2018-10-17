@@ -1,0 +1,67 @@
+---
+title: "Slides with Rmd"
+output:
+  xaringan::moon_reader:
+    includes:
+      after_body: include_twitter.html
+    seal: false
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.align = 'center', dev = "svg", out.width = "90%",
+                      echo = TRUE, comment = "")
+options(width = 70)
+```
+
+class: title-slide center middle inverse
+
+# Make your slides with R Markdown
+
+<br>
+
+## Florian Privé
+
+### October 19, 2018
+
+<br>
+
+**Slides:** `bit.ly/RUGgre11`
+
+---
+
+---
+
+## R Markdown (April session)
+
+<br>
+
+- Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, beamer, etc.
+
+- HTML presentations (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/whatrcando.Rmd))
+
+- websites (such as [the website of our R user group](https://r-in-grenoble.github.io/))
+
+- books (or even [a thesis](https://keurcien.github.io/book/introduction.html))
+
+---
+
+---
+
+class: inverse, center, middle
+
+# Thanks!
+
+<br>
+
+**Slides:** `bit.ly/RUGgre11`
+
+<br>
+
+`r icon::fa("twitter")` [privefl](https://twitter.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("github")` [privefl](https://github.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("stack-overflow")` [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
+
+.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
