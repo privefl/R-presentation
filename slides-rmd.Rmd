@@ -335,7 +335,7 @@ It allows you to use the chunk options for image size.
 
 ## Include an interactive map with {leaflet}
 
-```{r, out.width='100%', fig.height=5}
+```{r, out.width='100%', fig.height=5, echo=TRUE}
 library(leaflet)
 leaflet(width = "100%") %>% 
   setView(lng = 5.767249, lat = 45.190590, zoom = 12) %>% 
