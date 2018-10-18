@@ -509,7 +509,7 @@ knitr::include_graphics("https://bookdown.org/yihui/rmarkdown/images/cover.png")
 
 ---
 
-## R Markdown
+## Useful materials
 
 * [Official website](https://rmarkdown.rstudio.com)
 
@@ -519,11 +519,9 @@ knitr::include_graphics("https://bookdown.org/yihui/rmarkdown/images/cover.png")
 
 * [Cheat sheet](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
 
-* [Tips for R Markdown](https://holtzy.github.io/Pimp-my-rmd/)
-
 * [Xaringan documentation](https://slides.yihui.name/xaringan)
 
-### Misc.
+* [Tips for R Markdown](https://holtzy.github.io/Pimp-my-rmd/)
 
 * [Tips for making slides](https://www.tidyverse.org/articles/2018/07/carpe-talk/)
 
