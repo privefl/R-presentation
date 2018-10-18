@@ -14,7 +14,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(fig.align = 'center', dev = "svg", out.width = "90%",
-                      echo = TRUE, comment = "")
+                      echo = FALSE, comment = "")
 options(width = 70)
 ```
 
@@ -30,25 +30,504 @@ class: title-slide center middle inverse
 
 <br>
 
-**Slides:** `bit.ly/RUGgre11`
+**Slides:** `bit.ly/rmdslides`
+
+(Adapted with permission from [Antoine Bichat's presentation](https://abichat.github.io/Slides/ScienceCommunicationSOTR/ScienceCommunicationSOTR.html#1))
 
 ---
 
+class: inverse, center, middle
+
+# R Markdown
+
+```{r, out.width="40%"}
+knitr::include_graphics("rmarkdown.png")
+```
+
 ---
 
-## R Markdown (April session)
+## R Markdown?
+
+* Markdown is a _lightweight markup language_ with plain text formatting syntax that can be converted to many formats, including HTML.    
+It is completely independent from R.    
+The extention is typically `.md`.
+
+--
+
+* R Markdown is an extension of the markdown syntax that enables R code to be executed. The extention is typically `.Rmd`.
+
+--
+
+* {rmarkdown} is an R package that proceses and converts `.Rmd` files into a number of different formats, including HTML or `.pdf`. The core function is `rmarkdown::render()`.
+
+---
+
+## Create a new `.Rmd` in RStudio
+
+.pull-left[
+.center[
+  <img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd1.png" width="400">
+]
+]
+
+--
+
+.pull-right[
+  <div style = "margin-top: 80px"></div> 
+  .center[
+    <img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd2.png" width="400">
+  ]
+]
+
+---
+
+## New `.Rmd`
+
+.center[
+  <img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd3.png" width="700">
+]
+
+---
+
+## Compile `.Rmd`
+
+Use the `Knit` button to produce a HTML file
+
+.center[
+  <img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd4.png" width="300">
+]
+
+Shortcut: `Ctrl + Maj + K`
+
+---
+
+class: center, middle, inverse
+
+# Markdown syntax
+
+---
+
+## Titles and text fonts in Markdown
+
+```
+# Big title
+
+## Title
+
+### Small title
+
+_Italic_, *italic*, __bold__, **bold**, and `monospace`
+```
+
+--
+
+***
+
+# Big title
+
+## Title
+
+### Small title
+
+_Italic_, *italic*, __bold__, **bold**, and `monospace`
+
+
+---
+
+## Lists in Markdown
+
+.pull-left[
+```
+1. This is
+
+2. an ordered
+
+3. list
+```
+1. This is
+
+2. an ordered
+
+3. list
+]
+
+--
+
+.pull-right[
+```
+ * This is
+
+ * a bullet list
+
+    * with indent
+```
+* This is
+
+* a bullet list
+
+  * with indent
+]
+
+--
 
 <br>
 
-- Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, beamer, etc.
+- You can enumerate only with '`1.`'; it will increment automatically
 
-- HTML presentations (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/whatrcando.Rmd))
+- You can also use '`-`' or '`+`' instead of '`*`'
 
-- websites (such as [the website of our R user group](https://r-in-grenoble.github.io/))
-
-- books (or even [a thesis](https://keurcien.github.io/book/introduction.html))
 
 ---
+
+## More in Markdown
+
+```
+> You can insert quotes, $\LaTeX$ expressions and horizontal rule:
+```
+
+> You can insert quotes and $\LaTeX$ expressions:
+
+--
+
+<br>
+
+```
+$$ \frac{1}{n} \sum_{i=1}^n X_i $$
+```
+
+$$ \frac{1}{n} \sum_{i=1}^n X_i $$
+
+--
+
+<br>
+
+- Make an horizontal line with '`***`'
+
+- Add 4 spaces at the end of your text in order to write to the next
+
+    
+
+- You can write HTML in Markdown (e.g. use '`<br>`' to get a blank line)
+
+---
+
+## Insert links and pictures
+
+```
+[Antoine's personal page](https://abichat.github.io/)
+```
+
+[Antoine's personal page](https://abichat.github.io/)
+
+--
+
+```
+![](https://slides.yihui.name/gif/impossible-parking.gif)
+```
+
+![](https://slides.yihui.name/gif/impossible-parking.gif)
+
+--
+
+It also works directly with HTML syntax:
+
+```
+<a href="https://abichat.github.io/">My personal page</a>
+
+<img src="https://slides.yihui.name/gif/impossible-parking.gif">
+```
+
+---
+
+class: middle, center, inverse
+
+# Code chunks
+
+---
+
+## Basic chunk
+
+```{r comment=NA,echo=FALSE}
+cat("```{r}\nx <- 4\nx\n```")
+```
+
+--
+
+Output:
+
+```{r simplechunk}
+x <- 4
+x
+```
+
+--
+
+.pull-left[
+### Echo
+
+To display the output of a code chunk but not the underlying R code, you specify the `echo=FALSE` option
+
+```{r comment=NA,echo=FALSE}
+cat("```{r chunkecho, echo=FALSE}\nx <- 5\nx\n```")
+```
+]
+
+--
+
+.pull-right[
+### Eval
+
+To display R code without evaluating it, you specify the `eval=FALSE` chunk option
+
+```{r comment=NA,echo=FALSE}
+cat("```{r chunkeval, eval=FALSE}\nx <- 5\n```")
+```
+]
+
+---
+
+## Figure options (1/2)
+
+```{r comment=NA,echo=FALSE}
+cat('```{r, fig.align="center", out.width="60%"}
+ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
+```')
+```
+
+```{r chunkfig, fig.align="center", out.width="60%"}
+ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
+```
+
+---
+
+## Figure options (2/2)
+
+```{r comment=NA,echo=FALSE}
+cat('```{r, fig.align="center", out.width="80%", fig.width=4, fig.asp=0.7}
+ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
+```')
+```
+
+```{r chunkfig2, fig.align="center", out.width="80%", fig.width=4, fig.asp=0.7}
+ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
+```
+
+---
+
+## A better way to include pictures
+
+```{r comment=NA,echo=FALSE}
+cat('```{r betterway, fig.align="center", out.width="80%", echo=FALSE}\nknitr::include_graphics(\n  "https://slides.yihui.name/gif/impossible-parking.gif")\n```')
+```
+
+--
+
+```{r betterway, fig.align="center", out.width="80%", echo=FALSE}
+knitr::include_graphics(
+  "https://slides.yihui.name/gif/impossible-parking.gif")
+```
+
+--
+
+It allows you to use the chunk options for image size.
+
+---
+
+## [Supported languages in chunks](https://bookdown.org/yihui/rmarkdown/language-engines.html)
+
+- R 
+
+- Python
+
+- Shell
+
+- SQL
+
+- Rcpp
+
+- Stan
+
+- JavaScript and CSS
+
+- Julia
+
+- C and Fortran
+
+- many others...
+
+---
+
+class: inverse, center, middle
+
+# Formats
+
+---
+
+## Use R Markdown for.. 
+
+.footnote[(April session of [R in Grenoble](https://r-in-grenoble.github.io/sessions.html))]
+
+<br>
+
+- Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, etc.
+
+- **Slides**
+
+- Websites
+
+- Books (or even [a thesis](https://keurcien.github.io/book/introduction.html))
+
+---
+
+## Slides formats
+
+
+- [ioslides](https://bookdown.org/yihui/rmarkdown/ioslides-presentation.html) ([example](https://privefl.github.io/R-presentation/pResentation.html))
+
+- [slidy](https://bookdown.org/yihui/rmarkdown/slidy-presentation.html) ([example](https://www.jvcasillas.com/slidify_tutorial/))
+
+- [beamer](https://bookdown.org/yihui/rmarkdown/beamer-presentation.html) (pdf)
+
+- [powerpoint](https://bookdown.org/yihui/rmarkdown/powerpoint-presentation.html) (ppt)
+
+- [**xaringan** / remark.js](https://bookdown.org/yihui/rmarkdown/xaringan.html) (example: this presentation!)
+
+- [reveal.js](https://bookdown.org/yihui/rmarkdown/revealjs.html)
+
+---
+
+class: inverse, center, middle
+
+# Xaringan
+
+<img src="https://camo.githubusercontent.com/f91f64981633838bdedfee54df8595534c3cd9ba/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f622f62652f53686172696e67616e5f747269706c652e737667" width="232" height="232">
+
+---
+
+## Xaringan?
+
+Xaringan is a package to create slides with R Markdown
+
+--
+
+It is developped by Yihui Xie `r icon::fa("github", size = 1)` <a href="https://github.com/yihui">@yihui</a>
+
+```{r eval=FALSE, echo=TRUE}
+devtools::install_github('yihui/xaringan')
+```
+
+--
+
+.center[
+  <img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd5.png" width="450">
+]
+
+---
+
+## How it works?
+
+The syntax is almost the same as R Markdown
+
+--
+
+Slides are separated by `---`
+
+--
+
+You can build incremental slides with `--` 
+
+--
+
+<br>
+
+```{r comment=NA,echo=FALSE}
+cat('---
+
+## How it works?\n\nThe syntax is almost the same as R Markdown
+
+--
+
+Slides are separated by `---`
+
+--
+
+You can build incremental slides with `--` ')
+```
+
+---
+
+## Tips
+
+You can change slide configuration (for titles) with `class`
+
+```{r comment=NA,echo=FALSE}
+cat('---
+class: middle, center, inverse')
+```
+
+<br> 
+
+--
+
+To skip a lign, use the `<br>` HTML tag
+
+--
+
+<br>
+
+Use `.footnote[Text]` to add a footnote and `.center[Text]` to center text
+
+--
+
+<br>
+
+.center[I'm centered]
+
+.footnote[I'm a footnote]
+
+---
+
+# Include an interactive map with leaflet
+
+```{r, out.width='100%', fig.height=5}
+library(leaflet)
+leaflet() %>% addTiles() %>% setView(2.34822, 48.83976, zoom = 17)
+```
+
+---
+class: middle, center, inverse
+
+# References
+
+---
+
+```{r, out.width="52%"}
+knitr::include_graphics("https://bookdown.org/yihui/rmarkdown/images/cover.png")
+```
+
+---
+
+## R Markdown
+
+* [Official website](https://rmarkdown.rstudio.com)
+
+* [Official documentation](https://bookdown.org/yihui/rmarkdown/)
+
+* [Reference guide](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
+
+* [Cheat sheet](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
+
+* [Tips for R Markdown](https://holtzy.github.io/Pimp-my-rmd/)
+
+* [Xaringan documentation](https://slides.yihui.name/xaringan)
+
+### Misc.
+
+* [Tips for making slides](https://www.tidyverse.org/articles/2018/07/carpe-talk/)
+
+* [Embed a File in the HTML Output of R Markdown](https://yihui.name/en/2018/07/embed-file/)
+
+* [Decouple Code and Output in xaringan slides](https://www.garrickadenbuie.com/blog/2018/08/16/decouple-code-and-output-in-xaringan-slides/)
 
 ---
 
@@ -58,7 +537,7 @@ class: inverse, center, middle
 
 <br>
 
-**Slides:** `bit.ly/RUGgre11`
+**Slides:** `bit.ly/rmdslides`
 
 <br>
 
