@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
-    <link href="libs/font-awesome-5.0.12/css/fontawesome-all.min.css" rel="stylesheet" />
     <script src="libs/htmlwidgets-1.2/htmlwidgets.js"></script>
     <script src="libs/jquery-1.12.4/jquery.min.js"></script>
     <link href="libs/leaflet-0.7.7/leaflet.css" rel="stylesheet" />
@@ -16,6 +15,7 @@
     <script src="libs/Proj4Leaflet-0.7.2/proj4-compressed.js"></script>
     <script src="libs/Proj4Leaflet-0.7.2/proj4leaflet.js"></script>
     <script src="libs/leaflet-binding-1.1.0/leaflet.js"></script>
+    <link href="libs/font-awesome-5.0.12/css/fontawesome-all.min.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -346,6 +346,13 @@ It allows you to use the chunk options for image size.
 
 ---
 
+## Include an interactive map with {leaflet}
+
+<div id="htmlwidget-a2690e98abf47a1cfe7a" style="width:100%;height:360px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a2690e98abf47a1cfe7a">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[45.19059,5.767249],12,[]],"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"errorTileUrl":"","noWrap":false,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"minZoom":2,"maxZoom":19,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}]},"evals":[],"jsHooks":[]}</script>
+
+---
+
 ## [Supported languages in chunks](https://bookdown.org/yihui/rmarkdown/language-engines.html)
 
 - R 
@@ -502,13 +509,6 @@ Use `.footnote[Text]` to add a footnote and `.center[Text]` to center text
 .center[I'm centered]
 
 .footnote[I'm a footnote]
-
----
-
-# Include an interactive map with leaflet
-
-<div id="htmlwidget-010b6bb578f6be90f09e" style="width:100%;height:360px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-010b6bb578f6be90f09e">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}],"setView":[[48.83976,2.34822],17,[]]},"evals":[],"jsHooks":[]}</script>
 
 ---
 class: middle, center, inverse

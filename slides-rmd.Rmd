@@ -333,6 +333,17 @@ It allows you to use the chunk options for image size.
 
 ---
 
+## Include an interactive map with {leaflet}
+
+```{r, out.width='100%', fig.height=5}
+library(leaflet)
+leaflet(width = "100%") %>% 
+  setView(lng = 5.767249, lat = 45.190590, zoom = 12) %>% 
+  addTiles(options = providerTileOptions(minZoom = 2, maxZoom = 19))
+```
+
+---
+
 ## [Supported languages in chunks](https://bookdown.org/yihui/rmarkdown/language-engines.html)
 
 - R 
@@ -484,15 +495,6 @@ Use `.footnote[Text]` to add a footnote and `.center[Text]` to center text
 .center[I'm centered]
 
 .footnote[I'm a footnote]
-
----
-
-# Include an interactive map with leaflet
-
-```{r, out.width='100%', fig.height=5}
-library(leaflet)
-leaflet() %>% addTiles() %>% setView(2.34822, 48.83976, zoom = 17)
-```
 
 ---
 class: middle, center, inverse
