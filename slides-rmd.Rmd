@@ -32,7 +32,9 @@ class: title-slide center middle inverse
 
 **Slides:** `bit.ly/rmdslides`
 
-(Adapted with permission from [Antoine Bichat's presentation](https://abichat.github.io/Slides/ScienceCommunicationSOTR/ScienceCommunicationSOTR.html#1))
+<br>
+
+<small>(Adapted with permission from [Antoine Bichat's presentation](https://abichat.github.io/Slides/ScienceCommunicationSOTR/ScienceCommunicationSOTR.html#1))</small>
 
 ---
 
@@ -97,7 +99,9 @@ Use the `Knit` button to produce a HTML file
   <img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd4.png" width="300">
 ]
 
-Shortcut: `Ctrl + Maj + K`
+<br>
+
+Shortcut: `Ctrl + Shift + K`
 
 ---
 
@@ -182,10 +186,10 @@ _Italic_, *italic*, __bold__, **bold**, and `monospace`
 ## More in Markdown
 
 ```
-> You can insert quotes, $\LaTeX$ expressions and horizontal rule:
+> You can insert quotes and $\LaTeX$ expressions
 ```
 
-> You can insert quotes and $\LaTeX$ expressions:
+> You can insert quotes and $\LaTeX$ expressions
 
 --
 
