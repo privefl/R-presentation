@@ -631,7 +631,7 @@ class: center, middle, inverse
 
 ## ..to reproduce this plot
 
-```{r, out.width = "100%", fig.asp = 0.7, echo = FALSE, fig.width = 5}
+```{r, out.width = "100%", fig.asp = 0.7, echo = FALSE}
 ggplot(df) + 
   geom_point(aes(gdpPercap, lifeExp, size = pop, 
                  color = continent)) +
@@ -644,7 +644,7 @@ ggplot(df) +
 
 ---
 
-```{r, out.width = "78%", fig.asp = 0.7, fig.width = 5}
+```{r, out.width = "78%", fig.asp = 0.7}
 ggplot(df) + 
   geom_point(aes(gdpPercap, lifeExp, size = pop, 
                  color = continent)) +
