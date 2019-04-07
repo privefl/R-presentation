@@ -1,0 +1,523 @@
+---
+title: "R beyond statistics"
+output:
+  xaringan::moon_reader:
+    includes:
+      after_body: include_twitter.html
+    seal: false
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.align = 'center', dev = "svg", out.width = "90%",
+                      echo = TRUE, comment = "")
+options(width = 70)
+library(ggplot2)
+library(gganimate)
+library(gapminder)
+```
+
+class: title-slide center middle inverse
+
+# `r icon::fa_r_project()` beyond statistics
+
+<br>
+
+## Florian Privé
+
+### April 8, 2019
+
+<br>
+
+<br>
+
+<br>
+
+**Slides:** `privefl.github.io/R-presentation/beyond-stats.html`
+
+---
+
+## Contents
+
+<br>
+
+- Statistics & Data Science
+
+- Visualization
+
+- High Performance Computing
+
+- Web
+
+- Reporting
+
+- RStudio IDE
+
+- Community
+
+- Learn R
+
+- Program for this year
+
+---
+
+
+class: inverse, center, middle
+
+# Statistics & Data Science
+
+---
+
+## Just one example: 
+### glmnet: Lasso and Elastic-Net Regularized Generalized Linear Models
+
+Extremely efficient procedures for fitting the entire lasso or elastic-net regularization path for 
+
+- linear regression, 
+
+- logistic and multinomial regression models,
+
+- Poisson regression and 
+
+- the Cox model. 
+
+Two recent additions are the
+
+- multiple-response Gaussian, and 
+
+- the grouped multinomial regression.
+
+**With so many options!**
+
+---
+
+## Work with many kinds of data
+
+<br>
+
+- tabular tidy data (see [this book](http://r4ds.had.co.nz/))
+
+- spatial (see [this book](https://bookdown.org/robinlovelace/geocompr/) and [this blog](https://statnmap.com/))
+
+- temporal (see [this book](https://otexts.org/fpp2/))
+
+- textual (see [this book](https://www.tidytextmining.com/))
+
+- networks (see [this book](https://sites.fas.harvard.edu/~airoldi/pub/books/BookDraft-CsardiNepuszAiroldi2016.pdf))
+
+- etc
+
+- etc
+
+- etc
+
+---
+
+## Data manipulation
+
+<br>
+
+- [{data.table}](https://github.com/Rdatatable/data.table/wiki) is very fast
+
+```{r, echo=FALSE, out.width="20%"}
+knitr::include_graphics("http://hexb.in/hexagons/r-datatable.png")
+```
+
+
+- [{dplyr}](https://github.com/tidyverse/dplyr) is often fast enough and has a very intuitive syntax
+
+```{r, echo=FALSE, out.width="20%"}
+knitr::include_graphics("https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png")
+```
+
+---
+
+## Data manipulation with {dplyr}
+
+```{r, message=FALSE}
+library(dplyr)
+(flights <- nycflights13::flights)
+```
+
+---
+
+## Data manipulation with {dplyr}
+
+<br>
+
+R package {dplyr} aims to provide a function for each basic verb of data manipulation:
+
+- `filter()`
+
+- `arrange()`
+
+- `select()`
+
+- `mutate()`
+
+- `group_by()`
+
+- `summarise()`
+
+- and many others..
+
+---
+
+## Filtering observations
+
+```{r}
+filter(flights, month == 1, day == 1)
+```
+
+---
+
+## Sorting
+
+```{r}
+arrange(flights, desc(dep_delay))
+```
+
+---
+
+## Adding/replacing variables
+
+```{r}
+mutate(flights, speed = distance / air_time * 60)
+```
+
+---
+
+## Piping operations
+
+```{r}
+flights2 <- flights %>%
+  filter(month == 1, day == 1) %>%
+  arrange(desc(dep_delay)) %>%
+  mutate(speed = distance / air_time * 60)
+print(flights2, n = 6)
+```
+
+---
+
+## Summarizing by group
+
+```{r}
+flights %>%
+  group_by(carrier) %>%
+  summarize(avg_arr_delay = mean(arr_delay, na.rm = TRUE)) %>%
+  arrange(desc(avg_arr_delay)) %>%
+  left_join(nycflights13::airlines)
+```
+
+---
+
+## {dplyr} also works with databases
+
+```{r, echo=FALSE}
+knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/738885c8f54f3ab6118545469c28cd6635fcd656/96e0d/homepage/interact.png")
+```
+
+.footnote[Learn more at https://db.rstudio.com/dplyr/ and with [this webinar](https://www.rstudio.com/resources/videos/best-practices-for-working-with-databases-webinar/).]
+
+---
+
+## Machine Learning & Deep Learning
+
+### Package {caret}
+
+The caret package (short for **C**lassification **A**nd **RE**gression **T**raining) is a set of functions that attempt to streamline the process for creating predictive models (see [the full documentation](http://topepo.github.io/caret/index.html)). The package contains tools for:
+
+- data splitting
+- pre-processing
+- feature selection
+- model tuning using resampling
+- variable importance estimation
+
+
+
+### Keras & TensorFlow in R
+
+Keras & TensorFlow are integrated in R
+
+- [TensorFlow for R](https://TensorFlow.rstudio.com/)
+
+- [TensorFlow for R blog](https://blogs.rstudio.com/TensorFlow/)
+
+---
+
+class: center middle inverse
+
+# Visualization
+
+---
+
+## Package {ggplot2} and extensions
+
+```{r, echo=FALSE, out.width="75%"}
+knitr::include_graphics("http://www.sthda.com/english/rpkgs/ggpubr/tools/README-ggpubr-box-plot-dot-plots-strip-charts-3.png")
+```
+
+<!-- --- -->
+
+<!-- ## Animate graphics with {[gganimate](https://github.com/thomasp85/gganimate)} -->
+
+<!-- ```{r, cache=FALSE, echo=FALSE, out.width="70%"} -->
+<!-- knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.show = "animate") -->
+<!-- # Example from https://github.com/dgrtwo/gganimate -->
+
+<!-- ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +  -->
+<!--   bigstatsr::theme_bigstatsr() + -->
+<!--   geom_point(alpha = 0.7, show.legend = FALSE) + -->
+<!--   scale_colour_manual(values = country_colors) + -->
+<!--   scale_size(range = c(2, 12)) + -->
+<!--   scale_x_log10() + -->
+<!--   facet_wrap(~continent) + -->
+<!--   # Here comes the gganimate specific bits -->
+<!--   labs(title = 'Year: {frame_time}', x = 'GDP per capita', y = 'life expectancy') + -->
+<!--   transition_time(year) + -->
+<!--   ease_aes('linear') -->
+<!-- ``` -->
+
+---
+
+## Fancy graphics: [alluvial diagrams](https://github.com/mbojan/alluvial)
+
+```{r, echo=FALSE, fig.asp=0.7, out.width="80%"}
+tit <- as.data.frame(Titanic, stringsAsFactors = FALSE)
+alluvial::alluvial(
+  tit[1:4], freq = tit$Freq,
+         col = ifelse(tit$Survived == "Yes", "orange", "grey"),
+         border = ifelse(tit$Survived == "Yes", "orange", "grey"),
+         hide = tit$Freq == 0,
+         cex = 0.7
+)
+```
+
+.footnote[More nice plots in [the R Graph Gallery](https://www.r-graph-gallery.com/).]
+
+---
+
+## Image processing
+
+- {[magick](https://github.com/ropensci/magick)}
+
+- {[imager](https://github.com/dahtah/imager)} (by Simon Barthelmé, GIPSA-lab)
+
+<!-- ```{r, echo=FALSE} -->
+<!-- library(imager) -->
+<!-- file <- system.file('extdata/parrots.png', package = 'imager') -->
+<!-- im <- load.image(file) -->
+<!-- save.video(imlist( -->
+<!--   im,  -->
+<!--   isoblur(im, 10), -->
+<!--   grayscale(im), -->
+<!--   imrotate(im, 30), -->
+<!--   vanvliet(im, sigma = 4, order = 2, axis = "y"), -->
+<!--   with(imgradient(im, "xy"), sqrt(x^2 + y^2)) -->
+<!-- ), "parrots.gif", fps = 1) -->
+<!-- ``` -->
+
+<!-- ```{r, echo=FALSE, out.width="80%"} -->
+<!-- knitr::include_graphics("parrots.gif") -->
+<!-- ``` -->
+
+---
+
+class: center middle inverse
+
+# Reporting
+
+---
+
+## R Markdown (April session)
+
+<br>
+
+- Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, beamer, etc.
+
+- HTML presentations (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/whatrcando.Rmd))
+
+- websites (such as [the website of our R user group](https://r-in-grenoble.github.io/))
+
+- books (or even [a thesis](https://keurcien.github.io/book/introduction.html))
+
+---
+
+class: center middle inverse
+
+# Web
+
+---
+
+## Web scrapping
+
+```{r, message=FALSE}
+library(rvest)
+
+read_html("https://r-in-grenoble.github.io/sessions.html") %>%
+  html_nodes(".schedule") %>%
+  html_nodes(".center-title") %>%
+  html_text() %>%
+  gsub("\n", "", .) %>%
+  writeLines()
+```
+
+---
+
+## Shiny apps: web apps in R
+
+<br>
+
+- Example 1: [Airbnb visualization in New York](https://yuyuhan0306.shinyapps.io/airbnb_yuhan/)
+
+- Example 2: [Make pixel art models](https://florianprive.shinyapps.io/pixelart/)
+
+<br>
+
+[Learn more](https://privefl.github.io/advr38book/shiny.html)
+
+---
+
+class: center middle inverse
+
+# High Performance Computing
+
+---
+
+## [Integrate C++ code with {Rcpp}](https://privefl.github.io/R-presentation/Rcpp.html)
+
+
+<br>
+
+Rcpp lives between R and C++, so that you can get 
+
+- the *performance of C++* and
+
+- the *convenience of R*.
+
+<br>
+
+As 
+
+- I love *performance* and 
+
+- I also enjoy *simplicity*, 
+
+Rcpp might be my favorite R package.
+
+---
+
+## Easy parallelism with {[future](https://github.com/HenrikBengtsson/future)}
+
+<blockquote class="twitter-tweet" data-lang="en" align="center"><p lang="en" dir="ltr">future 1.0.0 on CRAN - cross-platform parallel evaluation via a single unified API <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://t.co/uxIozDAWHA">https://t.co/uxIozDAWHA</a> <a href="https://t.co/wV5vhcgpMJ">pic.twitter.com/wV5vhcgpMJ</a></p>&mdash; Henrik Bengtsson (@henrikbengtsson) <a href="https://twitter.com/henrikbengtsson/status/746906359484973057?ref_src=twsrc%5Etfw">26 juin 2016</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+.footnote[Also see [my intro to parallelism with {foreach}](https://privefl.github.io/blog/a-guide-to-parallelism-in-r/).]
+
+---
+
+## Scalable reproducible workflow with {[drake](https://ropensci.github.io/drake/)} (December session)
+
+<br>
+
+```{r, echo=FALSE, out.width="85%"}
+knitr::include_graphics("https://ropensci.github.io/drake/images/graph.png")
+```
+
+---
+
+## Large matrices with {[bigstatsr](https://github.com/privefl/bigstatsr)}
+
+### Advantages of using FBM objects
+
+<br>
+
+- you can apply algorithms on **data larger than your RAM**,
+
+- you can easily **parallelize** your algorithms because the data on disk is shared,
+
+- you write **more efficient algorithms** (you do less copies and think more about what you're doing),
+
+- you can use **different types of data**, for example, in my field, I’m storing my data with only 1 byte per element (rather than 8 bytes for a standard R matrix). See [the documentation of the FBM class](https://privefl.github.io/bigstatsr/reference/FBM-class.html) for details.
+
+---
+
+class: center middle inverse
+
+# RStudio
+
+---
+
+## RStudio IDE really helps
+
+<br>
+
+- console / scripts / environment / plots
+
+- code diagnostics
+
+- projects (+ git panel)
+
+- viewer / debugger / profiler
+
+- interactive import / connection
+
+- integrated terminal / HTML viewer
+
+- support many programming languages
+
+---
+
+class: center middle inverse
+
+# Where to learn R?
+
+---
+
+## Where to learn R?
+
+- [An Introduction to R](https://colinfay.me/intro-to-r/) by the R core team
+
+- [Introduction to R](https://www.datacamp.com/courses/free-introduction-to-r) by DataCamp
+
+- [R for Data Science](http://r4ds.had.co.nz/index.html) by Garrett Grolemund & Hadley Wickham, and [some solutions](https://jrnold.github.io/r4ds-exercise-solutions/)
+
+- [Advanced R](http://adv-r.had.co.nz/) by Hadley Wickham, and [some solutions](https://bookdown.org/Tazinho/Advanced-R-Solutions/)
+
+- [Useful packages for Data Science](https://github.com/rstudio/RStartHere)
+
+- [CRAN Task Views](https://cran.r-project.org/web/views/)
+
+- Course: [Advanced R course](https://privefl.github.io/advr38book/index.html) for PhD students in Grenoble (and 5 other open spots). **In French, but may be in English if enough demands.**
+
+- Read code, documentation, blog posts, etc. And PRACTICE.
+
+- Learn from others
+
+    - [join the French-speaking R community](https://join.slack.com/t/r-grrr/shared_invite/enQtMzI4MzgwNTc4OTAxLWZlOGZiZTBiMWU0NDQ3OTYzOGE1YThiODgwZWNhNWEyYjI4ZDJiNmNhY2YyYWI5YzFiOTFkNDYxYzkwODUwNWM)
+    - [join the R-Ladies community](https://rladies-community-slack.herokuapp.com/)
+
+---
+
+<blockquote class="twitter-tweet" data-lang="en" align="center" size="50%"><p lang="en" dir="ltr">New <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> post: &quot;Where to get help with your R question?&quot; <a href="https://t.co/ilIarU1518">https://t.co/ilIarU1518</a><br><br>❓❔⁉️ <a href="https://t.co/u0FB7FtAla">pic.twitter.com/u0FB7FtAla</a></p>&mdash; Maëlle Salmon 🐟 (@ma_salmon) <a href="https://twitter.com/ma_salmon/status/1021052562580045824?ref_src=twsrc%5Etfw">22 juillet 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+---
+
+class: inverse, center, middle
+
+# Thanks!
+
+<br>
+
+**Slides:** `privefl.github.io/R-presentation/beyond-stats.html`
+
+<br>
+
+`r icon::fa("twitter")` [privefl](https://twitter.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("github")` [privefl](https://github.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("stack-overflow")` [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
+
+.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
