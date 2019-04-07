@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>R beyond statistics</title>
+    <meta charset="utf-8">
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="libs/font-awesome-5.0.12/css/fontawesome-all.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: title-slide center middle inverse
+
+# <i class="fab  fa-r-project "></i> beyond statistics
+
+&lt;br&gt;
+
+## Florian Privé
+
+### April 8, 2019
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+**Slides:** `privefl.github.io/R-presentation/beyond-stats.html`
+
+---
+
+## Contents
+
+&lt;br&gt;
+
+- Statistics &amp; Data Science
+
+- Visualization
+
+- High Performance Computing
+
+- Web
+
+- Reporting
+
+- RStudio IDE
+
+- Community
+
+- Learn R
+
+- Program for this year
+
+---
+
+
+class: inverse, center, middle
+
+# Statistics &amp; Data Science
+
+---
+
+## Just one example in Statistics: 
+### glmnet: Lasso and Elastic-Net Regularized Generalized Linear Models
+
+Extremely efficient procedures for fitting the entire lasso or elastic-net regularization path for 
+
+- linear regression, 
+
+- logistic and multinomial regression models,
+
+- Poisson regression and 
+
+- the Cox model. 
+
+Two recent additions are the
+
+- multiple-response Gaussian, and 
+
+- the grouped multinomial regression.
+
+**With so many options!**
+
+---
+
+## Work with many kinds of data
+
+&lt;br&gt;
+
+- tabular tidy data (see [this book](http://r4ds.had.co.nz/))
+
+- spatial (see [this book](https://bookdown.org/robinlovelace/geocompr/) and [this blog](https://statnmap.com/))
+
+- temporal (see [this book](https://otexts.org/fpp2/))
+
+- textual (see [this book](https://www.tidytextmining.com/))
+
+- networks (see [this book](https://sites.fas.harvard.edu/~airoldi/pub/books/BookDraft-CsardiNepuszAiroldi2016.pdf))
+
+- etc
+
+- etc
+
+- etc
+
+---
+
+## Data manipulation
+
+&lt;br&gt;
+
+- [{data.table}](https://github.com/Rdatatable/data.table/wiki) is very fast
+
+&lt;img src="http://hexb.in/hexagons/r-datatable.png" width="20%" style="display: block; margin: auto;" /&gt;
+
+
+- [{dplyr}](https://github.com/tidyverse/dplyr) is often fast enough and has a very intuitive syntax
+
+&lt;img src="https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png" width="20%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Data manipulation with {dplyr}
+
+
+```r
+library(dplyr)
+(flights &lt;- nycflights13::flights)
+```
+
+```
+# A tibble: 336,776 x 19
+    year month   day dep_time sched_dep_time dep_delay arr_time
+   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+ 1  2013     1     1      517            515         2      830
+ 2  2013     1     1      533            529         4      850
+ 3  2013     1     1      542            540         2      923
+ 4  2013     1     1      544            545        -1     1004
+ 5  2013     1     1      554            600        -6      812
+ 6  2013     1     1      554            558        -4      740
+ 7  2013     1     1      555            600        -5      913
+ 8  2013     1     1      557            600        -3      709
+ 9  2013     1     1      557            600        -3      838
+10  2013     1     1      558            600        -2      753
+# … with 336,766 more rows, and 12 more variables:
+#   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+#   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+#   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
+#   time_hour &lt;dttm&gt;
+```
+
+---
+
+## Data manipulation with {dplyr}
+
+&lt;br&gt;
+
+R package {dplyr} aims to provide a function for each basic verb of data manipulation:
+
+- `filter()`
+
+- `arrange()`
+
+- `select()`
+
+- `mutate()`
+
+- `group_by()`
+
+- `summarise()`
+
+- and many others..
+
+---
+
+## Filtering observations
+
+
+```r
+filter(flights, month == 1, day == 1)
+```
+
+```
+# A tibble: 842 x 19
+    year month   day dep_time sched_dep_time dep_delay arr_time
+   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+ 1  2013     1     1      517            515         2      830
+ 2  2013     1     1      533            529         4      850
+ 3  2013     1     1      542            540         2      923
+ 4  2013     1     1      544            545        -1     1004
+ 5  2013     1     1      554            600        -6      812
+ 6  2013     1     1      554            558        -4      740
+ 7  2013     1     1      555            600        -5      913
+ 8  2013     1     1      557            600        -3      709
+ 9  2013     1     1      557            600        -3      838
+10  2013     1     1      558            600        -2      753
+# … with 832 more rows, and 12 more variables: sched_arr_time &lt;int&gt;,
+#   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+#   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+#   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+---
+
+## Sorting
+
+
+```r
+arrange(flights, desc(dep_delay))
+```
+
+```
+# A tibble: 336,776 x 19
+    year month   day dep_time sched_dep_time dep_delay arr_time
+   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+ 1  2013     1     9      641            900      1301     1242
+ 2  2013     6    15     1432           1935      1137     1607
+ 3  2013     1    10     1121           1635      1126     1239
+ 4  2013     9    20     1139           1845      1014     1457
+ 5  2013     7    22      845           1600      1005     1044
+ 6  2013     4    10     1100           1900       960     1342
+ 7  2013     3    17     2321            810       911      135
+ 8  2013     6    27      959           1900       899     1236
+ 9  2013     7    22     2257            759       898      121
+10  2013    12     5      756           1700       896     1058
+# … with 336,766 more rows, and 12 more variables:
+#   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+#   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+#   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
+#   time_hour &lt;dttm&gt;
+```
+
+---
+
+## Adding/replacing variables
+
+
+```r
+mutate(flights, speed = distance / air_time * 60)
+```
+
+```
+# A tibble: 336,776 x 20
+    year month   day dep_time sched_dep_time dep_delay arr_time
+   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+ 1  2013     1     1      517            515         2      830
+ 2  2013     1     1      533            529         4      850
+ 3  2013     1     1      542            540         2      923
+ 4  2013     1     1      544            545        -1     1004
+ 5  2013     1     1      554            600        -6      812
+ 6  2013     1     1      554            558        -4      740
+ 7  2013     1     1      555            600        -5      913
+ 8  2013     1     1      557            600        -3      709
+ 9  2013     1     1      557            600        -3      838
+10  2013     1     1      558            600        -2      753
+# … with 336,766 more rows, and 13 more variables:
+#   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+#   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+#   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
+#   time_hour &lt;dttm&gt;, speed &lt;dbl&gt;
+```
+
+---
+
+## Piping operations
+
+
+```r
+flights2 &lt;- flights %&gt;%
+  filter(month == 1, day == 1) %&gt;%
+  arrange(desc(dep_delay)) %&gt;%
+  mutate(speed = distance / air_time * 60)
+print(flights2, n = 6)
+```
+
+```
+# A tibble: 842 x 20
+   year month   day dep_time sched_dep_time dep_delay arr_time
+  &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+1  2013     1     1      848           1835       853     1001
+2  2013     1     1     2343           1724       379      314
+3  2013     1     1     1815           1325       290     2120
+4  2013     1     1     2205           1720       285       46
+5  2013     1     1     1842           1422       260     1958
+6  2013     1     1     2115           1700       255     2330
+# … with 836 more rows, and 13 more variables: sched_arr_time &lt;int&gt;,
+#   arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;,
+#   origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+#   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, speed &lt;dbl&gt;
+```
+
+---
+
+## Summarizing by group
+
+
+```r
+flights %&gt;%
+  group_by(carrier) %&gt;%
+  summarize(avg_arr_delay = mean(arr_delay, na.rm = TRUE)) %&gt;%
+  arrange(desc(avg_arr_delay)) %&gt;%
+  left_join(nycflights13::airlines)
+```
+
+```
+Joining, by = "carrier"
+```
+
+```
+# A tibble: 16 x 3
+   carrier avg_arr_delay name                       
+   &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;                      
+ 1 F9             21.9   Frontier Airlines Inc.     
+ 2 FL             20.1   AirTran Airways Corporation
+ 3 EV             15.8   ExpressJet Airlines Inc.   
+ 4 YV             15.6   Mesa Airlines Inc.         
+ 5 OO             11.9   SkyWest Airlines Inc.      
+ 6 MQ             10.8   Envoy Air                  
+ 7 WN              9.65  Southwest Airlines Co.     
+ 8 B6              9.46  JetBlue Airways            
+ 9 9E              7.38  Endeavor Air Inc.          
+10 UA              3.56  United Air Lines Inc.      
+11 US              2.13  US Airways Inc.            
+12 VX              1.76  Virgin America             
+13 DL              1.64  Delta Air Lines Inc.       
+14 AA              0.364 American Airlines Inc.     
+15 HA             -6.92  Hawaiian Airlines Inc.     
+16 AS             -9.93  Alaska Airlines Inc.       
+```
+
+---
+
+## {dplyr} also works with databases
+
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/738885c8f54f3ab6118545469c28cd6635fcd656/96e0d/homepage/interact.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Learn more at https://db.rstudio.com/dplyr/ and with [this webinar](https://www.rstudio.com/resources/videos/best-practices-for-working-with-databases-webinar/).]
+
+---
+
+## Machine Learning &amp; Deep Learning
+
+### Package {caret}
+
+The caret package (short for **C**lassification **A**nd **RE**gression **T**raining) is a set of functions that attempt to streamline the process for creating predictive models (see [the full documentation](http://topepo.github.io/caret/index.html)). The package contains tools for:
+
+- data splitting
+- pre-processing
+- feature selection
+- model tuning using resampling
+- variable importance estimation
+
+
+
+### Keras &amp; TensorFlow in R
+
+Keras &amp; TensorFlow are integrated in R
+
+- [TensorFlow for R](https://TensorFlow.rstudio.com/)
+
+- [TensorFlow for R blog](https://blogs.rstudio.com/TensorFlow/)
+
+---
+
+class: center middle inverse
+
+# Visualization
+
+---
+
+## Package {ggplot2} and extensions
+
+&lt;img src="http://www.sthda.com/english/rpkgs/ggpubr/tools/README-ggpubr-box-plot-dot-plots-strip-charts-3.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Animate graphics with {[gganimate](https://github.com/thomasp85/gganimate)}
+
+&lt;img src="beyond-stats_files/figure-html/unnamed-chunk-11-1.gif" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Fancy graphics: [alluvial diagrams](https://github.com/mbojan/alluvial)
+
+&lt;img src="beyond-stats_files/figure-html/unnamed-chunk-12-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+.footnote[More nice plots in [the R Graph Gallery](https://www.r-graph-gallery.com/).]
+
+---
+
+## Image processing
+
+- [{magick}](https://github.com/ropensci/magick)
+
+- [{imager}](https://github.com/dahtah/imager) (by Simon Barthelmé, GIPSA-lab)
+
+
+
+&lt;img src="parrots.gif" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center middle inverse
+
+# Reporting
+
+---
+
+## R Markdown
+
+&lt;br&gt;
+
+- Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, beamer, etc.
+
+- Many supported languages: 
+    
+    ```
+    awk, bash, coffee, gawk, groovy, haskell, lein, mysql, node,
+    octave, perl, psql, Rscript, ruby, sas, scala, sed, sh, stata,
+    zsh, highlight, Rcpp, tikz, dot, c, fortran, fortran95, asy, cat,
+    asis, stan, block, block2, js, css, sql, go, python, julia
+    ```
+
+- HTML presentations (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/beyond-stats.Rmd))
+
+- websites (such as [the website of our R user group](https://r-in-grenoble.github.io/))
+
+- books (e.g. my online [advanced R course](https://privefl.github.io/advr38book/) or even [a thesis](https://keurcien.github.io/book/introduction.html))
+
+---
+
+class: center middle inverse
+
+# Web
+
+---
+
+## Web scrapping
+
+
+```r
+library(rvest)
+
+read_html("https://r-in-grenoble.github.io/sessions.html") %&gt;%
+  html_nodes(".schedule") %&gt;%
+  html_nodes(".center-title") %&gt;%
+  html_text() %&gt;%
+  gsub("\n", "", .) %&gt;%
+  writeLines()
+```
+
+```
+What R can do for you
+Image processing with package {imager}
+Linear models in R
+Manage your workflow with package {drake}
+Deep Learning with package {keras}
+Machine Learning with package {caret}
+Best coding practices
+R Markdown
+Data manipulation with package {dplyr}
+Data vizualisation with package {ggplot2}
+```
+
+---
+
+## Shiny apps: web apps in R
+
+&lt;br&gt;
+
+- Example 1: [Airbnb visualization in New York](https://yuyuhan0306.shinyapps.io/airbnb_yuhan/)
+
+- Example 2: [Make pixel art models](https://florianprive.shinyapps.io/pixelart/)
+
+&lt;br&gt;
+
+[Learn more](https://privefl.github.io/advr38book/shiny.html)
+
+---
+
+class: center middle inverse
+
+# High Performance Computing
+
+---
+
+## [Integrate C++ code with {Rcpp}](https://privefl.github.io/R-presentation/Rcpp.html)
+
+
+&lt;br&gt;
+
+Rcpp lives between R and C++, so that you can get 
+
+- the *performance of C++* and
+
+- the *convenience of R*.
+
+&lt;br&gt;
+
+As 
+
+- I love *performance* and 
+
+- I also enjoy *simplicity*, 
+
+Rcpp might be my favorite R package.
+
+---
+
+## Easy parallelism with [{future}](https://github.com/HenrikBengtsson/future)
+
+&lt;blockquote class="twitter-tweet" data-lang="en" align="center" width="55%"&gt;&lt;p lang="en" dir="ltr"&gt;future 1.0.0 on CRAN - cross-platform parallel evaluation via a single unified API &lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt; &lt;a href="https://t.co/uxIozDAWHA"&gt;https://t.co/uxIozDAWHA&lt;/a&gt; &lt;a href="https://t.co/wV5vhcgpMJ"&gt;pic.twitter.com/wV5vhcgpMJ&lt;/a&gt;&lt;/p&gt;&amp;mdash; Henrik Bengtsson (@henrikbengtsson) &lt;a href="https://twitter.com/henrikbengtsson/status/746906359484973057?ref_src=twsrc%5Etfw"&gt;26 juin 2016&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+
+.footnote[Also see [my intro to parallelism with {foreach}](https://privefl.github.io/blog/a-guide-to-parallelism-in-r/).]
+
+---
+
+## Scalable reproducible workflow with [{drake}](https://ropensci.github.io/drake/)
+
+&lt;br&gt;
+
+&lt;img src="https://ropensci.github.io/drake/images/graph.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Large matrices with [{bigstatsr}](https://github.com/privefl/bigstatsr)
+
+### Advantages of using Filebacked Big Matrix (FBM) objects
+
+&lt;br&gt;
+
+- you can apply algorithms on **data larger than your RAM**,
+
+- you can easily **parallelize** your algorithms because the data on disk is shared,
+
+- you write **more efficient algorithms** (you do less copies and think more about what you're doing),
+
+- you can use **different types of data**, for example, in my field, I’m storing my data with only 1 byte per element (rather than 8 bytes for a standard R matrix). See [the documentation of the FBM class](https://privefl.github.io/bigstatsr/reference/FBM-class.html) for details.
+
+---
+
+class: center middle inverse
+
+# RStudio
+
+---
+
+## RStudio IDE really helps
+
+&lt;br&gt;
+
+- console / scripts / environment / plots
+
+- code diagnostics
+
+- projects (+ git panel)
+
+- viewer / debugger / profiler
+
+- interactive import / connection
+
+- integrated terminal / HTML viewer
+
+- support many programming languages
+
+---
+
+# Community
+
+---
+
+&lt;blockquote class="twitter-tweet" data-lang="en" align="center" width="80%&gt;&lt;p lang="en" dir="ltr"&gt;I&amp;#39;m curious as to how the R community came to be so supportive and welcoming (as opposed to so much of the tech world). Anyone have ideas? &lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt;&lt;/p&gt;&amp;mdash; David Keyes (@dgkeyes) &lt;a href="https://twitter.com/dgkeyes/status/1113547867984027648?ref_src=twsrc%5Etfw"&gt;3 avril 2019&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+
+
+---
+
+## Open Science: rOpenSci community
+
+&lt;br&gt;
+
+&lt;img src="https://i2.wp.com/www.numfocus.org/wp-content/uploads/2017/08/rOpenSci_logo_with_lettering-300x165.png" width="40%" style="display: block; margin: auto;" /&gt;
+
+&lt;br&gt;
+
+Packages in scope: data retrieval &amp; extraction, scientific software wrappers, database access, data munging, data deposition, reproducibility, geospatial data, and text analysis.
+
+Packages are openly reviewed to unsure quality.
+
+---
+
+class: center middle inverse
+
+# Where to learn R?
+
+---
+
+## Where to learn R?
+
+- [An Introduction to R](https://colinfay.me/intro-to-r/) by the R core team
+
+- [Introduction to R](https://www.datacamp.com/courses/free-introduction-to-r) by DataCamp
+
+- [R for Data Science](http://r4ds.had.co.nz/index.html) by Garrett Grolemund &amp; Hadley Wickham, and [some solutions](https://jrnold.github.io/r4ds-exercise-solutions/)
+
+- [Advanced R](http://adv-r.had.co.nz/) by Hadley Wickham, and [some solutions](https://bookdown.org/Tazinho/Advanced-R-Solutions/)
+
+- [Useful packages for Data Science](https://github.com/rstudio/RStartHere)
+
+- [CRAN Task Views](https://cran.r-project.org/web/views/)
+
+- [Advanced R course](https://privefl.github.io/advr38book/index.html)
+
+- Read code, documentation, blog posts, etc. And PRACTICE.
+
+- Learn from others
+
+    - [join the French-speaking R community](https://join.slack.com/t/r-grrr/shared_invite/enQtMzI4MzgwNTc4OTAxLWZlOGZiZTBiMWU0NDQ3OTYzOGE1YThiODgwZWNhNWEyYjI4ZDJiNmNhY2YyYWI5YzFiOTFkNDYxYzkwODUwNWM)
+    - [join the R-Ladies community](https://rladies-community-slack.herokuapp.com/)
+
+---
+
+&lt;blockquote class="twitter-tweet" data-lang="en" align="center" size="50%"&gt;&lt;p lang="en" dir="ltr"&gt;New &lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt; post: &amp;quot;Where to get help with your R question?&amp;quot; &lt;a href="https://t.co/ilIarU1518"&gt;https://t.co/ilIarU1518&lt;/a&gt;&lt;br&gt;&lt;br&gt;❓❔⁉️ &lt;a href="https://t.co/u0FB7FtAla"&gt;pic.twitter.com/u0FB7FtAla&lt;/a&gt;&lt;/p&gt;&amp;mdash; Maëlle Salmon 🐟 (@ma_salmon) &lt;a href="https://twitter.com/ma_salmon/status/1021052562580045824?ref_src=twsrc%5Etfw"&gt;22 juillet 2018&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+
+---
+
+class: inverse, center, middle
+
+# Thanks!
+
+&lt;br&gt;
+
+**Slides:** `privefl.github.io/R-presentation/beyond-stats.html`
+
+&lt;br&gt;
+
+<i class="fab  fa-twitter "></i> [privefl](https://twitter.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-github "></i> [privefl](https://github.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-stack-overflow "></i> [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
+
+.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
