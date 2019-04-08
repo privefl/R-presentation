@@ -498,6 +498,106 @@ knitr::include_graphics("https://ropensci.github.io/drake/images/graph.png")
 
 class: center middle inverse
 
+# Improvements to the language
+
+---
+
+## Just-in-time compiler
+
+<br>
+
+.pull-left[
+```{r}
+compiler::enableJIT(0)
+system.time({
+  N <- 1e6
+  res <- numeric(N)
+  for (i in 2:N) {
+    res[i] <- res[i - 1] + 1;
+  }
+})
+```
+]
+
+.pull-right[
+```{r}
+compiler::enableJIT(3)
+system.time({
+  N <- 1e6
+  res <- numeric(N)
+  for (i in 2:N) {
+    res[i] <- res[i - 1] + 1;
+  }
+})
+```
+
+<br>
+
+Since R 3.4
+]
+
+---
+
+## Growing vectors
+
+<br>
+
+.pull-left[
+```{r}
+system.time({
+  N <- 3e4
+  res <- c(0)
+  for (i in 2:N) {
+    new_val <- res[i - 1] + 1
+    res <- c(res, new_val)
+  }
+})
+```
+]
+
+.pull-right[
+```{r}
+system.time({
+  N <- 3e4
+  res <- c(0)
+  for (i in 2:N) {
+    new_val <- res[i - 1] + 1
+    res[i] <- new_val;
+  }
+})
+```
+
+<br>
+
+Since R 3.4
+]
+
+.footnote[Read more [there](https://blog.revolutionanalytics.com/2017/02/preview-r-340.html).]
+
+---
+
+## ALTREP (since 3.5)
+
+### An alternative way of representing R objects internally
+
+<br>
+
+Before :
+
+```{r, eval=FALSE}
+x <- 1:1e10
+```
+
+```
+Error: cannot allocate vector of size 74.5 Gb
+```
+
+After: 
+
+---
+
+class: center middle inverse
+
 # RStudio
 
 ---

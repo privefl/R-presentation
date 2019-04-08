@@ -589,6 +589,175 @@ Rcpp might be my favorite R package.
 
 class: center middle inverse
 
+# Improvements to the language
+
+---
+
+## Just-in-time compiler
+
+&lt;br&gt;
+
+.pull-left[
+
+```r
+compiler::enableJIT(0)
+```
+
+```
+[1] 3
+```
+
+```r
+system.time({
+  N &lt;- 1e6
+  res &lt;- numeric(N)
+  for (i in 2:N) {
+    res[i] &lt;- res[i - 1] + 1;
+  }
+})
+```
+
+```
+   user  system elapsed 
+  1.052   0.004   1.054 
+```
+]
+
+.pull-right[
+
+```r
+compiler::enableJIT(3)
+```
+
+```
+[1] 0
+```
+
+```r
+system.time({
+  N &lt;- 1e6
+  res &lt;- numeric(N)
+  for (i in 2:N) {
+    res[i] &lt;- res[i - 1] + 1;
+  }
+})
+```
+
+```
+   user  system elapsed 
+  0.088   0.000   0.090 
+```
+
+&lt;br&gt;
+
+Since R 3.4
+]
+
+---
+
+## Growing vectors
+
+&lt;br&gt;
+
+.pull-left[
+
+```r
+system.time({
+  N &lt;- 3e4
+  res &lt;- c(0)
+  for (i in 2:N) {
+    new_val &lt;- res[i - 1] + 1
+    res &lt;- c(res, new_val)
+  }
+})
+```
+
+```
+   user  system elapsed 
+  1.012   0.008   1.023 
+```
+]
+
+.pull-right[
+
+```r
+system.time({
+  N &lt;- 3e4
+  res &lt;- c(0)
+  for (i in 2:N) {
+    new_val &lt;- res[i - 1] + 1
+    res[i] &lt;- new_val;
+  }
+})
+```
+
+```
+   user  system elapsed 
+  0.012   0.000   0.011 
+```
+
+&lt;br&gt;
+
+Since R 3.4
+]
+
+.footnote[Read more [there](https://blog.revolutionanalytics.com/2017/02/preview-r-340.html).]
+
+---
+
+## ALTREP
+
+### an alternative way of representing R objects internally
+
+&lt;br&gt;
+
+.pull-left[
+
+```r
+system.time({
+  N &lt;- 3e4
+  res &lt;- c(0)
+  for (i in 2:N) {
+    new_val &lt;- res[i - 1] + 1
+    res &lt;- c(res, new_val)
+  }
+})
+```
+
+```
+   user  system elapsed 
+  0.956   0.016   0.970 
+```
+]
+
+.pull-right[
+
+```r
+system.time({
+  N &lt;- 3e4
+  res &lt;- c(0)
+  for (i in 2:N) {
+    new_val &lt;- res[i - 1] + 1
+    res[i] &lt;- new_val;
+  }
+})
+```
+
+```
+   user  system elapsed 
+  0.012   0.000   0.011 
+```
+
+&lt;br&gt;
+
+Since R 3.4
+]
+
+
+---
+
+class: center middle inverse
+
 # RStudio
 
 ---
