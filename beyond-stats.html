@@ -15,15 +15,19 @@
 
 class: title-slide center middle inverse
 
+&lt;br&gt;
+
+&lt;br&gt;
+
 # <i class="fab  fa-r-project "></i> beyond statistics
+
+&lt;br&gt;
 
 &lt;br&gt;
 
 ## Florian Privé
 
 ### April 8, 2019
-
-&lt;br&gt;
 
 &lt;br&gt;
 
@@ -53,10 +57,7 @@ class: title-slide center middle inverse
 
 - Learn R
 
-- Program for this year
-
 ---
-
 
 class: inverse, center, middle
 
@@ -336,7 +337,10 @@ Joining, by = "carrier"
 
 ## {dplyr} also works with databases
 
-&lt;img src="https://d33wubrfki0l68.cloudfront.net/738885c8f54f3ab6118545469c28cd6635fcd656/96e0d/homepage/interact.png" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/738885c8f54f3ab6118545469c28cd6635fcd656/96e0d/homepage/interact.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+Connect to DBs such as MySQL, MariaDB, Postgres, Redshift, SQLite, Google’s BigQuery... and use {dplyr} instead of SQL.
+
 
 .footnote[Learn more at https://db.rstudio.com/dplyr/ and with [this webinar](https://www.rstudio.com/resources/videos/best-practices-for-working-with-databases-webinar/).]
 
@@ -378,15 +382,18 @@ class: center middle inverse
 
 ---
 
-## Animate graphics with {[gganimate](https://github.com/thomasp85/gganimate)}
+## Animate graphics with [{gganimate}](https://github.com/thomasp85/gganimate)
 
-&lt;img src="beyond-stats_files/figure-html/unnamed-chunk-11-1.gif" width="70%" style="display: block; margin: auto;" /&gt;
+
+
+&lt;img src="https://privefl.github.io/R-presentation/whatrcando_files/figure-html/unnamed-chunk-12-1.gif" width="70%" style="display: block; margin: auto;" /&gt;
+
 
 ---
 
 ## Fancy graphics: [alluvial diagrams](https://github.com/mbojan/alluvial)
 
-&lt;img src="beyond-stats_files/figure-html/unnamed-chunk-12-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="beyond-stats_files/figure-html/unnamed-chunk-13-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
 
 .footnote[More nice plots in [the R Graph Gallery](https://www.r-graph-gallery.com/).]
 
@@ -400,7 +407,7 @@ class: center middle inverse
 
 
 
-&lt;img src="parrots.gif" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="https://raw.githubusercontent.com/privefl/R-presentation/master/parrots.gif" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -422,7 +429,8 @@ class: center middle inverse
     awk, bash, coffee, gawk, groovy, haskell, lein, mysql, node,
     octave, perl, psql, Rscript, ruby, sas, scala, sed, sh, stata,
     zsh, highlight, Rcpp, tikz, dot, c, fortran, fortran95, asy, cat,
-    asis, stan, block, block2, js, css, sql, go, python, julia
+    asis, stan, block, block2, js, css, sql, go, python, julia, sass,
+    scss
     ```
 
 - HTML presentations (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/beyond-stats.Rmd))
@@ -430,6 +438,8 @@ class: center middle inverse
 - websites (such as [the website of our R user group](https://r-in-grenoble.github.io/))
 
 - books (e.g. my online [advanced R course](https://privefl.github.io/advr38book/) or even [a thesis](https://keurcien.github.io/book/introduction.html))
+
+- [WIP] [{pagedown}](https://github.com/rstudio/pagedown): Paginate the HTML Output of R Markdown with CSS for Print
 
 ---
 
@@ -440,6 +450,8 @@ class: center middle inverse
 ---
 
 ## Web scrapping
+
+(Remember to be nice on the web with [{polite}](https://github.com/dmi3kno/polite))
 
 
 ```r
@@ -465,6 +477,35 @@ R Markdown
 Data manipulation with package {dplyr}
 Data vizualisation with package {ggplot2}
 ```
+
+---
+
+## R clients to interact with APIs
+
+
+- libcurl: https://cran.r-project.org/package=RCurl
+
+- Twitter: https://github.com/mkearney/rtweet
+
+- Gmail: https://github.com/jimhester/gmailr
+
+- Google Spreadsheets: https://github.com/jennybc/googlesheets
+
+- Google Analytics: https://github.com/MarkEdmondson1234/googleAnalyticsR
+
+- GitHub: https://github.com/r-lib/gh
+
+- Cloud computing / Web services: https://github.com/cloudyr
+
+- dbSNP / openSNP: https://github.com/ropensci/rsnps
+
+- OpenStreetMap: https://github.com/ropensci/osmdata
+
+- [Géo](https://api.gouv.fr/api/api-geo.html): https://github.com/ColinFay/rgeoapi
+
+- etc
+
+- etc
 
 ---
 
@@ -524,6 +565,8 @@ Rcpp might be my favorite R package.
 
 &lt;br&gt;
 
+&lt;br&gt;
+
 &lt;img src="https://ropensci.github.io/drake/images/graph.png" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
@@ -568,15 +611,38 @@ class: center middle inverse
 
 - support many programming languages
 
+- RStudio server to open RStudio in a web brower, with code running on a distant server
+
 ---
+
+## RStudio for Python?
+
+&lt;blockquote class="twitter-tweet" data-lang="en" align="center"&gt;&lt;p lang="en" dir="ltr"&gt;What is one of the better interactive data analysis editor / environments for &lt;a href="https://twitter.com/hashtag/Python?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#Python&lt;/a&gt;?  &lt;a href="https://twitter.com/rstudio?ref_src=twsrc%5Etfw"&gt;@rstudio&lt;/a&gt; :-)&lt;br&gt;&lt;br&gt;The new RSTUDIO 1.2 release will have support for python REPL &lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/MachineLearning?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#MachineLearning&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/visualization?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#visualization&lt;/a&gt; &lt;a href="https://t.co/lUvP3qYd4z"&gt;pic.twitter.com/lUvP3qYd4z&lt;/a&gt;&lt;/p&gt;&amp;mdash; Longhow Lam 林 隆 豪 (@longhowlam) &lt;a href="https://twitter.com/longhowlam/status/1022821624318447616?ref_src=twsrc%5Etfw"&gt;27 juillet 2018&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
+
+
+---
+
+class: center middle inverse
 
 # Community
 
 ---
 
-&lt;blockquote class="twitter-tweet" data-lang="en" align="center" width="80%&gt;&lt;p lang="en" dir="ltr"&gt;I&amp;#39;m curious as to how the R community came to be so supportive and welcoming (as opposed to so much of the tech world). Anyone have ideas? &lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt;&lt;/p&gt;&amp;mdash; David Keyes (@dgkeyes) &lt;a href="https://twitter.com/dgkeyes/status/1113547867984027648?ref_src=twsrc%5Etfw"&gt;3 avril 2019&lt;/a&gt;&lt;/blockquote&gt;
+## A welcoming and inclusive community
+
+&lt;br&gt;
+
+&lt;blockquote class="twitter-tweet" data-lang="en" align="center"&gt;&lt;p lang="en" dir="ltr"&gt;I&amp;#39;m curious as to how the R community came to be so supportive and welcoming (as opposed to so much of the tech world). Anyone have ideas? &lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt;&lt;/p&gt;&amp;mdash; David Keyes (@dgkeyes) &lt;a href="https://twitter.com/dgkeyes/status/1113547867984027648?ref_src=twsrc%5Etfw"&gt;3 avril 2019&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
 
+&lt;br&gt;
+
+- [R Ladies](https://rladies.org/)
+
+- [R Forwards](https://forwards.github.io/)
+
+- etc
 
 ---
 
@@ -591,6 +657,26 @@ class: center middle inverse
 Packages in scope: data retrieval &amp; extraction, scientific software wrappers, database access, data munging, data deposition, reproducibility, geospatial data, and text analysis.
 
 Packages are openly reviewed to unsure quality.
+
+---
+
+## Open to many other languages
+
+&lt;br&gt;
+
+- Python via [{reticulate}](https://rstudio.github.io/reticulate/)
+
+- Java vua [{rJava}](https://github.com/s-u/rJava)
+
+- Julia via [{JuliaCall}](https://github.com/Non-Contradiction/JuliaCall)
+
+- JavaScript via [{V8}](https://github.com/jeroen/v8)
+
+- JavaScript visualization via [{htmlwidgets}](https://www.htmlwidgets.org/)
+
+- etc
+
+- Beyond: [Apache Arrow](https://github.com/apache/arrow): cross-language development platform for in-memory data. Languages currently supported include C, C++, C#, Go, Java, JavaScript, MATLAB, Python, R, Ruby, and Rust.
 
 ---
 
@@ -625,11 +711,6 @@ class: center middle inverse
 
 ---
 
-&lt;blockquote class="twitter-tweet" data-lang="en" align="center" size="50%"&gt;&lt;p lang="en" dir="ltr"&gt;New &lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt; post: &amp;quot;Where to get help with your R question?&amp;quot; &lt;a href="https://t.co/ilIarU1518"&gt;https://t.co/ilIarU1518&lt;/a&gt;&lt;br&gt;&lt;br&gt;❓❔⁉️ &lt;a href="https://t.co/u0FB7FtAla"&gt;pic.twitter.com/u0FB7FtAla&lt;/a&gt;&lt;/p&gt;&amp;mdash; Maëlle Salmon 🐟 (@ma_salmon) &lt;a href="https://twitter.com/ma_salmon/status/1021052562580045824?ref_src=twsrc%5Etfw"&gt;22 juillet 2018&lt;/a&gt;&lt;/blockquote&gt;
-&lt;script async src="https://platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
-
----
-
 class: inverse, center, middle
 
 # Thanks!
@@ -661,30 +742,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
 })();</script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-<script>
-(function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
-  for (i = 0; i < codes.length;) {
-    code = codes[i];
-    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
-      text = code.textContent;
-      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
-          /^\$\$(.|\s)+\$\$$/.test(text) ||
-          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
-        code.outerHTML = code.innerHTML;  // remove <code></code>
-        continue;
-      }
-    }
-    i++;
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
   }
-})();
+});
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
 (function () {
   var script = document.createElement('script');
   script.type = 'text/javascript';
-  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
   if (location.protocol !== 'file:' && /^https?:/.test(script.src))
     script.src  = script.src.replace(/^https?:/, '');
   document.getElementsByTagName('head')[0].appendChild(script);

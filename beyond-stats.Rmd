@@ -26,15 +26,19 @@ library(imager)
 
 class: title-slide center middle inverse
 
+<br>
+
+<br>
+
 # `r icon::fa_r_project()` beyond statistics
+
+<br>
 
 <br>
 
 ## Florian Privé
 
 ### April 8, 2019
-
-<br>
 
 <br>
 
@@ -64,10 +68,7 @@ class: title-slide center middle inverse
 
 - Learn R
 
-- Program for this year
-
 ---
-
 
 class: inverse, center, middle
 
@@ -220,9 +221,12 @@ flights %>%
 
 ## {dplyr} also works with databases
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="80%"}
 knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/738885c8f54f3ab6118545469c28cd6635fcd656/96e0d/homepage/interact.png")
 ```
+
+Connect to DBs such as MySQL, MariaDB, Postgres, Redshift, SQLite, Google’s BigQuery... and use {dplyr} instead of SQL.
+
 
 .footnote[Learn more at https://db.rstudio.com/dplyr/ and with [this webinar](https://www.rstudio.com/resources/videos/best-practices-for-working-with-databases-webinar/).]
 
@@ -266,12 +270,10 @@ knitr::include_graphics("http://www.sthda.com/english/rpkgs/ggpubr/tools/README-
 
 ---
 
-## Animate graphics with {[gganimate](https://github.com/thomasp85/gganimate)}
+## Animate graphics with [{gganimate}](https://github.com/thomasp85/gganimate)
 
-```{r, cache=TRUE, echo=FALSE, out.width="70%"}
-knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.show = "animate")
+```{r, cache=FALSE, eval=FALSE, echo=FALSE, out.width="70%", message=FALSE, warning=FALSE, fig.show="animate"}
 # Example from https://github.com/dgrtwo/gganimate
-
 ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
   bigstatsr::theme_bigstatsr() +
   geom_point(alpha = 0.7, show.legend = FALSE) +
@@ -284,6 +286,11 @@ ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
   transition_time(year) +
   ease_aes('linear')
 ```
+
+```{r, echo=FALSE, out.width="70%"}
+knitr::include_graphics("https://privefl.github.io/R-presentation/whatrcando_files/figure-html/unnamed-chunk-12-1.gif")
+```
+
 
 ---
 
@@ -310,7 +317,8 @@ alluvial::alluvial(
 
 - [{imager}](https://github.com/dahtah/imager) (by Simon Barthelmé, GIPSA-lab)
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
+library(imager)
 file <- system.file('extdata/parrots.png', package = 'imager')
 im <- load.image(file)
 save.video(imlist(
@@ -324,7 +332,7 @@ save.video(imlist(
 ```
 
 ```{r, echo=FALSE, out.width="80%"}
-knitr::include_graphics("parrots.gif")
+knitr::include_graphics("https://raw.githubusercontent.com/privefl/R-presentation/master/parrots.gif")
 ```
 
 ---
@@ -352,6 +360,8 @@ class: center middle inverse
 
 - books (e.g. my online [advanced R course](https://privefl.github.io/advr38book/) or even [a thesis](https://keurcien.github.io/book/introduction.html))
 
+- [WIP] [{pagedown}](https://github.com/rstudio/pagedown): Paginate the HTML Output of R Markdown with CSS for Print
+
 ---
 
 class: center middle inverse
@@ -361,6 +371,8 @@ class: center middle inverse
 ---
 
 ## Web scrapping
+
+(Remember to be nice on the web with [{polite}](https://github.com/dmi3kno/polite))
 
 ```{r, message=FALSE}
 library(rvest)
@@ -372,6 +384,35 @@ read_html("https://r-in-grenoble.github.io/sessions.html") %>%
   gsub("\n", "", .) %>%
   writeLines()
 ```
+
+---
+
+## R clients to interact with APIs
+
+
+- libcurl: https://cran.r-project.org/package=RCurl
+
+- Twitter: https://github.com/mkearney/rtweet
+
+- Gmail: https://github.com/jimhester/gmailr
+
+- Google Spreadsheets: https://github.com/jennybc/googlesheets
+
+- Google Analytics: https://github.com/MarkEdmondson1234/googleAnalyticsR
+
+- GitHub: https://github.com/r-lib/gh
+
+- Cloud computing / Web services: https://github.com/cloudyr
+
+- dbSNP / openSNP: https://github.com/ropensci/rsnps
+
+- OpenStreetMap: https://github.com/ropensci/osmdata
+
+- [Géo](https://api.gouv.fr/api/api-geo.html): https://github.com/ColinFay/rgeoapi
+
+- etc
+
+- etc
 
 ---
 
@@ -431,6 +472,8 @@ Rcpp might be my favorite R package.
 
 <br>
 
+<br>
+
 ```{r, echo=FALSE, out.width="90%"}
 knitr::include_graphics("https://ropensci.github.io/drake/images/graph.png")
 ```
@@ -477,6 +520,16 @@ class: center middle inverse
 
 - support many programming languages
 
+- RStudio server to open RStudio in a web brower, with code running on a distant server
+
+---
+
+## RStudio for Python?
+
+<blockquote class="twitter-tweet" data-lang="en" align="center"><p lang="en" dir="ltr">What is one of the better interactive data analysis editor / environments for <a href="https://twitter.com/hashtag/Python?src=hash&amp;ref_src=twsrc%5Etfw">#Python</a>?  <a href="https://twitter.com/rstudio?ref_src=twsrc%5Etfw">@rstudio</a> :-)<br><br>The new RSTUDIO 1.2 release will have support for python REPL <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://twitter.com/hashtag/MachineLearning?src=hash&amp;ref_src=twsrc%5Etfw">#MachineLearning</a> <a href="https://twitter.com/hashtag/visualization?src=hash&amp;ref_src=twsrc%5Etfw">#visualization</a> <a href="https://t.co/lUvP3qYd4z">pic.twitter.com/lUvP3qYd4z</a></p>&mdash; Longhow Lam 林 隆 豪 (@longhowlam) <a href="https://twitter.com/longhowlam/status/1022821624318447616?ref_src=twsrc%5Etfw">27 juillet 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
 ---
 
 class: center middle inverse
@@ -485,9 +538,20 @@ class: center middle inverse
 
 ---
 
-<blockquote class="twitter-tweet" data-lang="en" align="center" width="80%><p lang="en" dir="ltr">I&#39;m curious as to how the R community came to be so supportive and welcoming (as opposed to so much of the tech world). Anyone have ideas? <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a></p>&mdash; David Keyes (@dgkeyes) <a href="https://twitter.com/dgkeyes/status/1113547867984027648?ref_src=twsrc%5Etfw">3 avril 2019</a></blockquote>
+## A welcoming and inclusive community
+
+<br>
+
+<blockquote class="twitter-tweet" data-lang="en" align="center"><p lang="en" dir="ltr">I&#39;m curious as to how the R community came to be so supportive and welcoming (as opposed to so much of the tech world). Anyone have ideas? <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a></p>&mdash; David Keyes (@dgkeyes) <a href="https://twitter.com/dgkeyes/status/1113547867984027648?ref_src=twsrc%5Etfw">3 avril 2019</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
+<br>
+
+- [R Ladies](https://rladies.org/)
+
+- [R Forwards](https://forwards.github.io/)
+
+- etc
 
 ---
 
@@ -504,6 +568,26 @@ knitr::include_graphics("https://i2.wp.com/www.numfocus.org/wp-content/uploads/2
 Packages in scope: data retrieval & extraction, scientific software wrappers, database access, data munging, data deposition, reproducibility, geospatial data, and text analysis.
 
 Packages are openly reviewed to unsure quality.
+
+---
+
+## Open to many other languages
+
+<br>
+
+- Python via [{reticulate}](https://rstudio.github.io/reticulate/)
+
+- Java vua [{rJava}](https://github.com/s-u/rJava)
+
+- Julia via [{JuliaCall}](https://github.com/Non-Contradiction/JuliaCall)
+
+- JavaScript via [{V8}](https://github.com/jeroen/v8)
+
+- JavaScript visualization via [{htmlwidgets}](https://www.htmlwidgets.org/)
+
+- etc
+
+- Beyond: [Apache Arrow](https://github.com/apache/arrow): cross-language development platform for in-memory data. Languages currently supported include C, C++, C#, Go, Java, JavaScript, MATLAB, Python, R, Ruby, and Rust.
 
 ---
 
@@ -535,11 +619,6 @@ class: center middle inverse
 
     - [join the French-speaking R community](https://join.slack.com/t/r-grrr/shared_invite/enQtMzI4MzgwNTc4OTAxLWZlOGZiZTBiMWU0NDQ3OTYzOGE1YThiODgwZWNhNWEyYjI4ZDJiNmNhY2YyYWI5YzFiOTFkNDYxYzkwODUwNWM)
     - [join the R-Ladies community](https://rladies-community-slack.herokuapp.com/)
-
----
-
-<blockquote class="twitter-tweet" data-lang="en" align="center" size="50%"><p lang="en" dir="ltr">New <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> post: &quot;Where to get help with your R question?&quot; <a href="https://t.co/ilIarU1518">https://t.co/ilIarU1518</a><br><br>❓❔⁉️ <a href="https://t.co/u0FB7FtAla">pic.twitter.com/u0FB7FtAla</a></p>&mdash; Maëlle Salmon 🐟 (@ma_salmon) <a href="https://twitter.com/ma_salmon/status/1021052562580045824?ref_src=twsrc%5Etfw">22 juillet 2018</a></blockquote>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 ---
 
