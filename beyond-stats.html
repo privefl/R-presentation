@@ -45,11 +45,13 @@ class: title-slide center middle inverse
 
 - Visualization
 
-- High Performance Computing
+- Reporting
 
 - Web
 
-- Reporting
+- High Performance Computing
+
+- Improvements to the language
 
 - RStudio IDE
 
@@ -419,7 +421,6 @@ class: center middle inverse
 
 ## R Markdown
 
-&lt;br&gt;
 
 - Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, beamer, etc.
 
@@ -429,9 +430,10 @@ class: center middle inverse
     awk, bash, coffee, gawk, groovy, haskell, lein, mysql, node,
     octave, perl, psql, Rscript, ruby, sas, scala, sed, sh, stata,
     zsh, highlight, Rcpp, tikz, dot, c, fortran, fortran95, asy, cat,
-    asis, stan, block, block2, js, css, sql, go, python, julia, sass,
-    scss
+    asis, stan, block, block2, js, css, sql, go, python, julia
     ```
+    
+- Notebooks
 
 - HTML presentations (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/beyond-stats.Rmd))
 
@@ -619,7 +621,7 @@ system.time({
 
 ```
    user  system elapsed 
-  1.052   0.004   1.054 
+  1.406   0.000   1.406 
 ```
 ]
 
@@ -645,7 +647,7 @@ system.time({
 
 ```
    user  system elapsed 
-  0.088   0.000   0.090 
+  0.111   0.000   0.111 
 ```
 
 &lt;br&gt;
@@ -674,7 +676,7 @@ system.time({
 
 ```
    user  system elapsed 
-  1.012   0.008   1.023 
+  1.440   0.041   1.483 
 ```
 ]
 
@@ -693,7 +695,7 @@ system.time({
 
 ```
    user  system elapsed 
-  0.012   0.000   0.011 
+  0.013   0.000   0.013 
 ```
 
 &lt;br&gt;
@@ -705,54 +707,42 @@ Since R 3.4
 
 ---
 
-## ALTREP
+## ALTREP (since R 3.5)
 
-### an alternative way of representing R objects internally
+### An alternative way of representing R objects internally
 
-&lt;br&gt;
 
-.pull-left[
+Before :
 
-```r
-system.time({
-  N &lt;- 3e4
-  res &lt;- c(0)
-  for (i in 2:N) {
-    new_val &lt;- res[i - 1] + 1
-    res &lt;- c(res, new_val)
-  }
-})
-```
-
-```
-   user  system elapsed 
-  0.956   0.016   0.970 
-```
-]
-
-.pull-right[
 
 ```r
-system.time({
-  N &lt;- 3e4
-  res &lt;- c(0)
-  for (i in 2:N) {
-    new_val &lt;- res[i - 1] + 1
-    res[i] &lt;- new_val;
-  }
-})
+x &lt;- 1:1e10
 ```
 
 ```
-   user  system elapsed 
-  0.012   0.000   0.011 
+Error: cannot allocate vector of size 74.5 Gb
 ```
 
-&lt;br&gt;
 
-Since R 3.4
-]
+After: 
 
+
+```r
+x &lt;- 1:1e10
+.Internal(inspect(x))
+```
+
+```
+@67ddb58 14 REALSXP g0c0 [NAM(3)]  1 : 10000000000 (compact)
+```
+
+```r
+sum(x)
+```
+
+```
+[1] 5e+19
+```
 
 ---
 
@@ -833,6 +823,8 @@ Packages are openly reviewed to unsure quality.
 
 &lt;br&gt;
 
+- C++ via [{Rcpp}](https://github.com/RcppCore/Rcpp)
+
 - Python via [{reticulate}](https://rstudio.github.io/reticulate/)
 
 - Java vua [{rJava}](https://github.com/s-u/rJava)
@@ -911,19 +903,30 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
 })();</script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
   }
-});
+})();
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
 (function () {
   var script = document.createElement('script');
   script.type = 'text/javascript';
-  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
   if (location.protocol !== 'file:' && /^https?:/.test(script.src))
     script.src  = script.src.replace(/^https?:/, '');
   document.getElementsByTagName('head')[0].appendChild(script);

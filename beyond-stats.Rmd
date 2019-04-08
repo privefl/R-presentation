@@ -56,11 +56,13 @@ class: title-slide center middle inverse
 
 - Visualization
 
-- High Performance Computing
+- Reporting
 
 - Web
 
-- Reporting
+- High Performance Computing
+
+- Improvements to the language
 
 - RStudio IDE
 
@@ -345,7 +347,6 @@ class: center middle inverse
 
 ## R Markdown
 
-<br>
 
 - Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, beamer, etc.
 
@@ -353,6 +354,8 @@ class: center middle inverse
     ```{r, echo=FALSE}
     cat(stringr::str_wrap(paste(names(knitr::knit_engines$get()), collapse = ", "), 65))
     ```
+    
+- Notebooks
 
 - HTML presentations (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/beyond-stats.Rmd))
 
@@ -576,11 +579,10 @@ Since R 3.4
 
 ---
 
-## ALTREP (since 3.5)
+## ALTREP (since R 3.5)
 
 ### An alternative way of representing R objects internally
 
-<br>
 
 Before :
 
@@ -592,7 +594,14 @@ x <- 1:1e10
 Error: cannot allocate vector of size 74.5 Gb
 ```
 
+
 After: 
+
+```{r}
+x <- 1:1e10
+.Internal(inspect(x))
+sum(x)
+```
 
 ---
 
@@ -674,6 +683,8 @@ Packages are openly reviewed to unsure quality.
 ## Open to many other languages
 
 <br>
+
+- C++ via [{Rcpp}](https://github.com/RcppCore/Rcpp)
 
 - Python via [{reticulate}](https://rstudio.github.io/reticulate/)
 
