@@ -26,11 +26,7 @@ class: title-slide center middle inverse
 
 &lt;br&gt;
 
-&lt;br&gt;
-
 # R Markdown
-
-&lt;br&gt;
 
 &lt;br&gt;
 
@@ -42,7 +38,7 @@ class: title-slide center middle inverse
 
 &lt;br&gt;
 
-**Slides:** `privefl.github.io/R-presentation/rmarkdown.html`
+**Slides:** `bit.ly/RUGgre18`
 
 &lt;br&gt;
 
@@ -60,6 +56,8 @@ class: inverse, center, middle
 
 ## R Markdown?
 
+&lt;br&gt;
+
 * Markdown is a _lightweight markup language_ with plain text formatting syntax that can be converted to many formats, including HTML.    
 It is completely independent from R.    
 The extention is typically `.md`.
@@ -70,7 +68,7 @@ The extention is typically `.md`.
 
 --
 
-* {rmarkdown} is an R package that proceses and converts `.Rmd` files into a number of different formats, including HTML or `.pdf`. The core function is `rmarkdown::render()`.
+* {rmarkdown} is an R package that proceses and converts `.Rmd` files into a number of different formats, including HTML, PDF and Word.
 
 ---
 
@@ -217,9 +215,7 @@ $$ \frac{1}{n} \sum_{i=1}^n X_i $$
 
 - Make an horizontal line with '`***`'
 
-- Add 4 spaces at the end of your text in order to write to the next
-
-    
+- Add 4 spaces at the end of your text in order to write to the next line
 
 - You can write HTML in Markdown (e.g. use '`&lt;br&gt;`' to get a blank line)
 
@@ -367,12 +363,13 @@ leaflet(width = "100%") %&gt;%
   addTiles(options = providerTileOptions(minZoom = 2, maxZoom = 19))
 ```
 
-<div id="htmlwidget-d90ec60277c24bea7995" style="width:100%;height:360px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-d90ec60277c24bea7995">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[45.19059,5.767249],12,[]],"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false,"minZoom":2,"maxZoom":19,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}]},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-b2804904edfa63778a1a" style="width:100%;height:360px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b2804904edfa63778a1a">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[45.19059,5.767249],12,[]],"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false,"minZoom":2,"maxZoom":19,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}]},"evals":[],"jsHooks":[]}</script>
 
 ---
 
 ## [Supported languages in chunks](https://bookdown.org/yihui/rmarkdown/language-engines.html)
+
 
 - R 
 
@@ -386,7 +383,9 @@ leaflet(width = "100%") %&gt;%
 
 - Stan
 
-- JavaScript and CSS
+- JavaScript
+
+- CSS
 
 - Julia
 
@@ -404,22 +403,25 @@ class: inverse, center, middle
 
 ## Use R Markdown for.. 
 
-.footnote[(April session of [R in Grenoble](https://r-in-grenoble.github.io/sessions.html))]
-
 &lt;br&gt;
 
 - Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, etc.
 
-- **Slides**
+- Notebooks
 
-- Websites
+- Slides (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/rmarkdown.Rmd))
 
-- Books (or even [a thesis](https://keurcien.github.io/book/introduction.html))
+- Websites (such as [the website of our R user group](https://r-in-grenoble.github.io/))
+
+- Books (e.g. my online [advanced R course](https://privefl.github.io/advr38book/) or even [a thesis](https://keurcien.github.io/book/introduction.html))
+
+- [WIP] [{pagedown}](https://github.com/rstudio/pagedown): Paginate the HTML Output of R Markdown with CSS for Print
 
 ---
 
 ## Slides formats
 
+&lt;br&gt;
 
 - [ioslides](https://bookdown.org/yihui/rmarkdown/ioslides-presentation.html) ([example](https://privefl.github.io/R-presentation/pResentation.html))
 
@@ -435,100 +437,6 @@ class: inverse, center, middle
 
 ---
 
-class: inverse, center, middle
-
-# Xaringan
-
-&lt;img src="https://camo.githubusercontent.com/f91f64981633838bdedfee54df8595534c3cd9ba/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f622f62652f53686172696e67616e5f747269706c652e737667" width="232" height="232"&gt;
-
----
-
-## Xaringan?
-
-Xaringan is a package to create slides with R Markdown
-
---
-
-It is developped by Yihui Xie <i class="fab  fa-github "></i> &lt;a href="https://github.com/yihui"&gt;@yihui&lt;/a&gt;
-
-
-```r
-devtools::install_github('yihui/xaringan')
-```
-
---
-
-.center[
-  &lt;img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd5.png" width="450"&gt;
-]
-
----
-
-## How it works?
-
-The syntax is almost the same as R Markdown
-
---
-
-Slides are separated by `---`
-
---
-
-You can build incremental slides with `--` 
-
---
-
-&lt;br&gt;
-
-
-```
----
-
-## How it works?
-
-The syntax is almost the same as R Markdown
-
---
-
-Slides are separated by `---`
-
---
-
-You can build incremental slides with `--` 
-```
-
----
-
-## Tips
-
-You can change slide configuration (for titles) with `class`
-
-
-```
----
-class: middle, center, inverse
-```
-
-&lt;br&gt; 
-
---
-
-To skip a lign, use the `&lt;br&gt;` HTML tag
-
---
-
-&lt;br&gt;
-
-Use `.footnote[Text]` to add a footnote and `.center[Text]` to center text
-
---
-
-&lt;br&gt;
-
-.center[I'm centered]
-
-.footnote[I'm a footnote]
-
 ---
 class: middle, center, inverse
 
@@ -536,29 +444,41 @@ class: middle, center, inverse
 
 ---
 
-&lt;img src="https://bookdown.org/yihui/rmarkdown/images/cover.png" width="52%" style="display: block; margin: auto;" /&gt;
+class: middle, center
+
+.pull-left[
+&lt;img src="https://bookdown.org/yihui/rmarkdown/images/cover.png" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="https://bookdown.org/yihui/bookdown/images/cover.jpg" width="95%" style="display: block; margin: auto;" /&gt;
+]
 
 ---
 
 ## Useful materials
 
+&lt;br&gt;
+
 * [Official website](https://rmarkdown.rstudio.com)
 
-* [Official documentation](https://bookdown.org/yihui/rmarkdown/)
+* [*R Markdown: The Definitive Guide*](https://bookdown.org/yihui/rmarkdown/)
+
+* [*Authoring Books and Technical Documents with R Markdown*](https://bookdown.org/yihui/bookdown/)
 
 * [Reference guide](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
 
 * [Cheat sheet](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
 
-* [Xaringan documentation](https://slides.yihui.name/xaringan)
-
 * [Tips for R Markdown](https://holtzy.github.io/Pimp-my-rmd/)
-
-* [Tips for making slides](https://www.tidyverse.org/articles/2018/07/carpe-talk/)
 
 * [Embed a File in the HTML Output of R Markdown](https://yihui.name/en/2018/07/embed-file/)
 
+* [Xaringan documentation](https://slides.yihui.name/xaringan)
+
 * [Decouple Code and Output in xaringan slides](https://www.garrickadenbuie.com/blog/2018/08/16/decouple-code-and-output-in-xaringan-slides/)
+
+* [Tips for making slides](https://www.tidyverse.org/articles/2018/07/carpe-talk/)
 
 ---
 
@@ -568,11 +488,13 @@ class: inverse, center, middle
 
 &lt;br&gt;
 
-**Slides:** `bit.ly/rmdslides`
+**Slides:** `bit.ly/RUGgre18`
 
 &lt;br&gt;
 
 <i class="fab  fa-twitter "></i> [privefl](https://twitter.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-github "></i> [privefl](https://github.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-stack-overflow "></i> [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
+
+<i class="fab  fa-twitter "></i> [JulyanArbel](https://twitter.com/JulyanArbel) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-github "></i> [jarbel](https://github.com/jarbel)
 
 .footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
     </textarea>

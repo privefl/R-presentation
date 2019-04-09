@@ -24,11 +24,7 @@ class: title-slide center middle inverse
 
 <br>
 
-<br>
-
 # R Markdown
-
-<br>
 
 <br>
 
@@ -40,7 +36,7 @@ class: title-slide center middle inverse
 
 <br>
 
-**Slides:** `privefl.github.io/R-presentation/rmarkdown.html`
+**Slides:** `bit.ly/RUGgre18`
 
 <br>
 
@@ -60,6 +56,8 @@ knitr::include_graphics("rmarkdown.png")
 
 ## R Markdown?
 
+<br>
+
 * Markdown is a _lightweight markup language_ with plain text formatting syntax that can be converted to many formats, including HTML.    
 It is completely independent from R.    
 The extention is typically `.md`.
@@ -70,7 +68,7 @@ The extention is typically `.md`.
 
 --
 
-* {rmarkdown} is an R package that proceses and converts `.Rmd` files into a number of different formats, including HTML or `.pdf`. The core function is `rmarkdown::render()`.
+* {rmarkdown} is an R package that proceses and converts `.Rmd` files into a number of different formats, including HTML, PDF and Word.
 
 ---
 
@@ -217,9 +215,7 @@ $$ \frac{1}{n} \sum_{i=1}^n X_i $$
 
 - Make an horizontal line with '`***`'
 
-- Add 4 spaces at the end of your text in order to write to the next
-
-    
+- Add 4 spaces at the end of your text in order to write to the next line
 
 - You can write HTML in Markdown (e.g. use '`<br>`' to get a blank line)
 
@@ -360,6 +356,7 @@ leaflet(width = "100%") %>%
 
 ## [Supported languages in chunks](https://bookdown.org/yihui/rmarkdown/language-engines.html)
 
+
 - R 
 
 - Python
@@ -372,7 +369,9 @@ leaflet(width = "100%") %>%
 
 - Stan
 
-- JavaScript and CSS
+- JavaScript
+
+- CSS
 
 - Julia
 
@@ -390,22 +389,25 @@ class: inverse, center, middle
 
 ## Use R Markdown for.. 
 
-.footnote[(April session of [R in Grenoble](https://r-in-grenoble.github.io/sessions.html))]
-
 <br>
 
 - Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, etc.
 
-- **Slides**
+- Notebooks
 
-- Websites
+- Slides (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/rmarkdown.Rmd))
 
-- Books (or even [a thesis](https://keurcien.github.io/book/introduction.html))
+- Websites (such as [the website of our R user group](https://r-in-grenoble.github.io/))
+
+- Books (e.g. my online [advanced R course](https://privefl.github.io/advr38book/) or even [a thesis](https://keurcien.github.io/book/introduction.html))
+
+- [WIP] [{pagedown}](https://github.com/rstudio/pagedown): Paginate the HTML Output of R Markdown with CSS for Print
 
 ---
 
 ## Slides formats
 
+<br>
 
 - [ioslides](https://bookdown.org/yihui/rmarkdown/ioslides-presentation.html) ([example](https://privefl.github.io/R-presentation/pResentation.html))
 
@@ -421,95 +423,6 @@ class: inverse, center, middle
 
 ---
 
-class: inverse, center, middle
-
-# Xaringan
-
-<img src="https://camo.githubusercontent.com/f91f64981633838bdedfee54df8595534c3cd9ba/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f622f62652f53686172696e67616e5f747269706c652e737667" width="232" height="232">
-
----
-
-## Xaringan?
-
-Xaringan is a package to create slides with R Markdown
-
---
-
-It is developped by Yihui Xie `r icon::fa("github", size = 1)` <a href="https://github.com/yihui">@yihui</a>
-
-```{r eval=FALSE, echo=TRUE}
-devtools::install_github('yihui/xaringan')
-```
-
---
-
-.center[
-  <img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd5.png" width="450">
-]
-
----
-
-## How it works?
-
-The syntax is almost the same as R Markdown
-
---
-
-Slides are separated by `---`
-
---
-
-You can build incremental slides with `--` 
-
---
-
-<br>
-
-```{r comment=NA,echo=FALSE}
-cat('---
-
-## How it works?\n\nThe syntax is almost the same as R Markdown
-
---
-
-Slides are separated by `---`
-
---
-
-You can build incremental slides with `--` ')
-```
-
----
-
-## Tips
-
-You can change slide configuration (for titles) with `class`
-
-```{r comment=NA,echo=FALSE}
-cat('---
-class: middle, center, inverse')
-```
-
-<br> 
-
---
-
-To skip a lign, use the `<br>` HTML tag
-
---
-
-<br>
-
-Use `.footnote[Text]` to add a footnote and `.center[Text]` to center text
-
---
-
-<br>
-
-.center[I'm centered]
-
-.footnote[I'm a footnote]
-
 ---
 class: middle, center, inverse
 
@@ -517,31 +430,45 @@ class: middle, center, inverse
 
 ---
 
-```{r, out.width="52%"}
+class: middle, center
+
+.pull-left[
+```{r, out.width="95%"}
 knitr::include_graphics("https://bookdown.org/yihui/rmarkdown/images/cover.png")
 ```
+]
+
+.pull-right[
+```{r, out.width="95%"}
+knitr::include_graphics("https://bookdown.org/yihui/bookdown/images/cover.jpg")
+```
+]
 
 ---
 
 ## Useful materials
 
+<br>
+
 * [Official website](https://rmarkdown.rstudio.com)
 
-* [Official documentation](https://bookdown.org/yihui/rmarkdown/)
+* [*R Markdown: The Definitive Guide*](https://bookdown.org/yihui/rmarkdown/)
+
+* [*Authoring Books and Technical Documents with R Markdown*](https://bookdown.org/yihui/bookdown/)
 
 * [Reference guide](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
 
 * [Cheat sheet](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
 
-* [Xaringan documentation](https://slides.yihui.name/xaringan)
-
 * [Tips for R Markdown](https://holtzy.github.io/Pimp-my-rmd/)
-
-* [Tips for making slides](https://www.tidyverse.org/articles/2018/07/carpe-talk/)
 
 * [Embed a File in the HTML Output of R Markdown](https://yihui.name/en/2018/07/embed-file/)
 
+* [Xaringan documentation](https://slides.yihui.name/xaringan)
+
 * [Decouple Code and Output in xaringan slides](https://www.garrickadenbuie.com/blog/2018/08/16/decouple-code-and-output-in-xaringan-slides/)
+
+* [Tips for making slides](https://www.tidyverse.org/articles/2018/07/carpe-talk/)
 
 ---
 
@@ -551,10 +478,12 @@ class: inverse, center, middle
 
 <br>
 
-**Slides:** `bit.ly/rmdslides`
+**Slides:** `bit.ly/RUGgre18`
 
 <br>
 
 `r icon::fa("twitter")` [privefl](https://twitter.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("github")` [privefl](https://github.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("stack-overflow")` [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
+
+`r icon::fa("twitter")` [JulyanArbel](https://twitter.com/JulyanArbel) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("github")` [jarbel](https://github.com/jarbel)
 
 .footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
