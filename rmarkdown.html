@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Slides with Rmd</title>
+    <meta charset="utf-8">
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+    <script src="libs/jquery-1.12.4/jquery.min.js"></script>
+    <link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+    <script src="libs/leaflet-1.3.1/leaflet.js"></script>
+    <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+    <script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+    <script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+    <link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+    <script src="libs/leaflet-binding-2.0.1/leaflet.js"></script>
+    <link href="libs/font-awesome-5.0.12/css/fontawesome-all.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: title-slide center middle inverse
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+# R Markdown
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+## Florian Privé &amp; Julyan Arbel
+
+### April 11, 2019
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+**Slides:** `privefl.github.io/R-presentation/rmarkdown.html`
+
+&lt;br&gt;
+
+&lt;small&gt;(Adapted with permission from [Antoine Bichat's presentation](https://abichat.github.io/Slides/ScienceCommunicationSOTR/ScienceCommunicationSOTR.html#1))&lt;/small&gt;
+
+---
+
+class: inverse, center, middle
+
+# R Markdown
+
+&lt;img src="rmarkdown.png" width="40%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## R Markdown?
+
+* Markdown is a _lightweight markup language_ with plain text formatting syntax that can be converted to many formats, including HTML.    
+It is completely independent from R.    
+The extention is typically `.md`.
+
+--
+
+* R Markdown is an extension of the markdown syntax that enables R code to be executed. The extention is typically `.Rmd`.
+
+--
+
+* {rmarkdown} is an R package that proceses and converts `.Rmd` files into a number of different formats, including HTML or `.pdf`. The core function is `rmarkdown::render()`.
+
+---
+
+## Create a new `.Rmd` in RStudio
+
+.pull-left[
+.center[
+  &lt;img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd1.png" width="400"&gt;
+]
+]
+
+--
+
+.pull-right[
+  &lt;div style = "margin-top: 80px"&gt;&lt;/div&gt; 
+  .center[
+    &lt;img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd2.png" width="400"&gt;
+  ]
+]
+
+---
+
+## New `.Rmd`
+
+.center[
+  &lt;img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd3.png" width="700"&gt;
+]
+
+---
+
+## Compile `.Rmd`
+
+Use the `Knit` button to produce a HTML file
+
+.center[
+  &lt;img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd4.png" width="300"&gt;
+]
+
+&lt;br&gt;
+
+Shortcut: `Ctrl + Shift + K`
+
+---
+
+class: center, middle, inverse
+
+# Markdown syntax
+
+---
+
+## Titles and text fonts in Markdown
+
+```
+# Big title
+
+## Title
+
+### Small title
+
+_Italic_, *italic*, __bold__, **bold**, and `monospace`
+```
+
+--
+
+***
+
+# Big title
+
+## Title
+
+### Small title
+
+_Italic_, *italic*, __bold__, **bold**, and `monospace`
+
+
+---
+
+## Lists in Markdown
+
+.pull-left[
+```
+1. This is
+
+2. an ordered
+
+3. list
+```
+1. This is
+
+2. an ordered
+
+3. list
+]
+
+--
+
+.pull-right[
+```
+ * This is
+
+ * a bullet list
+
+    * with indent
+```
+* This is
+
+* a bullet list
+
+  * with indent
+]
+
+--
+
+&lt;br&gt;
+
+- You can enumerate only with '`1.`'; it will increment automatically
+
+- You can also use '`-`' or '`+`' instead of '`*`'
+
+
+---
+
+## More in Markdown
+
+```
+&gt; You can insert quotes and $\LaTeX$ expressions
+```
+
+&gt; You can insert quotes and `\(\LaTeX\)` expressions
+
+--
+
+&lt;br&gt;
+
+```
+$$ \frac{1}{n} \sum_{i=1}^n X_i $$
+```
+
+$$ \frac{1}{n} \sum_{i=1}^n X_i $$
+
+--
+
+&lt;br&gt;
+
+- Make an horizontal line with '`***`'
+
+- Add 4 spaces at the end of your text in order to write to the next
+
+    
+
+- You can write HTML in Markdown (e.g. use '`&lt;br&gt;`' to get a blank line)
+
+---
+
+## Insert links and pictures
+
+```
+[Antoine's personal page](https://abichat.github.io/)
+```
+
+[Antoine's personal page](https://abichat.github.io/)
+
+--
+
+```
+![](https://slides.yihui.name/gif/impossible-parking.gif)
+```
+
+![](https://slides.yihui.name/gif/impossible-parking.gif)
+
+--
+
+It also works directly with HTML syntax:
+
+```
+&lt;a href="https://abichat.github.io/"&gt;My personal page&lt;/a&gt;
+
+&lt;img src="https://slides.yihui.name/gif/impossible-parking.gif"&gt;
+```
+
+---
+
+class: middle, center, inverse
+
+# Code chunks
+
+---
+
+## Basic chunk
+
+
+````
+```{r}
+x &lt;- 4
+x
+```
+````
+
+--
+
+Output:
+
+
+```
+[1] 4
+```
+
+--
+
+.pull-left[
+### Echo
+
+To display the output of a code chunk but not the underlying R code, you specify the `echo=FALSE` option
+
+
+````
+```{r chunkecho, echo=FALSE}
+x &lt;- 5
+x
+```
+````
+]
+
+--
+
+.pull-right[
+### Eval
+
+To display R code without evaluating it, you specify the `eval=FALSE` chunk option
+
+
+````
+```{r chunkeval, eval=FALSE}
+x &lt;- 5
+```
+````
+]
+
+---
+
+## Figure options (1/2)
+
+
+````
+```{r, fig.align="center", out.width="60%"}
+ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
+```
+````
+
+&lt;img src="rmarkdown_files/figure-html/chunkfig-1.svg" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Figure options (2/2)
+
+
+````
+```{r, fig.align="center", out.width="80%", fig.width=4, fig.asp=0.7}
+ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
+```
+````
+
+&lt;img src="rmarkdown_files/figure-html/chunkfig2-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## A better way to include pictures
+
+
+````
+```{r betterway, fig.align="center", out.width="80%", echo=FALSE}
+knitr::include_graphics(
+  "https://slides.yihui.name/gif/impossible-parking.gif")
+```
+````
+
+--
+
+&lt;img src="https://slides.yihui.name/gif/impossible-parking.gif" width="80%" style="display: block; margin: auto;" /&gt;
+
+--
+
+It allows you to use the chunk options for image size.
+
+---
+
+## Include an interactive map with {leaflet}
+
+
+```r
+library(leaflet)
+leaflet(width = "100%") %&gt;% 
+  setView(lng = 5.767249, lat = 45.190590, zoom = 12) %&gt;% 
+  addTiles(options = providerTileOptions(minZoom = 2, maxZoom = 19))
+```
+
+<div id="htmlwidget-d90ec60277c24bea7995" style="width:100%;height:360px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d90ec60277c24bea7995">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[45.19059,5.767249],12,[]],"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false,"minZoom":2,"maxZoom":19,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}]},"evals":[],"jsHooks":[]}</script>
+
+---
+
+## [Supported languages in chunks](https://bookdown.org/yihui/rmarkdown/language-engines.html)
+
+- R 
+
+- Python
+
+- Shell
+
+- SQL
+
+- Rcpp
+
+- Stan
+
+- JavaScript and CSS
+
+- Julia
+
+- C and Fortran
+
+- many others...
+
+---
+
+class: inverse, center, middle
+
+# Formats
+
+---
+
+## Use R Markdown for.. 
+
+.footnote[(April session of [R in Grenoble](https://r-in-grenoble.github.io/sessions.html))]
+
+&lt;br&gt;
+
+- Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, etc.
+
+- **Slides**
+
+- Websites
+
+- Books (or even [a thesis](https://keurcien.github.io/book/introduction.html))
+
+---
+
+## Slides formats
+
+
+- [ioslides](https://bookdown.org/yihui/rmarkdown/ioslides-presentation.html) ([example](https://privefl.github.io/R-presentation/pResentation.html))
+
+- [slidy](https://bookdown.org/yihui/rmarkdown/slidy-presentation.html) ([example](https://www.jvcasillas.com/slidify_tutorial/))
+
+- [beamer](https://bookdown.org/yihui/rmarkdown/beamer-presentation.html) (pdf)
+
+- [powerpoint](https://bookdown.org/yihui/rmarkdown/powerpoint-presentation.html) (ppt)
+
+- [**xaringan** / remark.js](https://bookdown.org/yihui/rmarkdown/xaringan.html) (example: this presentation!)
+
+- [reveal.js](https://bookdown.org/yihui/rmarkdown/revealjs.html)
+
+---
+
+class: inverse, center, middle
+
+# Xaringan
+
+&lt;img src="https://camo.githubusercontent.com/f91f64981633838bdedfee54df8595534c3cd9ba/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f622f62652f53686172696e67616e5f747269706c652e737667" width="232" height="232"&gt;
+
+---
+
+## Xaringan?
+
+Xaringan is a package to create slides with R Markdown
+
+--
+
+It is developped by Yihui Xie <i class="fab  fa-github "></i> &lt;a href="https://github.com/yihui"&gt;@yihui&lt;/a&gt;
+
+
+```r
+devtools::install_github('yihui/xaringan')
+```
+
+--
+
+.center[
+  &lt;img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd5.png" width="450"&gt;
+]
+
+---
+
+## How it works?
+
+The syntax is almost the same as R Markdown
+
+--
+
+Slides are separated by `---`
+
+--
+
+You can build incremental slides with `--` 
+
+--
+
+&lt;br&gt;
+
+
+```
+---
+
+## How it works?
+
+The syntax is almost the same as R Markdown
+
+--
+
+Slides are separated by `---`
+
+--
+
+You can build incremental slides with `--` 
+```
+
+---
+
+## Tips
+
+You can change slide configuration (for titles) with `class`
+
+
+```
+---
+class: middle, center, inverse
+```
+
+&lt;br&gt; 
+
+--
+
+To skip a lign, use the `&lt;br&gt;` HTML tag
+
+--
+
+&lt;br&gt;
+
+Use `.footnote[Text]` to add a footnote and `.center[Text]` to center text
+
+--
+
+&lt;br&gt;
+
+.center[I'm centered]
+
+.footnote[I'm a footnote]
+
+---
+class: middle, center, inverse
+
+# References
+
+---
+
+&lt;img src="https://bookdown.org/yihui/rmarkdown/images/cover.png" width="52%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Useful materials
+
+* [Official website](https://rmarkdown.rstudio.com)
+
+* [Official documentation](https://bookdown.org/yihui/rmarkdown/)
+
+* [Reference guide](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
+
+* [Cheat sheet](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
+
+* [Xaringan documentation](https://slides.yihui.name/xaringan)
+
+* [Tips for R Markdown](https://holtzy.github.io/Pimp-my-rmd/)
+
+* [Tips for making slides](https://www.tidyverse.org/articles/2018/07/carpe-talk/)
+
+* [Embed a File in the HTML Output of R Markdown](https://yihui.name/en/2018/07/embed-file/)
+
+* [Decouple Code and Output in xaringan slides](https://www.garrickadenbuie.com/blog/2018/08/16/decouple-code-and-output-in-xaringan-slides/)
+
+---
+
+class: inverse, center, middle
+
+# Thanks!
+
+&lt;br&gt;
+
+**Slides:** `bit.ly/rmdslides`
+
+&lt;br&gt;
+
+<i class="fab  fa-twitter "></i> [privefl](https://twitter.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-github "></i> [privefl](https://github.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-stack-overflow "></i> [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
+
+.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
