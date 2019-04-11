@@ -9,7 +9,7 @@ output:
     nature:
       highlightStyle: github
       highlightLines: true
-      countIncrementalSlides: true
+      countIncrementalSlides: false
 editor_options: 
   chunk_output_type: console
 ---
@@ -40,7 +40,7 @@ class: title-slide center middle inverse
 
 <br>
 
-<small>(Adapted with permission from [Antoine Bichat's presentation](https://abichat.github.io/Slides/ScienceCommunicationSOTR/ScienceCommunicationSOTR.html#1))</small>
+<small>(adapted with permission from [Antoine Bichat's presentation](https://abichat.github.io/Slides/ScienceCommunicationSOTR/ScienceCommunicationSOTR.html#1))</small>
 
 ---
 
@@ -265,7 +265,7 @@ cat("```{r}\nx <- 4\nx\n```")
 
 Output:
 
-```{r simplechunk}
+```{r}
 x <- 4
 x
 ```
@@ -278,7 +278,7 @@ x
 To display the output of a code chunk but not the underlying R code, you specify the `echo=FALSE` option
 
 ```{r comment=NA,echo=FALSE}
-cat("```{r chunkecho, echo=FALSE}\nx <- 5\nx\n```")
+cat("```{r, echo=FALSE}\nx <- 5\nx\n```")
 ```
 ]
 
@@ -290,7 +290,7 @@ cat("```{r chunkecho, echo=FALSE}\nx <- 5\nx\n```")
 To display R code without evaluating it, you specify the `eval=FALSE` chunk option
 
 ```{r comment=NA,echo=FALSE}
-cat("```{r chunkeval, eval=FALSE}\nx <- 5\n```")
+cat("```{r, eval=FALSE}\nx <- 5\n```")
 ```
 ]
 
@@ -313,12 +313,12 @@ ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
 ## Figure options (2/2)
 
 ```{r comment=NA,echo=FALSE}
-cat('```{r, fig.align="center", out.width="80%", fig.width=4, fig.asp=0.7}
+cat('```{r, fig.align="center", out.width="80%", fig.asp=0.7, fig.width=4}
 ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
 ```')
 ```
 
-```{r chunkfig2, fig.align="center", out.width="80%", fig.width=4, fig.asp=0.7}
+```{r chunkfig2, fig.align="center", out.width="80%", fig.asp=0.7, fig.width=4}
 ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
 ```
 
@@ -327,34 +327,56 @@ ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
 ## A better way to include pictures
 
 ```{r comment=NA,echo=FALSE}
-cat('```{r betterway, fig.align="center", out.width="80%", echo=FALSE}\nknitr::include_graphics(\n  "https://slides.yihui.name/gif/impossible-parking.gif")\n```')
+cat('```{r, fig.align="center", out.width="80%", echo=FALSE}\nknitr::include_graphics(\n  "https://slides.yihui.name/gif/impossible-parking.gif")\n```')
 ```
-
---
 
 ```{r betterway, fig.align="center", out.width="80%", echo=FALSE}
 knitr::include_graphics(
   "https://slides.yihui.name/gif/impossible-parking.gif")
 ```
 
---
-
 It allows you to use the chunk options for image size.
 
 ---
 
-## Include an interactive map with {leaflet}
+## FAQ: two figures side-by-side
 
-```{r, out.width='100%', fig.height=5, echo=TRUE}
-library(leaflet)
-leaflet(width = "100%") %>% 
-  setView(lng = 5.767249, lat = 45.190590, zoom = 12) %>% 
-  addTiles(options = providerTileOptions(minZoom = 2, maxZoom = 19))
+```{r comment=NA,echo=FALSE}
+cat('```{r, echo=FALSE, out.width="50%", fig.show="hold", fig.align="default"}\nplot(iris)\nplot(iris, pch = 20, col = iris$Species)\n```')
+```
+
+```{r, fig.align="default", out.width="50%", echo=FALSE, fig.show='hold'}
+plot(iris)
+plot(iris, pch = 20, col = iris$Species)
 ```
 
 ---
 
-## [Supported languages in chunks](https://bookdown.org/yihui/rmarkdown/language-engines.html)
+class: inverse, center, middle
+
+# Formats and options
+
+---
+
+## Use R Markdown for.. 
+
+<br>
+
+- Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, etc.
+
+- Notebooks
+
+- Slides (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/rmarkdown.Rmd))
+
+- Websites (such as [the website of our R user group](https://r-in-grenoble.github.io/))
+
+- Books (e.g. my online [advanced R course](https://privefl.github.io/advr38book/) or even [a thesis](https://keurcien.github.io/book/introduction.html))
+
+- [WIP] [{pagedown}](https://github.com/rstudio/pagedown): Paginate the HTML Output of R Markdown with CSS for Print
+
+---
+
+## Supported languages in chunks
 
 
 - R 
@@ -377,37 +399,17 @@ leaflet(width = "100%") %>%
 
 - C and Fortran
 
-- many others...
+- [many others...](https://bookdown.org/yihui/rmarkdown/language-engines.html)
 
 ---
 
-class: inverse, center, middle
+## Different types of tables
 
-# Formats
 
----
-
-## Use R Markdown for.. 
-
-<br>
-
-- Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, etc.
-
-- Notebooks
-
-- Slides (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/rmarkdown.Rmd))
-
-- Websites (such as [the website of our R user group](https://r-in-grenoble.github.io/))
-
-- Books (e.g. my online [advanced R course](https://privefl.github.io/advr38book/) or even [a thesis](https://keurcien.github.io/book/introduction.html))
-
-- [WIP] [{pagedown}](https://github.com/rstudio/pagedown): Paginate the HTML Output of R Markdown with CSS for Print
 
 ---
 
 ## Slides formats
-
-<br>
 
 - [ioslides](https://bookdown.org/yihui/rmarkdown/ioslides-presentation.html) ([example](https://privefl.github.io/R-presentation/pResentation.html))
 
@@ -421,9 +423,92 @@ class: inverse, center, middle
 
 - [reveal.js](https://bookdown.org/yihui/rmarkdown/revealjs.html)
 
----
+--
+
+<br>
+
+3 main reasons to make your slides with R Markdown:
+
+--
+
+1. Include code and results very easily
+
+--
+
+1. Make HTML presentations directly available online (easy to export them to PDF using "print to PDF" of Chrome)
+
+--
+
+1. Include fancy HTML widgets (like maps, searchable tables, interactive graphics, etc)
 
 ---
+
+### Include an interactive map with {leaflet}
+
+```{r, out.width='100%', fig.height=5, echo=TRUE, warning=FALSE}
+library(leaflet)
+leaflet(width = "100%") %>% 
+  setView(lng = 5.767249, lat = 45.190590, zoom = 12) %>% 
+  addTiles(options = providerTileOptions(minZoom = 2, maxZoom = 19))
+```
+
+---
+
+## Websites
+
+<br>
+
+Example: webpage of the [Grenoble RUG](https://r-in-grenoble.github.io/)
+
+<br>
+
+How does it work?
+
+- just multiple Rmd documents (one by page) rendered as HTML with a common navigation bar
+
+- host the static HTML pages using e.g. GitHub pages
+
+- make your own website in 20 minutes with [this tutorial](https://github.com/privefl/rmarkdown-website-template)
+
+
+.footnote[You can also use {blogdown}. See the [full documentation](https://bookdown.org/yihui/blogdown/).]
+
+---
+
+## Books
+
+<br>
+
+Every R book is now written with [{bookdown}](https://bookdown.org/yihui/bookdown/). 
+
+See many of them at https://bookdown.org/.
+
+<br>
+
+Again, from our side, it is just a collection of R Markdown documents.
+
+E.g. see [my advanced R course](https://privefl.github.io/advr38book/) and [the associated GitHub repository](https://github.com/privefl/advr38book).
+
+---
+
+## Technical Documents
+
+<br>
+
+Formats in {bookdown} allows you to:
+
+- number and reference equations, tables, figures, etc
+
+- use special chunks such as theorems and proofs
+
+- special headers such as "PART" and "APPENDIX"
+
+- citations
+
+- etc
+
+---
+
 class: middle, center, inverse
 
 # References

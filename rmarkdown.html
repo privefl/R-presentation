@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
     <title>Slides with Rmd</title>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
-    <script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+    <script src="libs/htmlwidgets-1.2/htmlwidgets.js"></script>
     <script src="libs/jquery-1.12.4/jquery.min.js"></script>
     <link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
     <script src="libs/leaflet-1.3.1/leaflet.js"></script>
@@ -13,8 +13,8 @@
     <script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
     <script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
     <link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
-    <script src="libs/leaflet-binding-2.0.1/leaflet.js"></script>
-    <link href="libs/font-awesome-5.0.12/css/fontawesome-all.min.css" rel="stylesheet" />
+    <script src="libs/leaflet-binding-2.0.2/leaflet.js"></script>
+    <link href="libs/font-awesome-5.3.1/css/fontawesome-all.min.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -42,7 +42,7 @@ class: title-slide center middle inverse
 
 &lt;br&gt;
 
-&lt;small&gt;(Adapted with permission from [Antoine Bichat's presentation](https://abichat.github.io/Slides/ScienceCommunicationSOTR/ScienceCommunicationSOTR.html#1))&lt;/small&gt;
+&lt;small&gt;(adapted with permission from [Antoine Bichat's presentation](https://abichat.github.io/Slides/ScienceCommunicationSOTR/ScienceCommunicationSOTR.html#1))&lt;/small&gt;
 
 ---
 
@@ -283,7 +283,7 @@ To display the output of a code chunk but not the underlying R code, you specify
 
 
 ````
-```{r chunkecho, echo=FALSE}
+```{r, echo=FALSE}
 x &lt;- 5
 x
 ```
@@ -299,7 +299,7 @@ To display R code without evaluating it, you specify the `eval=FALSE` chunk opti
 
 
 ````
-```{r chunkeval, eval=FALSE}
+```{r, eval=FALSE}
 x &lt;- 5
 ```
 ````
@@ -324,7 +324,7 @@ ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
 
 
 ````
-```{r, fig.align="center", out.width="80%", fig.width=4, fig.asp=0.7}
+```{r, fig.align="center", out.width="80%", fig.asp=0.7, fig.width=4}
 ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
 ```
 ````
@@ -337,38 +337,57 @@ ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
 
 
 ````
-```{r betterway, fig.align="center", out.width="80%", echo=FALSE}
+```{r, fig.align="center", out.width="80%", echo=FALSE}
 knitr::include_graphics(
   "https://slides.yihui.name/gif/impossible-parking.gif")
 ```
 ````
 
---
-
 &lt;img src="https://slides.yihui.name/gif/impossible-parking.gif" width="80%" style="display: block; margin: auto;" /&gt;
-
---
 
 It allows you to use the chunk options for image size.
 
 ---
 
-## Include an interactive map with {leaflet}
+## FAQ: two figures side-by-side
 
 
-```r
-library(leaflet)
-leaflet(width = "100%") %&gt;% 
-  setView(lng = 5.767249, lat = 45.190590, zoom = 12) %&gt;% 
-  addTiles(options = providerTileOptions(minZoom = 2, maxZoom = 19))
+````
+```{r, echo=FALSE, out.width="50%", fig.show="hold", fig.align="default"}
+plot(iris)
+plot(iris, pch = 20, col = iris$Species)
 ```
+````
 
-<div id="htmlwidget-b2804904edfa63778a1a" style="width:100%;height:360px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b2804904edfa63778a1a">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[45.19059,5.767249],12,[]],"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false,"minZoom":2,"maxZoom":19,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}]},"evals":[],"jsHooks":[]}</script>
+&lt;img src="rmarkdown_files/figure-html/unnamed-chunk-10-1.svg" width="50%" /&gt;&lt;img src="rmarkdown_files/figure-html/unnamed-chunk-10-2.svg" width="50%" /&gt;
 
 ---
 
-## [Supported languages in chunks](https://bookdown.org/yihui/rmarkdown/language-engines.html)
+class: inverse, center, middle
+
+# Formats and options
+
+---
+
+## Use R Markdown for.. 
+
+&lt;br&gt;
+
+- Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, etc.
+
+- Notebooks
+
+- Slides (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/rmarkdown.Rmd))
+
+- Websites (such as [the website of our R user group](https://r-in-grenoble.github.io/))
+
+- Books (e.g. my online [advanced R course](https://privefl.github.io/advr38book/) or even [a thesis](https://keurcien.github.io/book/introduction.html))
+
+- [WIP] [{pagedown}](https://github.com/rstudio/pagedown): Paginate the HTML Output of R Markdown with CSS for Print
+
+---
+
+## Supported languages in chunks
 
 
 - R 
@@ -391,37 +410,17 @@ leaflet(width = "100%") %&gt;%
 
 - C and Fortran
 
-- many others...
+- [many others...](https://bookdown.org/yihui/rmarkdown/language-engines.html)
 
 ---
 
-class: inverse, center, middle
+## Different types of tables
 
-# Formats
 
----
-
-## Use R Markdown for.. 
-
-&lt;br&gt;
-
-- Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, etc.
-
-- Notebooks
-
-- Slides (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/rmarkdown.Rmd))
-
-- Websites (such as [the website of our R user group](https://r-in-grenoble.github.io/))
-
-- Books (e.g. my online [advanced R course](https://privefl.github.io/advr38book/) or even [a thesis](https://keurcien.github.io/book/introduction.html))
-
-- [WIP] [{pagedown}](https://github.com/rstudio/pagedown): Paginate the HTML Output of R Markdown with CSS for Print
 
 ---
 
 ## Slides formats
-
-&lt;br&gt;
 
 - [ioslides](https://bookdown.org/yihui/rmarkdown/ioslides-presentation.html) ([example](https://privefl.github.io/R-presentation/pResentation.html))
 
@@ -435,9 +434,96 @@ class: inverse, center, middle
 
 - [reveal.js](https://bookdown.org/yihui/rmarkdown/revealjs.html)
 
----
+--
+
+&lt;br&gt;
+
+3 main reasons to make your slides with R Markdown:
+
+--
+
+1. Include code and results very easily
+
+--
+
+1. Make HTML presentations directly available online (easy to export them to PDF using "print to PDF" of Chrome)
+
+--
+
+1. Include fancy HTML widgets (like maps, searchable tables, interactive graphics, etc)
 
 ---
+
+### Include an interactive map with {leaflet}
+
+
+```r
+library(leaflet)
+leaflet(width = "100%") %&gt;% 
+  setView(lng = 5.767249, lat = 45.190590, zoom = 12) %&gt;% 
+  addTiles(options = providerTileOptions(minZoom = 2, maxZoom = 19))
+```
+
+<div id="htmlwidget-e965c6bbb1644b8208f3" style="width:100%;height:360px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e965c6bbb1644b8208f3">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[45.19059,5.767249],12,[]],"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false,"minZoom":2,"maxZoom":19,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}]},"evals":[],"jsHooks":[]}</script>
+
+---
+
+## Websites
+
+&lt;br&gt;
+
+Example: webpage of the [Grenoble RUG](https://r-in-grenoble.github.io/)
+
+&lt;br&gt;
+
+How does it work?
+
+- just multiple Rmd documents (one by page) rendered as HTML with a common navigation bar
+
+- host the static HTML pages using e.g. GitHub pages
+
+- make your own website in 20 minutes with [this tutorial](https://github.com/privefl/rmarkdown-website-template)
+
+
+.footnote[You can also use {blogdown}. See the [full documentation](https://bookdown.org/yihui/blogdown/).]
+
+---
+
+## Books
+
+&lt;br&gt;
+
+Every R book is now written with [{bookdown}](https://bookdown.org/yihui/bookdown/). 
+
+See many of them at https://bookdown.org/.
+
+&lt;br&gt;
+
+Again, from our side, it is just a collection of R Markdown documents.
+
+E.g. see [my advanced R course](https://privefl.github.io/advr38book/) and [the associated GitHub repository](https://github.com/privefl/advr38book).
+
+---
+
+## Technical Documents
+
+&lt;br&gt;
+
+Formats in {bookdown} allows you to:
+
+- number and reference equations, tables, figures, etc
+
+- use special chunks such as theorems and proofs
+
+- special headers such as "PART" and "APPENDIX"
+
+- citations
+
+- etc
+
+---
+
 class: middle, center, inverse
 
 # References
@@ -498,36 +584,90 @@ class: inverse, center, middle
 
 .footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
 "highlightLines": true,
-"countIncrementalSlides": true
+"countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
 })();</script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
   }
-});
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
 (function () {
   var script = document.createElement('script');
   script.type = 'text/javascript';
-  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
   if (location.protocol !== 'file:' && /^https?:/.test(script.src))
     script.src  = script.src.replace(/^https?:/, '');
   document.getElementsByTagName('head')[0].appendChild(script);
