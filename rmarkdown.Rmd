@@ -2,6 +2,7 @@
 title: "Slides with Rmd"
 output:
   xaringan::moon_reader:
+    df_print: paged
     includes:
       after_body: include_twitter.html
     seal: false
@@ -385,9 +386,16 @@ class: inverse, center, middle
 
 ---
 
-## Different types of tables
+## Data frame printing and tables
+
+You can play with YAML option `df_print`. For example, `df_print: paged`:
+
+```{r, echo=TRUE}
+iris   ## or directly with `DT::datatable(iris)`
+```
 
 
+For more refined tables, you can use `knitr::kable()`, `xtable::xtable()`, `kableExtra::kable().`
 
 ---
 
@@ -397,7 +405,7 @@ class: inverse, center, middle
 
 - Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, etc.
 
-- Notebooks
+- Notebooks (vs "Chunk Output in Console")
 
 - Slides (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/rmarkdown.Rmd))
 
@@ -513,9 +521,9 @@ Formats in {bookdown} allows you to:
 
 To use this in single R Markdown documents (not books), you can use formats
 
-- `bookdown::html_document2()`, 
-- `bookdown::pdf_document2()` and 
-- `bookdown::word_document2()`.
+- `bookdown::html_document2()`
+- `bookdown::pdf_document2()`
+- `bookdown::word_document2()`
 
 ---
 
@@ -543,7 +551,6 @@ knitr::include_graphics("https://bookdown.org/yihui/bookdown/images/cover.jpg")
 
 ## Useful materials
 
-<br>
 
 * [Official website](https://rmarkdown.rstudio.com)
 
@@ -556,6 +563,8 @@ knitr::include_graphics("https://bookdown.org/yihui/bookdown/images/cover.jpg")
 * [Cheat sheet](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
 
 * [Tips for R Markdown](https://holtzy.github.io/Pimp-my-rmd/)
+
+* For less problems with LaTeX distributions: [{TinyTeX}](https://yihui.name/tinytex/)
 
 * [Embed a File in the HTML Output of R Markdown](https://yihui.name/en/2018/07/embed-file/)
 
