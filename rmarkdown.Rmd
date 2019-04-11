@@ -1,5 +1,5 @@
 ---
-title: "Slides with Rmd"
+title: "R Markdown"
 output:
   xaringan::moon_reader:
     df_print: paged
