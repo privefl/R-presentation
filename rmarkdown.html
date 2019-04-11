@@ -365,25 +365,7 @@ plot(iris, pch = 20, col = iris$Species)
 
 class: inverse, center, middle
 
-# Formats and options
-
----
-
-## Use R Markdown for.. 
-
-&lt;br&gt;
-
-- Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, etc.
-
-- Notebooks
-
-- Slides (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/rmarkdown.Rmd))
-
-- Websites (such as [the website of our R user group](https://r-in-grenoble.github.io/))
-
-- Books (e.g. my online [advanced R course](https://privefl.github.io/advr38book/) or even [a thesis](https://keurcien.github.io/book/introduction.html))
-
-- [WIP] [{pagedown}](https://github.com/rstudio/pagedown): Paginate the HTML Output of R Markdown with CSS for Print
+# Options and Formats
 
 ---
 
@@ -420,6 +402,24 @@ class: inverse, center, middle
 
 ---
 
+## Use R Markdown for.. 
+
+&lt;br&gt;
+
+- Reports (analysis, etc) with text, code and results in the same place! With many possible output formats including HTML, PDF, MS Word, etc.
+
+- Notebooks
+
+- Slides (like this one! -- see [source code](https://github.com/privefl/R-presentation/blob/master/rmarkdown.Rmd))
+
+- Websites (such as [the website of our R user group](https://r-in-grenoble.github.io/))
+
+- Books (e.g. my online [advanced R course](https://privefl.github.io/advr38book/) or even [a thesis](https://keurcien.github.io/book/introduction.html))
+
+- [WIP] [{pagedown}](https://github.com/rstudio/pagedown): Paginate the HTML Output of R Markdown with CSS for Print
+
+---
+
 ## Slides formats
 
 - [ioslides](https://bookdown.org/yihui/rmarkdown/ioslides-presentation.html) ([example](https://privefl.github.io/R-presentation/pResentation.html))
@@ -430,7 +430,7 @@ class: inverse, center, middle
 
 - [powerpoint](https://bookdown.org/yihui/rmarkdown/powerpoint-presentation.html) (ppt)
 
-- [**xaringan** / remark.js](https://bookdown.org/yihui/rmarkdown/xaringan.html) (example: this presentation!)
+- [xaringan / remark.js](https://bookdown.org/yihui/rmarkdown/xaringan.html) (example: this presentation!)
 
 - [reveal.js](https://bookdown.org/yihui/rmarkdown/revealjs.html)
 
@@ -464,8 +464,8 @@ leaflet(width = "100%") %&gt;%
   addTiles(options = providerTileOptions(minZoom = 2, maxZoom = 19))
 ```
 
-<div id="htmlwidget-e965c6bbb1644b8208f3" style="width:100%;height:360px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-e965c6bbb1644b8208f3">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[45.19059,5.767249],12,[]],"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false,"minZoom":2,"maxZoom":19,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}]},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-657dd852ca4f31245b1a" style="width:100%;height:360px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-657dd852ca4f31245b1a">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[45.19059,5.767249],12,[]],"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false,"minZoom":2,"maxZoom":19,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}]},"evals":[],"jsHooks":[]}</script>
 
 ---
 
@@ -521,6 +521,16 @@ Formats in {bookdown} allows you to:
 - citations
 
 - etc
+
+--
+
+&lt;br&gt;
+
+To use this in single R Markdown documents (not books), you can use formats
+
+- `bookdown::html_document2()`, 
+- `bookdown::pdf_document2()` and 
+- `bookdown::word_document2()`.
 
 ---
 
