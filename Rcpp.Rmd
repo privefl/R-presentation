@@ -532,7 +532,7 @@ List scalar_missings() {
   
   int    int_s = NA_INTEGER;
   String chr_s = NA_STRING;
-  bool   lgl_s = NA_LOGICAL;
+  bool   lgl_s = NA_LOGICAL;   // Warning!
   double num_s = NA_REAL;
 
   return List::create(int_s, chr_s, lgl_s, num_s);
@@ -631,9 +631,8 @@ class: center, middle, inverse
 
 ```{r, echo=TRUE, eval=FALSE}
 # In a new RStudio project, run
-usethis::use_description()
-usethis::use_namespace()
-usethis::use_package_doc()
+usethis::use_description(); usethis::use_namespace()
+dir.create("R"); usethis::use_package_doc()
 usethis::use_roxygen_md()
 ```
 
@@ -646,6 +645,8 @@ knitr::include_graphics("build-doc.png")
 ---
 
 ## Add Rcpp to your package
+
+<br>
 
 ```{r, echo=TRUE, eval=FALSE}
 usethis::use_rcpp()
@@ -663,7 +664,9 @@ usethis::use_rcpp()
 ● Run document()  ## forget that
 ```
 
-+ create a new Rcpp file and save it in `src/`.
+<br>
+
+Then, create a new Rcpp file and save it in `src/`.
 
 .footnote[Put the two roxygen tags in the `R/testpkg-package.R`.]
 

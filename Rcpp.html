@@ -7,7 +7,7 @@
     <meta name="date" content="2018-03-15" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
-    <link href="libs/font-awesome-5.0.11/css/fontawesome-all.min.css" rel="stylesheet" />
+    <link href="libs/font-awesome-5.0.12/css/fontawesome-all.min.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -255,12 +255,12 @@ microbenchmark::microbenchmark(
 ```
 ## Unit: microseconds
 ##    expr      min        lq      mean    median        uq      max
-##  R LOOP 3011.741 3120.9465 3427.0180 3333.0435 3567.9745 6539.369
-##   R VEC   94.535   94.7925  107.7183   97.8150  119.4990  161.905
-##  C LOOP  126.928  128.3625  152.3319  131.2900  157.0990 1048.438
-##   C VEC  127.010  127.8960  149.5685  131.4835  153.5225  875.355
-##    C IT  283.701  285.5730  323.4720  293.7015  344.2515 1126.623
-##   C STD  127.021  127.5110  149.7604  131.2360  157.0360  790.412
+##  R LOOP 4199.858 4357.6880 4772.2233 4403.5705 4677.0215 8888.635
+##   R VEC  118.221  126.4065  134.2891  128.0980  134.7790  211.995
+##  C LOOP  157.269  169.9370  188.7199  171.8795  179.0410 1239.887
+##   C VEC  159.947  170.3065  190.7651  174.4585  185.8320 1116.796
+##    C IT  351.685  379.3410  413.5425  384.4135  403.1525 1482.656
+##   C STD  157.546  170.1120  191.1931  173.2455  182.4770 1360.836
 ##  neval
 ##    100
 ##    100
@@ -579,16 +579,16 @@ microbenchmark::microbenchmark(
 
 ```
 ## Unit: microseconds
-##                 expr       min         lq       mean    median
-##     gibbs_r(100, 10)  3874.772  4590.0610  5227.9596  5201.155
-##   gibbs_cpp(100, 10)   244.603   271.6625   306.4258   285.529
-##    gibbs_r(1000, 10) 47832.993 50077.0245 55029.9208 51193.546
-##  gibbs_cpp(1000, 10)  2524.100  2701.7555  2999.8113  2897.436
-##         uq       max neval
-##   5712.733  7822.054   100
-##    308.803  1228.347   100
-##  54086.507 96511.306   100
-##   3150.553  4446.685   100
+##                 expr       min        lq       mean    median
+##     gibbs_r(100, 10)  5340.502  5781.488  6216.0982  5910.880
+##   gibbs_cpp(100, 10)   312.706   347.861   383.1457   360.887
+##    gibbs_r(1000, 10) 57991.903 63438.467 65064.6874 63902.342
+##  gibbs_cpp(1000, 10)  3263.238  3480.166  3642.9946  3558.119
+##         uq        max neval
+##   6036.889  12308.717   100
+##    380.751   1524.377   100
+##  64666.805 111151.260   100
+##   3655.977   7026.987   100
 ```
 
 ---
@@ -613,7 +613,7 @@ List scalar_missings() {
   
   int    int_s = NA_INTEGER;
   String chr_s = NA_STRING;
-  bool   lgl_s = NA_LOGICAL;
+  bool   lgl_s = NA_LOGICAL;   // Warning!
   double num_s = NA_REAL;
 
   return List::create(int_s, chr_s, lgl_s, num_s);
@@ -657,8 +657,8 @@ x2
 ```
 
 ```
-##  [1] 100.0000000   0.2141551   0.9758600   0.4368239   0.6164925
-##  [6]   0.6045934   0.7977633   0.3765584   0.5999117   0.2155159
+##  [1] 100.00000000   0.88289940   0.53702082   0.31790320   0.25654386
+##  [6]   0.01424356   0.61715938   0.38176546   0.69886953   0.56337326
 ```
 
 ```r
@@ -699,8 +699,8 @@ x2
 ```
 
 ```
-##  [1] 0.99290586 0.79324628 0.53300777 0.06261034 0.89626767 0.49939172
-##  [7] 0.23427955 0.32377472 0.15492356 0.42202812
+##  [1] 0.16259102 0.07173874 0.48382528 0.85438239 0.42743254 0.61468127
+##  [7] 0.20034410 0.86976531 0.09244387 0.05780916
 ```
 
 ---
@@ -749,9 +749,8 @@ class: center, middle, inverse
 
 ```r
 # In a new RStudio project, run
-usethis::use_description()
-usethis::use_namespace()
-usethis::use_package_doc()
+usethis::use_description(); usethis::use_namespace()
+dir.create("R"); usethis::use_package_doc()
 usethis::use_roxygen_md()
 ```
 
@@ -762,6 +761,8 @@ usethis::use_roxygen_md()
 ---
 
 ## Add Rcpp to your package
+
+&lt;br&gt;
 
 
 ```r
@@ -781,7 +782,9 @@ usethis::use_rcpp()
 ● Run document()  ## forget that
 ```
 
-+ create a new Rcpp file and save it in `src/`.
+&lt;br&gt;
+
+Then, create a new Rcpp file and save it in `src/`.
 
 .footnote[Put the two roxygen tags in the `R/testpkg-package.R`.]
 
@@ -851,12 +854,12 @@ microbenchmark::microbenchmark(
 
 ```
 ## Unit: milliseconds
-##        expr       min        lq      mean    median        uq
-##    fun_r(x) 90.648164 94.042297 102.29452 99.059534 108.82827
-##  fun_cpp(x)  6.978074  7.470771   9.32281  8.270141  10.06478
+##        expr       min        lq      mean    median       uq
+##    fun_r(x) 115.82288 117.93668 120.38656 118.73573 122.1426
+##  fun_cpp(x)  10.06505  10.82437  12.16268  10.90465  14.3630
 ##        max neval
-##  156.95222   100
-##   51.97196   100
+##  137.22758   100
+##   17.90154   100
 ```
 
 
@@ -896,12 +899,23 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
 })();</script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {
-    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
   }
-});
+})();
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
