@@ -1,0 +1,46 @@
+---
+title: "Penalised methods for genetic data"
+output:
+  xaringan::moon_reader:
+    df_print: paged
+    includes:
+      after_body: include_twitter.html
+    seal: false
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.align = 'center', dev = "svg", out.width = "90%",
+                      echo = FALSE, comment = "")
+options(width = 70)
+```
+
+class: title-slide center middle inverse
+
+<br>
+
+# Penalised methods for genetic data
+
+<br>
+
+## Florian Privé
+
+### King's College London -- May 20, 2019
+
+<br>
+
+<br>
+
+**Slides:** ``
+
+---
+
+class: inverse, center, middle
+
+# R Markdown
