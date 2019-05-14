@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
     <title>Penalised methods for genetic data</title>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
@@ -30,14 +30,114 @@ class: title-slide center middle inverse
 
 &lt;br&gt;
 
-**Slides:** ``
+**Slides:** `https://privefl.github.io/R-presentation/penalised-genetics.html`
 
 ---
 
 class: inverse, center, middle
 
-# R Markdown
+# Introduction to penalized models
+
+---
+
+## Multiple linear regression
+
+We want to solve
+
+`$$y = \alpha + \beta_1 G_1 + \cdots + \beta_p G_p + \gamma_1 COV_1 + \cdots + \gamma_q COV_q + \epsilon~.$$`
+--
+
+Let `\(\beta = (\alpha, \beta_1, \dots, \beta_p, \gamma_1, \dots, \gamma_q)\)` and `\(X = [1; G_1; \dots;G_p; COV_1; \dots; COV_q]\)`, then
+
+`$$y = X \beta + \epsilon~.$$`
+
+--
+
+This is equivalent to minimizing
+
+`$$||y - X \beta||_2^2 =  ||\epsilon||_2^2~,$$`
+--
+
+whose solution is 
+
+`$$\beta = (X^T X)^{-1} X^T y~.$$`
+
+--
+
+&lt;br&gt;
+
+**What is the problem when analyzing genotype data?**
+
+--
+
+`$$n &lt; p$$`
+
+---
+
+## Penalization term -- `\(L_2\)` regularization
+
+&lt;br&gt;
+
+Instead, we can minimize
+
+`$$||y - X \beta||_2^2 + \lambda ||\beta||_2^2~,$$`
+--
+
+whose solution is 
+
+`$$\beta = (X^T X + \lambda I)^{-1} X^T y~.$$`
+
+--
+
+&lt;br&gt;
+
+This is the L2-regularization ("**ridge**", Hoerl and Kennard, 1970); **it shrinks coefficients `\(\beta\)` towards 0**.
+
+.footnote[https://doi.org/10.1080/00401706.1970.10488634]
+
+---
+
+## Penalization term -- `\(L_1\)` regularization
+
+&lt;br&gt;
+
+Instead, we can minimize
+
+`$$||y - X \beta||_2^2 + \lambda ||\beta||_1~,$$`
+--
+
+which does not have any closed form but can be solved using iterative algorithms.
+
+--
+
+&lt;br&gt;
+
+This is the L1-regularization ("**lasso**", Tibshirani, 1996); **it forces some of the coefficients to be equal to 0** and can be used as a means of variable selection, leading to sparse models.
+
+.footnote[https://doi.org/10.1111/j.2517-6161.1996.tb02080.x]
+
+---
+
+## Penalization term -- `\(L_1\)` and `\(L_2\)` regularization
+
+&lt;br&gt;
+
+Instead, we can minimize
+
+`$$||y - X \beta||_2^2 + \lambda (\alpha ||\beta||_1 + (1 - \alpha) ||\beta||_2^2)~,$$`
+--
+
+which does not have any closed form but can be solved using iterative algorithms ( `\(0 \le \alpha \le 1\)` ).
+
+--
+
+&lt;br&gt;
+
+This is the L1- and L2-regularization ("**elastic-net**", Zou and Hastie, 2005); it is a compromise between the two previous penalties.
+
+.footnote[https://doi.org/10.1111/j.1467-9868.2005.00503.x]
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
@@ -47,17 +147,58 @@ class: inverse, center, middle
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
 })();</script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 <script>
 (function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -71,7 +212,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
