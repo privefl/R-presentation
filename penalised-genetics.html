@@ -7,6 +7,7 @@
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
     <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+    <link href="libs/font-awesome-5.0.12/css/fontawesome-all.min.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -324,6 +325,9 @@ What would be a better solution?
 
 --
 
+
+
+
 **K-fold cross-validation** (here, K = 5):
 
 &lt;img src="crossval.png" width="70%" style="display: block; margin: auto;" /&gt;
@@ -370,7 +374,6 @@ aucs &lt;- sapply(1:K, function(k) {
   ind.test  &lt;- which(test_grp == k)
   ind.train &lt;- which(test_grp != k)
   ## Replace with your preferred model
-  df &lt;- data.frame(y = y, x = X[, 1])
   mod &lt;- glmnet(X[ind.train, ], y[ind.train], family = "binomial")
   pred &lt;- predict(mod, X[ind.test, ], type = "response")
   apply(pred, 2, AUC, target = y[ind.test])
@@ -382,7 +385,7 @@ aucs &lt;- sapply(1:K, function(k) {
 plot(rowMeans(aucs)[-1], pch = 20, ylab = "Mean AUC")
 ```
 
-&lt;img src="penalised-genetics_files/figure-html/unnamed-chunk-16-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="penalised-genetics_files/figure-html/unnamed-chunk-17-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -469,9 +472,159 @@ Advantages:
 
 - faster (mainly because of early-stopping criterion)
 
-- more memory efficient (data on disk)
+- memory efficient (because data is stored on disk)
 
 So, can be applied to huge genotype data.
+
+---
+
+class: inverse, center, middle
+
+# Time to practice yourself
+
+---
+
+## Data
+
+Download [data](https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data.zip) and unzip files. 
+
+I store those files in a directory called "tmp-data" here.
+
+
+```r
+# Convert the bed/bim/fam data to the format used 
+# by packages {bigstatsr} and {bigsnpr}.
+bigsnpr::snp_readBed("tmp-data/public-data.bed")
+```
+
+
+```r
+# Access the genotype matrix and the phenotype
+data &lt;- bigsnpr::snp_attach("tmp-data/public-data.rds")
+G &lt;- data$genotypes
+X &lt;- G[]  ## Access as standard R matrix of 560 MB
+y &lt;- data$fam$affection - 1
+```
+
+
+```r
+# Let us use the same folds for evaluation in cross-validation
+set.seed(1)
+n &lt;- nrow(G)
+K &lt;- 5
+test_grp &lt;- sample(rep_len(1:K, n))
+```
+
+---
+
+## Make the best prediction of disease
+
+You can use any model you like.
+
+In addition to the genotype data we already used, you can use external summary statistics provided in `tmp-data/public-data-sumstats.txt`.
+
+--
+
+&lt;br&gt;
+
+For example,
+
+
+```r
+library(bigstatsr)
+sapply(1:K, function(k) {
+  ind.test  &lt;- which(test_grp == k)
+  ind.train &lt;- which(test_grp != k)
+  ## Penalized logistic regression with CMSA
+  mod_cmsa &lt;- big_spLogReg(G, y[ind.train], ind.train = ind.train, 
+                           K = 4, ncores = nb_cores())
+  pred &lt;- predict(mod_cmsa, G, ind.test)
+  AUC(pred, y[ind.test])
+})
+```
+
+```
+[1] 0.7232278 0.6933493 0.7213358 0.7110912 0.7482517
+```
+
+---
+
+class: inverse, center, middle
+
+# Correction
+
+## Some possible solutions
+
+---
+
+## Train elastic-net instead of only lasso
+
+
+```r
+sapply(1:K, function(k) {
+  ind.test  &lt;- which(test_grp == k)
+  ind.train &lt;- which(test_grp != k)
+  ## Penalized logistic regression with CMSA
+  mod_cmsa &lt;- big_spLogReg(G, y[ind.train], ind.train = ind.train, 
+                           K = 4, ncores = nb_cores(),
+                           alphas = 10^(-(0:4)))
+  pred &lt;- predict(mod_cmsa, G, ind.test)
+  AUC(pred, y[ind.test])
+})
+```
+
+```
+[1] 0.7586727 0.7120669 0.7187384 0.7204830 0.7288267
+```
+
+---
+
+## Use summary statistics to prioritize variables
+
+
+```r
+sumstats &lt;- bigreadr::fread2("tmp-data/public-data-sumstats.txt")
+pval &lt;- sumstats$p
+conf &lt;- pmax(-log10(pval), 1)
+```
+
+--
+
+&lt;br&gt;
+
+Apply a different penalization factor to each variable:
+
+
+```r
+sapply(1:K, function(k) {
+  ind.test  &lt;- which(test_grp == k)
+  ind.train &lt;- which(test_grp != k)
+  ## Penalized logistic regression with CMSA
+  mod_cmsa &lt;- big_spLogReg(G, y[ind.train], ind.train = ind.train, 
+                           K = 4, ncores = nb_cores(),
+                           alphas = 10^(-(0:4)), pf.X = 1 / conf)
+  pred &lt;- predict(mod_cmsa, G, ind.test)
+  AUC(pred, y[ind.test])
+})
+```
+
+```
+[1] 0.7914781 0.7224213 0.7239332 0.7218247 0.7482517
+```
+
+---
+
+class: inverse, center, middle
+
+# Thanks!
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+<i class="fab  fa-twitter "></i> [privefl](https://twitter.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-github "></i> [privefl](https://github.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-stack-overflow "></i> [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
+
+.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

@@ -312,6 +312,11 @@ What would be a better solution?
 
 --
 
+```{r, echo=FALSE}
+rm(ind.train, ind.test)
+```
+
+
 **K-fold cross-validation** (here, K = 5):
 
 ```{r, echo=FALSE}
@@ -347,7 +352,6 @@ aucs <- sapply(1:K, function(k) {
   ind.test  <- which(test_grp == k)
   ind.train <- which(test_grp != k)
   ## Replace with your preferred model
-  df <- data.frame(y = y, x = X[, 1])
   mod <- glmnet(X[ind.train, ], y[ind.train], family = "binomial")
   pred <- predict(mod, X[ind.test, ], type = "response")
   apply(pred, 2, AUC, target = y[ind.test])
@@ -417,7 +421,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/privefl/paper2-PRS/ma
 
 ## CMSA in practice
 
-```{r}
+```{r, cache=TRUE}
 sapply(1:K, function(k) {
   ind.test  <- which(test_grp == k)
   ind.train <- which(test_grp != k)
@@ -441,4 +445,133 @@ Advantages:
 
 So, can be applied to huge genotype data.
 
+---
 
+class: inverse, center, middle
+
+# Time to practice yourself
+
+---
+
+## Data
+
+Download [data](https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data.zip) and unzip files. 
+
+I store those files in a directory called "tmp-data" here.
+
+```{r, eval=FALSE}
+# Convert the bed/bim/fam data to the format used 
+# by packages {bigstatsr} and {bigsnpr}.
+bigsnpr::snp_readBed("tmp-data/public-data.bed")
+```
+
+```{r}
+# Access the genotype matrix and the phenotype
+data <- bigsnpr::snp_attach("tmp-data/public-data.rds")
+G <- data$genotypes
+X <- G[]  ## Access as standard R matrix of 560 MB
+y <- data$fam$affection - 1
+```
+
+```{r}
+# Let us use the same folds for evaluation in cross-validation
+set.seed(1)
+n <- nrow(G)
+K <- 5
+test_grp <- sample(rep_len(1:K, n))
+```
+
+---
+
+## Make the best prediction of disease
+
+You can use any model you like.
+
+In addition to the genotype data we already used, you can use external summary statistics provided in `tmp-data/public-data-sumstats.txt`.
+
+--
+
+<br>
+
+For example,
+
+```{r, cache=TRUE}
+library(bigstatsr)
+sapply(1:K, function(k) {
+  ind.test  <- which(test_grp == k)
+  ind.train <- which(test_grp != k)
+  ## Penalized logistic regression with CMSA
+  mod_cmsa <- big_spLogReg(G, y[ind.train], ind.train = ind.train, 
+                           K = 4, ncores = nb_cores())
+  pred <- predict(mod_cmsa, G, ind.test)
+  AUC(pred, y[ind.test])
+})
+```
+
+---
+
+class: inverse, center, middle
+
+# Correction
+
+## Some possible solutions
+
+---
+
+## Train elastic-net instead of only lasso
+
+```{r, cache=TRUE}
+sapply(1:K, function(k) {
+  ind.test  <- which(test_grp == k)
+  ind.train <- which(test_grp != k)
+  ## Penalized logistic regression with CMSA
+  mod_cmsa <- big_spLogReg(G, y[ind.train], ind.train = ind.train, 
+                           K = 4, ncores = nb_cores(),
+                           alphas = 10^(-(0:4)))
+  pred <- predict(mod_cmsa, G, ind.test)
+  AUC(pred, y[ind.test])
+})
+```
+
+---
+
+## Use summary statistics to prioritize variables
+
+```{r, fig.asp=0.7}
+sumstats <- bigreadr::fread2("tmp-data/public-data-sumstats.txt")
+pval <- sumstats$p
+conf <- pmax(-log10(pval), 1)
+```
+
+--
+
+<br>
+
+Apply a different penalization factor to each variable:
+
+```{r, cache=TRUE}
+sapply(1:K, function(k) {
+  ind.test  <- which(test_grp == k)
+  ind.train <- which(test_grp != k)
+  ## Penalized logistic regression with CMSA
+  mod_cmsa <- big_spLogReg(G, y[ind.train], ind.train = ind.train, 
+                           K = 4, ncores = nb_cores(),
+                           alphas = 10^(-(0:4)), pf.X = 1 / conf)
+  pred <- predict(mod_cmsa, G, ind.test)
+  AUC(pred, y[ind.test])
+})
+```
+
+---
+
+class: inverse, center, middle
+
+# Thanks!
+
+<br>
+
+<br>
+
+`r icon::fa("twitter")` [privefl](https://twitter.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("github")` [privefl](https://github.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("stack-overflow")` [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
+
+.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
