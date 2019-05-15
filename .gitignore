@@ -25,3 +25,5 @@ vignettes/*.pdf
 .Rproj.user
 Members group R in Grenoble.xlsx
 webshot.png
+public-data.zip
+tmp-data

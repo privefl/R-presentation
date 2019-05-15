@@ -18,7 +18,7 @@ class: title-slide center middle inverse
 
 &lt;br&gt;
 
-# Penalised methods for genetic data
+# Session 4.&lt;br&gt;Penalised methods for genetic data analysis
 
 &lt;br&gt;
 
@@ -44,10 +44,10 @@ class: inverse, center, middle
 
 We want to solve
 
-`$$y = \alpha + \beta_1 G_1 + \cdots + \beta_p G_p + \gamma_1 COV_1 + \cdots + \gamma_q COV_q + \epsilon~.$$`
+`$$y = \beta_0 + \beta_1 G_1 + \cdots + \beta_p G_p + \gamma_1 COV_1 + \cdots + \gamma_q COV_q + \epsilon~.$$`
 --
 
-Let `\(\beta = (\alpha, \beta_1, \dots, \beta_p, \gamma_1, \dots, \gamma_q)\)` and `\(X = [1; G_1; \dots;G_p; COV_1; \dots; COV_q]\)`, then
+Let `\(\beta = (\beta_0, \beta_1, \dots, \beta_p, \gamma_1, \dots, \gamma_q)\)` and `\(X = [1; G_1; \dots;G_p; COV_1; \dots; COV_q]\)`, then
 
 `$$y = X \beta + \epsilon~.$$`
 
@@ -136,6 +136,173 @@ which does not have any closed form but can be solved using iterative algorithms
 This is the L1- and L2-regularization ("**elastic-net**", Zou and Hastie, 2005); it is a compromise between the two previous penalties.
 
 .footnote[https://doi.org/10.1111/j.1467-9868.2005.00503.x]
+
+---
+
+## Advantages and drawbacks of penalization
+
+--
+
+### Advantages
+
+- Make it possible to solve the linear problem
+
+- Generally prevents overfitting (because of smaller effects)
+
+--
+
+### Drawback
+
+- Add at least one hyper-parameter ( `\(\lambda\)` ) that needs to be chosen and another one if using the elastic-net regularization ( `\(\alpha\)` )
+
+--
+
+### Alternative
+
+- Select a few variables before fitting the linear model (e.g. using marginal significance/p-values); heuristic: `\(p = n / 10\)`
+
+---
+
+## Binary outcome (case-control)
+
+**Penalized logistic regression**: minimize
+
+`$$L(\lambda, \alpha) = \underbrace{ -\sum_{i=1}^n \left( y_i \log\left(z_i\right) + (1 - y_i) \log\left(1 - z_i\right) \right) }_\text{Loss function}$$`
+    
+`$$+ \underbrace{ \lambda \left((1-\alpha)\|\beta\|_2^2 + \alpha \|\beta\|_1\right) }_\text{Penalization} ~,$$`
+
+where `\(z_i=1/\left(1+\exp\left(-(\beta_0 + X_{(i)}^T\beta)\right)\right)\)`, `\(X_i\)` denotes the genotypes and covariates (e.g. principal components) for individual `\(i\)`, and `\(y_i\)` is the disease status for individual `\(i\)`.
+
+---
+
+class: inverse, center, middle
+
+# Code in practice
+
+---
+
+## Data
+
+Download [data](https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data.zip) and unzip files. 
+
+I store those files in a directory called "tmp-data" here.
+
+
+```r
+# Convert the bed/bim/fam data to the format used 
+# by packages {bigstatsr} and {bigsnpr}.
+bigsnpr::snp_readBed("tmp-data/public-data.bed")
+```
+
+
+```r
+# Access the genotype matrix and the phenotype
+data &lt;- bigsnpr::snp_attach("tmp-data/public-data.rds")
+G &lt;- data$genotypes
+X &lt;- G[]  ## 560 MB
+y &lt;- data$fam$affection - 1
+```
+
+
+```r
+# Divide the indices in training/test sets
+set.seed(1)
+n &lt;- nrow(X)
+ind.train &lt;- sample(n, 400)
+ind.test &lt;- setdiff(1:n, ind.train)
+```
+
+---
+
+## Multiple logistic model
+
+&lt;br&gt;
+
+
+```r
+mod &lt;- glm(y[ind.train] ~ X[ind.train, ], family = "binomial")
+```
+
+```
+Error: cannot allocate vector of size 128.4 Gb
+In addition: Warning message:
+glm.fit: algorithm did not converge 
+```
+
+&lt;br&gt;
+
+### Prioritazing on marginal p-values
+
+
+```r
+library(bigstatsr)
+gwas &lt;- big_univLogReg(G, y[ind.train], ind.train = ind.train,
+                       ncores = nb_cores())
+pval &lt;- predict(gwas, log10 = FALSE)
+ind &lt;- order(pval)
+```
+
+---
+
+## Multiple logistic model after selection
+
+
+```r
+df &lt;- data.frame(y = y, X.sub = I(X[, ind[1:40]]))
+mod &lt;- glm(y ~ X.sub, data = df, subset = ind.train, 
+           family = "binomial")
+pred &lt;- predict(mod, df[ind.test, ], type = "response")
+AUCBoot(pred, y[ind.test])
+```
+
+```
+      Mean       2.5%      97.5%         Sd 
+0.68731950 0.59291869 0.77324362 0.04612472 
+```
+
+--
+
+
+```r
+library(ggplot2)
+ggplot(data.frame(pheno = as.factor(y[ind.test]), pred = pred)) + 
+  geom_density(aes(pred, fill = pheno), alpha = 0.3)
+```
+
+&lt;img src="penalised-genetics_files/figure-html/unnamed-chunk-7-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Penalized models using {glmnet}
+
+
+```r
+library(glmnet)
+mod2 &lt;- glmnet(X[ind.train, ], y[ind.train], family = "binomial")
+pred2 &lt;- predict(mod2, X[ind.test, ], type = "response")
+```
+
+
+
+
+```r
+plot(mod2$lambda[-1], apply(pred2, 2, AUC, target = y[ind.test])[-1],
+     xlim = rev(range(mod2$lambda)), log = "x", pch = 20,
+     xlab = expression(lambda~~(log-scale)), ylab = "AUC (on test set)")
+```
+
+&lt;img src="penalised-genetics_files/figure-html/unnamed-chunk-10-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Overfitting
+
+
+```r
+plot(mod2$dev.ratio, pch = 20, log = "y")
+```
+
+&lt;img src="penalised-genetics_files/figure-html/unnamed-chunk-11-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
