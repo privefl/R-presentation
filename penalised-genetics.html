@@ -231,7 +231,7 @@ glm.fit: algorithm did not converge
 
 &lt;br&gt;
 
-### Prioritazing on marginal p-values
+### Prioritizing on marginal p-values
 
 
 ```r
@@ -278,6 +278,10 @@ ggplot(data.frame(pheno = as.factor(y[ind.test]), pred = pred)) +
 
 ```r
 library(glmnet)
+```
+
+
+```r
 mod2 &lt;- glmnet(X[ind.train, ], y[ind.train], family = "binomial")
 pred2 &lt;- predict(mod2, X[ind.test, ], type = "response")
 ```
@@ -291,18 +295,108 @@ plot(mod2$lambda[-1], apply(pred2, 2, AUC, target = y[ind.test])[-1],
      xlab = expression(lambda~~(log-scale)), ylab = "AUC (on test set)")
 ```
 
-&lt;img src="penalised-genetics_files/figure-html/unnamed-chunk-10-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="penalised-genetics_files/figure-html/unnamed-chunk-11-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-## Overfitting
+## From underfitting to overfitting
 
 
 ```r
 plot(mod2$dev.ratio, pch = 20, log = "y")
 ```
 
-&lt;img src="penalised-genetics_files/figure-html/unnamed-chunk-11-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="penalised-genetics_files/figure-html/unnamed-chunk-12-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: inverse, center, middle
+
+# Evaluating models
+
+---
+
+## Dividing in training / test sets
+
+What is the issue with this?
+
+What would be a better solution?
+
+--
+
+**K-fold cross-validation** (here, K = 5):
+
+&lt;img src="crossval.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## A possible implementation
+
+
+```r
+set.seed(1)
+K &lt;- 5
+test_grp &lt;- sample(rep_len(1:K, n))
+head(test_grp, 20)
+```
+
+```
+ [1] 4 3 5 5 2 3 3 5 2 4 4 2 1 5 5 1 5 3 1 5
+```
+
+```r
+sapply(1:K, function(k) {
+  ind.test  &lt;- which(test_grp == k)
+  ind.train &lt;- which(test_grp != k)
+  ## Replace with your preferred model
+  df &lt;- data.frame(y = y, x = X[, 1])
+  mod &lt;- glm(y ~ x, data = df, subset = ind.train, family = "binomial")
+  pred &lt;- predict(mod, df[ind.test, ], type = "response")
+  AUC(pred, y[ind.test])
+})
+```
+
+```
+[1] 0.4917044 0.4717244 0.4361781 0.5601521 0.4949495
+```
+
+---
+
+## Using cross-validation for parameter(s) selection
+
+
+```r
+aucs &lt;- sapply(1:K, function(k) {
+  ind.test  &lt;- which(test_grp == k)
+  ind.train &lt;- which(test_grp != k)
+  ## Replace with your preferred model
+  df &lt;- data.frame(y = y, x = X[, 1])
+  mod &lt;- glmnet(X[ind.train, ], y[ind.train], family = "binomial")
+  pred &lt;- predict(mod, X[ind.test, ], type = "response")
+  apply(pred, 2, AUC, target = y[ind.test])
+})
+```
+
+
+```r
+plot(rowMeans(aucs)[-1], pch = 20, ylab = "Mean AUC")
+```
+
+&lt;img src="penalised-genetics_files/figure-html/unnamed-chunk-16-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Both parameter selection and evaluating
+
+How to do this?
+
+We already used all data to find best parameter `\(\lambda\)`..
+
+--
+
+**Nested** cross-validation (here 5x2 nested CV):
+
+&lt;img src="nested-crossval.png" width="75%" style="display: block; margin: auto;" /&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

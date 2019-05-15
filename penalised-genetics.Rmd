@@ -235,7 +235,7 @@ glm.fit: algorithm did not converge
 
 <br>
 
-### Prioritazing on marginal p-values
+### Prioritizing on marginal p-values
 
 ```{r, message=FALSE}
 library(bigstatsr)
@@ -269,8 +269,11 @@ ggplot(data.frame(pheno = as.factor(y[ind.test]), pred = pred)) +
 
 ## Penalized models using {glmnet}
 
-```{r, cache=TRUE, message=FALSE}
+```{r, message=FALSE}
 library(glmnet)
+```
+
+```{r, cache=TRUE}
 mod2 <- glmnet(X[ind.train, ], y[ind.train], family = "binomial")
 pred2 <- predict(mod2, X[ind.test, ], type = "response")
 ```
@@ -287,14 +290,86 @@ plot(mod2$lambda[-1], apply(pred2, 2, AUC, target = y[ind.test])[-1],
 
 ---
 
-## Overfitting
+## From underfitting to overfitting
 
 ```{r, warning=FALSE, fig.asp=0.85}
 plot(mod2$dev.ratio, pch = 20, log = "y")
 ```
 
+---
 
+class: inverse, center, middle
 
+# Evaluating models
 
+---
 
+## Dividing in training / test sets
 
+What is the issue with this?
+
+What would be a better solution?
+
+--
+
+**K-fold cross-validation** (here, K = 5):
+
+```{r, echo=FALSE}
+knitr::include_graphics("crossval.png")
+```
+
+---
+
+## A possible implementation
+
+```{r}
+set.seed(1)
+K <- 5
+test_grp <- sample(rep_len(1:K, n))
+head(test_grp, 20)
+sapply(1:K, function(k) {
+  ind.test  <- which(test_grp == k)
+  ind.train <- which(test_grp != k)
+  ## Replace with your preferred model
+  df <- data.frame(y = y, x = X[, 1])
+  mod <- glm(y ~ x, data = df, subset = ind.train, family = "binomial")
+  pred <- predict(mod, df[ind.test, ], type = "response")
+  AUC(pred, y[ind.test])
+})
+```
+
+---
+
+## Using cross-validation for parameter(s) selection
+
+```{r, cache = TRUE}
+aucs <- sapply(1:K, function(k) {
+  ind.test  <- which(test_grp == k)
+  ind.train <- which(test_grp != k)
+  ## Replace with your preferred model
+  df <- data.frame(y = y, x = X[, 1])
+  mod <- glmnet(X[ind.train, ], y[ind.train], family = "binomial")
+  pred <- predict(mod, X[ind.test, ], type = "response")
+  apply(pred, 2, AUC, target = y[ind.test])
+})
+```
+
+```{r, fig.asp=0.45}
+plot(rowMeans(aucs)[-1], pch = 20, ylab = "Mean AUC")
+```
+
+---
+
+## Both parameter selection and evaluation
+
+How to do this?
+
+We already used all data to find best parameter $\lambda$..
+
+--
+
+**Nested** cross-validation (here 5x2 nested CV):
+
+```{r, echo=FALSE, out.width="75%"}
+knitr::include_graphics("nested-crossval.png")
+```
