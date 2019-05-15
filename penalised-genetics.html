@@ -386,7 +386,7 @@ plot(rowMeans(aucs)[-1], pch = 20, ylab = "Mean AUC")
 
 ---
 
-## Both parameter selection and evaluating
+## Both parameter selection and evaluation
 
 How to do this?
 
@@ -397,6 +397,81 @@ We already used all data to find best parameter `\(\lambda\)`..
 **Nested** cross-validation (here 5x2 nested CV):
 
 &lt;img src="nested-crossval.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Using the internal cross-validation of {glmnet}
+
+&lt;br&gt;
+
+Nested 5x3 cross-validation:
+
+
+```r
+sapply(1:K, function(k) {
+  ind.test  &lt;- which(test_grp == k)
+  ind.train &lt;- which(test_grp != k)
+  ## Penalized logistic regression with cross-validation
+  mod_cv &lt;- cv.glmnet(X[ind.train, ], y[ind.train],
+                      family = "binomial", nfolds = 3)
+  pred &lt;- predict(mod_cv, X[ind.test, ], type = "response", 
+                  s = "lambda.1se")
+  AUC(pred, y[ind.test])
+})
+```
+
+```
+[1] 0.6602564 0.6798088 0.7269017 0.6788909 0.7082362
+```
+
+&lt;br&gt;
+
+However, it is starting to take some time to run.
+
+---
+
+class: inverse, center, middle
+
+# A slightly different approach in {bigstatsr}
+
+---
+
+## Cross-Model Selection and Averaging (CMSA)
+
+&lt;img src="https://raw.githubusercontent.com/privefl/paper2-PRS/master/figures/simple-CMSA.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## CMSA in practice
+
+
+```r
+sapply(1:K, function(k) {
+  ind.test  &lt;- which(test_grp == k)
+  ind.train &lt;- which(test_grp != k)
+  ## Penalized logistic regression with CMSA
+  mod_cmsa &lt;- big_spLogReg(G, y[ind.train], ind.train = ind.train, 
+                           K = 3)
+  pred &lt;- predict(mod_cmsa, G, ind.test)
+  AUC(pred, y[ind.test])
+})
+```
+
+```
+[1] 0.7405732 0.7009160 0.6909091 0.6900716 0.6915307
+```
+
+--
+
+&lt;br&gt;
+
+Advantages:
+
+- faster (mainly because of early-stopping criterion)
+
+- more memory efficient (data on disk)
+
+So, can be applied to huge genotype data.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
