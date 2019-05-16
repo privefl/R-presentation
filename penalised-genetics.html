@@ -37,7 +37,7 @@ class: title-slide center middle inverse
 
 class: inverse, center, middle
 
-# Introduction to penalized models
+# Introduction to penalised models
 
 ---
 
@@ -67,7 +67,7 @@ whose solution is
 
 &lt;br&gt;
 
-**What is the problem when analyzing genotype data?**
+**What is the problem when analysing genotype data?**
 
 --
 
@@ -75,7 +75,7 @@ whose solution is
 
 ---
 
-## Penalization term -- `\(L_2\)` regularization
+## Penalisation term -- `\(L_2\)` regularisation
 
 &lt;br&gt;
 
@@ -92,13 +92,13 @@ whose solution is
 
 &lt;br&gt;
 
-This is the L2-regularization ("**ridge**", Hoerl and Kennard, 1970); **it shrinks coefficients `\(\beta\)` towards 0**.
+This is the L2-regularisation ("**ridge**", Hoerl and Kennard, 1970); **it shrinks coefficients `\(\beta\)` towards 0**.
 
 .footnote[https://doi.org/10.1080/00401706.1970.10488634]
 
 ---
 
-## Penalization term -- `\(L_1\)` regularization
+## Penalisation term -- `\(L_1\)` regularisation
 
 &lt;br&gt;
 
@@ -113,13 +113,13 @@ which does not have any closed form but can be solved using iterative algorithms
 
 &lt;br&gt;
 
-This is the L1-regularization ("**lasso**", Tibshirani, 1996); **it forces some of the coefficients to be equal to 0** and can be used as a means of variable selection, leading to sparse models.
+This is the L1-regularisation ("**lasso**", Tibshirani, 1996); **it forces some of the coefficients to be equal to 0** and can be used as a means of variable selection, leading to sparse models.
 
 .footnote[https://doi.org/10.1111/j.2517-6161.1996.tb02080.x]
 
 ---
 
-## Penalization term -- `\(L_1\)` and `\(L_2\)` regularization
+## Penalisation term -- `\(L_1\)` and `\(L_2\)` regularisation
 
 &lt;br&gt;
 
@@ -134,19 +134,19 @@ which does not have any closed form but can be solved using iterative algorithms
 
 &lt;br&gt;
 
-This is the L1- and L2-regularization ("**elastic-net**", Zou and Hastie, 2005); it is a compromise between the two previous penalties.
+This is the L1- and L2-regularisation ("**elastic-net**", Zou and Hastie, 2005); it is a compromise between the two previous penalties.
 
 .footnote[https://doi.org/10.1111/j.1467-9868.2005.00503.x]
 
 ---
 
-## Advantages and drawbacks of penalization
+## Advantages and drawbacks of penalisation
 
 --
 
 ### Advantages
 
-- Make it possible to solve the linear problem
+- Makes it possible to solve linear problems when `\(n &lt; p\)`
 
 - Generally prevents overfitting (because of smaller effects)
 
@@ -154,7 +154,7 @@ This is the L1- and L2-regularization ("**elastic-net**", Zou and Hastie, 2005);
 
 ### Drawback
 
-- Add at least one hyper-parameter ( `\(\lambda\)` ) that needs to be chosen and another one if using the elastic-net regularization ( `\(\alpha\)` )
+- Add at least one hyper-parameter ( `\(\lambda\)` ) that needs to be chosen and another one if using the elastic-net regularisation ( `\(\alpha\)` )
 
 --
 
@@ -166,13 +166,15 @@ This is the L1- and L2-regularization ("**elastic-net**", Zou and Hastie, 2005);
 
 ## Binary outcome (case-control)
 
-**Penalized logistic regression**: minimize
+&lt;br&gt;
+
+**Penalised logistic regression**: minimize
 
 `$$L(\lambda, \alpha) = \underbrace{ -\sum_{i=1}^n \left( y_i \log\left(z_i\right) + (1 - y_i) \log\left(1 - z_i\right) \right) }_\text{Loss function}$$`
     
-`$$+ \underbrace{ \lambda \left((1-\alpha)\|\beta\|_2^2 + \alpha \|\beta\|_1\right) }_\text{Penalization} ~,$$`
+`$$+ \underbrace{ \lambda \left((1-\alpha)\|\beta\|_2^2 + \alpha \|\beta\|_1\right) }_\text{penalisation} ~,$$`
 
-where `\(z_i=1/\left(1+\exp\left(-(\beta_0 + X_{(i)}^T\beta)\right)\right)\)`, `\(X_i\)` denotes the genotypes and covariates (e.g. principal components) for individual `\(i\)`, and `\(y_i\)` is the disease status for individual `\(i\)`.
+where `\(z_i=1/\left(1+\exp\left(-(\beta_0 + {X_{(i)}}^T\beta)\right)\right)\)`, `\(X_{(i)}\)` denotes the genotypes and covariates (e.g. principal components) for individual `\(i\)`, and `\(y_i\)` is the disease status for individual `\(i\)`.
 
 ---
 
@@ -186,7 +188,7 @@ class: inverse, center, middle
 
 Download [data](https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data.zip) and unzip files. 
 
-I store those files in a directory called "tmp-data" here.
+I store those files in a directory called `tmp-data` here.
 
 
 ```r
@@ -232,7 +234,7 @@ glm.fit: algorithm did not converge
 
 &lt;br&gt;
 
-### Prioritizing on marginal p-values
+### Prioritising on marginal p-values
 
 
 ```r
@@ -274,7 +276,7 @@ ggplot(data.frame(pheno = as.factor(y[ind.test]), pred = pred)) +
 
 ---
 
-## Penalized models using {glmnet}
+## Penalised models using {glmnet}
 
 
 ```r
@@ -293,7 +295,7 @@ pred2 &lt;- predict(mod2, X[ind.test, ], type = "response")
 ```r
 plot(mod2$lambda[-1], apply(pred2, 2, AUC, target = y[ind.test])[-1],
      xlim = rev(range(mod2$lambda)), log = "x", pch = 20,
-     xlab = expression(lambda~~(log-scale)), ylab = "AUC (on test set)")
+     xlab = "lambda (reversed log-scale)", ylab = "AUC (on test set)")
 ```
 
 &lt;img src="penalised-genetics_files/figure-html/unnamed-chunk-11-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
@@ -414,7 +416,7 @@ Nested 5x3 cross-validation:
 sapply(1:K, function(k) {
   ind.test  &lt;- which(test_grp == k)
   ind.train &lt;- which(test_grp != k)
-  ## Penalized logistic regression with cross-validation
+  ## penalised logistic regression with cross-validation
   mod_cv &lt;- cv.glmnet(X[ind.train, ], y[ind.train],
                       family = "binomial", nfolds = 3)
   pred &lt;- predict(mod_cv, X[ind.test, ], type = "response", 
@@ -426,6 +428,8 @@ sapply(1:K, function(k) {
 ```
 [1] 0.6602564 0.6798088 0.7269017 0.6788909 0.7082362
 ```
+
+--
 
 &lt;br&gt;
 
@@ -452,7 +456,7 @@ class: inverse, center, middle
 sapply(1:K, function(k) {
   ind.test  &lt;- which(test_grp == k)
   ind.train &lt;- which(test_grp != k)
-  ## Penalized logistic regression with CMSA
+  ## penalised logistic regression with CMSA
   mod_cmsa &lt;- big_spLogReg(G, y[ind.train], ind.train = ind.train, 
                            K = 3)
   pred &lt;- predict(mod_cmsa, G, ind.test)
@@ -488,7 +492,7 @@ class: inverse, center, middle
 
 Download [data](https://github.com/privefl/bigsnpr/raw/master/data-raw/public-data.zip) and unzip files. 
 
-I store those files in a directory called "tmp-data" here.
+I store those files in a directory called `tmp-data` here.
 
 
 ```r
@@ -535,7 +539,7 @@ library(bigstatsr)
 sapply(1:K, function(k) {
   ind.test  &lt;- which(test_grp == k)
   ind.train &lt;- which(test_grp != k)
-  ## Penalized logistic regression with CMSA
+  ## penalised logistic regression with CMSA
   mod_cmsa &lt;- big_spLogReg(G, y[ind.train], ind.train = ind.train, 
                            K = 4, ncores = nb_cores())
   pred &lt;- predict(mod_cmsa, G, ind.test)
@@ -564,7 +568,7 @@ class: inverse, center, middle
 sapply(1:K, function(k) {
   ind.test  &lt;- which(test_grp == k)
   ind.train &lt;- which(test_grp != k)
-  ## Penalized logistic regression with CMSA
+  ## penalised logistic regression with CMSA
   mod_cmsa &lt;- big_spLogReg(G, y[ind.train], ind.train = ind.train, 
                            K = 4, ncores = nb_cores(),
                            alphas = 10^(-(0:4)))
@@ -579,7 +583,7 @@ sapply(1:K, function(k) {
 
 ---
 
-## Use summary statistics to prioritize variables
+## Use summary statistics to prioritise variables
 
 
 ```r
@@ -592,14 +596,14 @@ conf &lt;- pmax(-log10(pval), 1)
 
 &lt;br&gt;
 
-Apply a different penalization factor to each variable:
+Apply a different penalisation factor to each variable:
 
 
 ```r
 sapply(1:K, function(k) {
   ind.test  &lt;- which(test_grp == k)
   ind.train &lt;- which(test_grp != k)
-  ## Penalized logistic regression with CMSA
+  ## penalised logistic regression with CMSA
   mod_cmsa &lt;- big_spLogReg(G, y[ind.train], ind.train = ind.train, 
                            K = 4, ncores = nb_cores(),
                            alphas = 10^(-(0:4)), pf.X = 1 / conf)
@@ -611,6 +615,34 @@ sapply(1:K, function(k) {
 ```
 [1] 0.7914781 0.7224213 0.7239332 0.7218247 0.7482517
 ```
+
+---
+
+## Concluding remarks
+
+&lt;br&gt;
+
+- Summary statistics are based on marginal effects vs penalised regressions learn effects jointly
+
+--
+
+- In addition to genetic variants, you can straightforwardly include other covariates in a regression model
+
+--
+
+- Lasso and elastic net offers a method for variable selection
+
+--
+
+- Elastic net has often good performance, even under high correlation
+
+--
+
+&lt;br&gt;
+
+Generally, for large sample sizes and moderate effect sizes, individual-level data works better than summary statistics based methods (Privé et al., 2019)
+
+.footnote[https://doi.org/10.1534/genetics.119.302019]
 
 ---
 
