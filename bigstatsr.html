@@ -264,7 +264,7 @@ X[1:5, 1]
 ```
 
 ```
-## [1]  2.3072035 -1.2569511 -0.6695401 -0.5836173  1.0333209
+## [1]  0.9049859  0.4069235  0.2709667 -1.7053191  1.0157806
 ```
 
 ---
@@ -279,7 +279,7 @@ system.time(corr1 &lt;- cor(mat))
 
 ```
 ##    user  system elapsed 
-##   7.510   0.017   7.534
+##   7.226   0.008   7.243
 ```
 
 
@@ -289,7 +289,7 @@ system.time(corr2 &lt;- big_cor(X))
 
 ```
 ##    user  system elapsed 
-##   0.437   0.071   0.509
+##   0.452   0.062   0.514
 ```
 
 ```r
@@ -311,7 +311,7 @@ system.time(svd1 &lt;- svd(scale(mat), nu = 10, nv = 10))
 
 ```
 ##    user  system elapsed 
-##   3.546   0.320   3.871
+##   3.802   0.330   4.142
 ```
 
 
@@ -322,7 +322,7 @@ system.time(svd2 &lt;- big_SVD(X, fun.scaling = big_scale(), k = 10))
 
 ```
 ##    user  system elapsed 
-##   6.521   0.537   7.059
+##   1.464   0.112   1.576
 ```
 
 
@@ -334,7 +334,7 @@ system.time(svd3 &lt;- big_randomSVD(X, fun.scaling = big_scale(), k = 10))
 
 ```
 ##    user  system elapsed 
-##   9.091   0.542   9.638
+##   1.933   0.014   1.948
 ```
 
 ---
@@ -559,8 +559,8 @@ str(sums6)
 
 ```
 ## 'data.frame':	1000 obs. of  2 variables:
-##  $ sum: num  61.99 90.55 -60.33 3.47 -298.47 ...
-##  $ var: num  1.008 1.01 1.009 0.995 0.998 ...
+##  $ sum: num  184.5 -55.8 77.4 -110.5 -45.1 ...
+##  $ var: num  0.997 1.006 0.987 1.005 1.014 ...
 ```
 
 ```r
@@ -600,7 +600,7 @@ system.time(
 
 ```
 ##    user  system elapsed 
-##   6.548   0.015   6.566
+##   6.186   0.014   6.269
 ```
 
 ```r
@@ -612,7 +612,7 @@ system.time(
 
 ```
 ##    user  system elapsed 
-##   0.076   0.054   4.230
+##   0.061   0.054   4.389
 ```
 
 ---
@@ -633,7 +633,7 @@ system.time(
 
 ```
 ##    user  system elapsed 
-##   0.086   0.060   4.774
+##   0.055   0.057   5.046
 ```
 
 ```r
