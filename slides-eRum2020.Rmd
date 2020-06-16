@@ -32,7 +32,7 @@ class: title-slide center middle inverse
 
 ## {bigstatsr} uses memory-mapping
 
-```{r, out.width='90%'}
+```{r, out.width='85%'}
 knitr::include_graphics("memory-solution.svg")
 ```
 
@@ -46,7 +46,7 @@ knitr::include_graphics("memory-solution.svg")
 
 with **lasso** ( $\alpha=1$ ) or **elastic-net** regularization ( $0 < \alpha < 1$ )
 
-$$L(\lambda, \alpha) = \underbrace{ ||y - X \beta||_2^2 }_\text{Loss function} + \underbrace{ \lambda \left( \alpha \|\beta\|_1 + (1-\alpha) \frac{\|\beta\|_2^2}{2}  \right) }_\text{Penalisation} ~,$$
+$$L(\lambda, \alpha) = \underbrace{ ||y - X \beta||_2^2 }_\text{Loss function} + \underbrace{ \lambda \left( \alpha \|\beta\|_1 + (1-\alpha) \frac{\|\beta\|_2^2}{2}  \right) }_\text{Penalisation}$$
 
 <br>
 
@@ -94,8 +94,18 @@ knitr::include_graphics("https://privefl.github.io/blog/images/UKB-final-pred.pn
 
 ---
 
+class: inverse, center, middle
+
+#  `r icon::fa_r_project()` package {bigstatsr}
+# makes it possible 
+# to fit penalized linear/logistic regression
+# on 100s of GB of data
+
+---
+
 ## Other functions
 
+- Principal Component Analysis (PCA)
 
 - matrix operations
 
@@ -117,16 +127,7 @@ knitr::include_graphics("https://privefl.github.io/blog/images/UKB-final-pred.pn
 
 ---
 
-class: inverse, center, middle
-
-#  `r icon::fa_r_project()` package {bigstatsr}
-# makes it possible 
-# to fit penalized linear/logistic regression
-# on 100GB of data
-
----
-
-## R Packages
+## Scientific publications
 
 <br>
 
@@ -152,9 +153,9 @@ knitr::include_graphics("paper2-2.PNG")
 
 ---
 
-## Contributors are welcome!
+## Contributions are welcome!
 
-```{r, out.width='80%'}
+```{r, out.width='75%'}
 knitr::include_graphics("cat-help.jpg")
 ```
 
@@ -166,7 +167,7 @@ class: inverse, center, middle
 
 <br/><br/>
 
-Go check the package website and the vignette!
+#### Go check the package website and the vignette!
 
 <!-- Package's website: https://privefl.github.io/bigstatsr/ -->
 
@@ -175,4 +176,4 @@ Go check the package website and the vignette!
 `r icon::fa("twitter")` [privefl](https://twitter.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("github")` [privefl](https://github.com/privefl) &nbsp;&nbsp;&nbsp;&nbsp; `r icon::fa("stack-overflow")` [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
 
 
-.footnote[Slides created via the `r icon::fa_r_project()` package [**xaringan**](https://github.com/yihui/xaringan).]
+.footnote[Slides created using `r icon::fa_r_project()` package [**xaringan**](https://github.com/yihui/xaringan).]
