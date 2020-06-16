@@ -28,19 +28,7 @@ class: title-slide center middle inverse
 
 ---
 
-## Very large genotype matrices
-
-- previously: 15K x 280K, [celiac disease](https://doi.org/10.1038/ng.543) (~30GB)
-
-- currently: 500K x 500K, [UK Biobank](https://doi.org/10.1101/166298) (~2TB)
- 
-&lt;img src="https://media.giphy.com/media/3o7bueyxGydy48Lwgo/giphy.gif" width="55%" style="display: block; margin: auto;" /&gt;
-
-.footnote[But I still want to use <i class="fab  fa-r-project "></i>..]
-
----
-
-## The solution I found
+## {bigstatsr} uses memory-mapping
 
 &lt;img src="memory-solution.svg" width="90%" style="display: block; margin: auto;" /&gt;
 
@@ -50,7 +38,9 @@ class: title-slide center middle inverse
 
 ## Penalized linear regression 
 
-#### with **lasso** ( `\(\alpha=1\)` ) or **elastic-net** regularization ( `\(0 &lt; \alpha &lt; 1\)` )
+&lt;br&gt;
+
+with **lasso** ( `\(\alpha=1\)` ) or **elastic-net** regularization ( `\(0 &lt; \alpha &lt; 1\)` )
 
 `$$L(\lambda, \alpha) = \underbrace{ ||y - X \beta||_2^2 }_\text{Loss function} + \underbrace{ \lambda \left( \alpha \|\beta\|_1 + (1-\alpha) \frac{\|\beta\|_2^2}{2}  \right) }_\text{Penalisation} ~,$$`
 
@@ -64,25 +54,35 @@ Two hyper-parameters in this model:
 
 ---
 
-## Cross-Model Selection and Averaging (CMSA)
+## Science and Implementation
 
-&lt;img src="https://raw.githubusercontent.com/privefl/paper2-PRS/master/figures/simple-CMSA.png" width="75%" style="display: block; margin: auto;" /&gt;
+&lt;br&gt;
+
+- Use fast underlying **C++** code
+
+- Use **strong rules** to discard variables a priori
+
+- Use **early-stopping** to avoid fitting costly models
+
+- Process the hyper-parameter **grid in parallel** &lt;br&gt;(memory-mapping makes it easy and efficient)
+
+.footnote[Strong rules: DOI: [10.1111%2Fj.1467-9868.2011.01004.x](https://doi.org/10.1111/j.1467-9868.2011.01004.x)]
 
 ---
 
-### Predicting height from genetics with a penalized logistic regression
+## Predicting common diseases from genetics
 
-15K `\(\times\)` 280K -- 6 cores -- **2 min**
+15K `\(\times\)` 280K in **a few minutes**
 
-&lt;img src="density-scores.svg" width="75%" style="display: block; margin: auto;" /&gt;
+&lt;img src="density-scores.svg" width="85%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-### Predicting complex diseases from genetics with a penalized logistic regression
+## Predicting height from genetics
 
-15K `\(\times\)` 280K -- 6 cores -- **2 min**
+350K `\(\times\)` 560K in **one day**
 
-&lt;img src="density-scores.svg" width="75%" style="display: block; margin: auto;" /&gt;
+&lt;img src="https://privefl.github.io/blog/images/UKB-final-pred.png" width="85%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -151,6 +151,8 @@ class: inverse, center, middle
 # Thanks!
 
 &lt;br/&gt;&lt;br/&gt;
+
+Go check the package website and the vignette!
 
 &lt;!-- Package's website: https://privefl.github.io/bigstatsr/ --&gt;
 

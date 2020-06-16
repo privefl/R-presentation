@@ -30,21 +30,7 @@ class: title-slide center middle inverse
 
 ---
 
-## Very large genotype matrices
-
-- previously: 15K x 280K, [celiac disease](https://doi.org/10.1038/ng.543) (~30GB)
-
-- currently: 500K x 500K, [UK Biobank](https://doi.org/10.1101/166298) (~2TB)
- 
-```{r, out.width='55%'}
-knitr::include_graphics("https://media.giphy.com/media/3o7bueyxGydy48Lwgo/giphy.gif")
-```
-
-.footnote[But I still want to use `r icon::fa_r_project()`..]
-
----
-
-## The solution I found
+## {bigstatsr} uses memory-mapping
 
 ```{r, out.width='90%'}
 knitr::include_graphics("memory-solution.svg")
@@ -56,7 +42,9 @@ knitr::include_graphics("memory-solution.svg")
 
 ## Penalized linear regression 
 
-#### with **lasso** ( $\alpha=1$ ) or **elastic-net** regularization ( $0 < \alpha < 1$ )
+<br>
+
+with **lasso** ( $\alpha=1$ ) or **elastic-net** regularization ( $0 < \alpha < 1$ )
 
 $$L(\lambda, \alpha) = \underbrace{ ||y - X \beta||_2^2 }_\text{Loss function} + \underbrace{ \lambda \left( \alpha \|\beta\|_1 + (1-\alpha) \frac{\|\beta\|_2^2}{2}  \right) }_\text{Penalisation} ~,$$
 
@@ -70,29 +58,37 @@ Two hyper-parameters in this model:
 
 ---
 
-## Cross-Model Selection and Averaging (CMSA)
+## Science and Implementation
 
-```{r, echo=FALSE, out.width="75%"}
-knitr::include_graphics("https://raw.githubusercontent.com/privefl/paper2-PRS/master/figures/simple-CMSA.png")
-```
+<br>
+
+- Use fast underlying **C++** code
+
+- Use **strong rules** to discard variables a priori
+
+- Use **early-stopping** to avoid fitting costly models
+
+- Process the hyper-parameter **grid in parallel** <br>(memory-mapping makes it easy and efficient)
+
+.footnote[Strong rules: DOI: [10.1111%2Fj.1467-9868.2011.01004.x](https://doi.org/10.1111/j.1467-9868.2011.01004.x)]
 
 ---
 
-### Predicting complex diseases from genetics with a penalized logistic regression
+## Predicting common diseases from genetics
 
-15K $\times$ 280K -- 6 cores -- **2 min**
+15K $\times$ 280K in **a few minutes**
 
-```{r, out.width='75%'}
+```{r, out.width='85%'}
 knitr::include_graphics("density-scores.svg")
 ```
 
 ---
 
-### Predicting height from genetics with a penalized linear regression
+## Predicting height from genetics
 
-15K $\times$ 280K -- 6 cores -- **2 min**
+350K $\times$ 560K in **one day**
 
-```{r, out.width='75%'}
+```{r, out.width='85%'}
 knitr::include_graphics("https://privefl.github.io/blog/images/UKB-final-pred.png")
 ```
 
@@ -169,6 +165,8 @@ class: inverse, center, middle
 # Thanks!
 
 <br/><br/>
+
+Go check the package website and the vignette!
 
 <!-- Package's website: https://privefl.github.io/bigstatsr/ -->
 
