@@ -1,5 +1,5 @@
 ---
-title: "R package bigstatsr - eRum 2018"
+title: "eRum 2020"
 output:
   xaringan::moon_reader:
     seal: false
@@ -60,9 +60,11 @@ Two hyper-parameters in this model:
 
 ## Science and Implementation
 
+### behind the penalized regression framework of {bigstatsr}
+
 <br>
 
-- Use fast underlying **C++** code
+- Mostly implemented in **C++**
 
 - Use **strong rules** to discard variables a priori
 
@@ -98,12 +100,12 @@ class: inverse, center, middle
 
 #  `r icon::fa_r_project()` package {bigstatsr}
 # makes it possible 
-# to fit penalized linear/logistic regression
+# to fit penalized regressions
 # on 100s of GB of data
 
 ---
 
-## Other functions
+## Other functions in {bigstatsr}
 
 - Principal Component Analysis (PCA)
 
