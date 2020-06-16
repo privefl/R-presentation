@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>R package bigstatsr - eRum 2018</title>
+    <meta charset="utf-8" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: title-slide center middle inverse
+
+# Ultra fast penalized regressions&lt;br&gt;with <i class="fab  fa-r-project "></i> package {bigstatsr}
+
+&lt;br&gt;
+
+## e-Rum 2020
+
+&lt;br&gt;
+
+### Florian Privé (@privefl)
+#### postdoc in *Predictive Human Genetics*
+
+---
+
+## Very large genotype matrices
+
+- previously: 15K x 280K, [celiac disease](https://doi.org/10.1038/ng.543) (~30GB)
+
+- currently: 500K x 500K, [UK Biobank](https://doi.org/10.1101/166298) (~2TB)
+ 
+&lt;img src="https://media.giphy.com/media/3o7bueyxGydy48Lwgo/giphy.gif" width="55%" style="display: block; margin: auto;" /&gt;
+
+.footnote[But I still want to use <i class="fab  fa-r-project "></i>..]
+
+---
+
+## The solution I found
+
+&lt;img src="memory-solution.svg" width="90%" style="display: block; margin: auto;" /&gt;
+
+.footnote[`FBM` is very similar to `filebacked.big.matrix` from package {bigmemory}.]
+
+---
+
+## Penalized linear regression 
+
+#### with **lasso** ( `\(\alpha=1\)` ) or **elastic-net** regularization ( `\(0 &lt; \alpha &lt; 1\)` )
+
+`$$L(\lambda, \alpha) = \underbrace{ ||y - X \beta||_2^2 }_\text{Loss function} + \underbrace{ \lambda \left( \alpha \|\beta\|_1 + (1-\alpha) \frac{\|\beta\|_2^2}{2}  \right) }_\text{Penalisation} ~,$$`
+
+&lt;br&gt;
+
+Two hyper-parameters in this model:
+
+- `\(\lambda\)`
+
+- `\(\alpha\)`
+
+---
+
+## Cross-Model Selection and Averaging (CMSA)
+
+&lt;img src="https://raw.githubusercontent.com/privefl/paper2-PRS/master/figures/simple-CMSA.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Predicting height from genetics with a penalized logistic regression
+
+15K `\(\times\)` 280K -- 6 cores -- **2 min**
+
+&lt;img src="density-scores.svg" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Predicting complex diseases from genetics with a penalized logistic regression
+
+15K `\(\times\)` 280K -- 6 cores -- **2 min**
+
+&lt;img src="density-scores.svg" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Other functions
+
+
+- matrix operations
+
+- association of each variable with an output
+
+- plotting functions
+
+- read from text files
+
+- many other functions..
+
+&lt;br&gt;
+
+### Parallel
+
+- most of the functions are parallelized (memory-mapping makes it easy!)
+
+- you can parallelize you own functions with `big_parallelize()`
+
+---
+
+class: inverse, center, middle
+
+#  <i class="fab  fa-r-project "></i> package {bigstatsr}
+# makes it possible 
+# to fit penalized linear/logistic regression
+# on 100GB of data
+
+---
+
+## R Packages
+
+&lt;br&gt;
+
+&lt;a href="https://doi.org/10.1093/bioinformatics/bty185" target="_blank"&gt;
+&lt;img src="bty185.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;/a&gt;
+
+&lt;br&gt;
+
+- {bigstatsr}: to be used by any field of research
+
+- {bigsnpr}: algorithms specific to my field of research, Human Genetics
+
+&lt;br&gt;
+
+&lt;a href="https://doi.org/10.1534/genetics.119.302019" target="_blank"&gt;
+&lt;img src="paper2-2.PNG" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;/a&gt;
+
+---
+
+## Contributors are welcome!
+
+&lt;img src="cat-help.jpg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: inverse, center, middle
+
+# Thanks!
+
+&lt;br/&gt;&lt;br/&gt;
+
+&lt;!-- Package's website: https://privefl.github.io/bigstatsr/ --&gt;
+
+&lt;br/&gt;
+
+<i class="fab  fa-twitter "></i> [privefl](https://twitter.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-github "></i> [privefl](https://github.com/privefl) &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; <i class="fab  fa-stack-overflow "></i> [F. Privé](https://stackoverflow.com/users/6103040/f-priv%c3%a9)
+
+
+.footnote[Slides created via the <i class="fab  fa-r-project "></i> package [**xaringan**](https://github.com/yihui/xaringan).]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
