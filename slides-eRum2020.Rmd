@@ -105,30 +105,6 @@ class: inverse, center, middle
 
 ---
 
-## Other functions in {bigstatsr}
-
-- Principal Component Analysis (PCA)
-
-- matrix operations
-
-- association of each variable with an output
-
-- plotting functions
-
-- read from text files
-
-- many other functions..
-
-<br>
-
-### Parallel
-
-- most of the functions are parallelized (memory-mapping makes it easy!)
-
-- you can parallelize you own functions with `big_parallelize()`
-
----
-
 ## Scientific publications
 
 <br>
