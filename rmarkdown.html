@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
     <title>R Markdown</title>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
     <link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
     <script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
-    <script src="libs/htmlwidgets-1.2/htmlwidgets.js"></script>
+    <script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
     <script src="libs/jquery-1.12.4/jquery.min.js"></script>
     <link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
     <script src="libs/leaflet-1.3.1/leaflet.js"></script>
@@ -15,8 +15,8 @@
     <script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
     <script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
     <link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
-    <script src="libs/leaflet-binding-2.0.2/leaflet.js"></script>
-    <link href="libs/font-awesome-5.0.12/css/fontawesome-all.min.css" rel="stylesheet" />
+    <script src="libs/leaflet-binding-2.0.3/leaflet.js"></script>
+    <link href="libs/font-awesome-5.3.1/css/fontawesome-all.min.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -44,7 +44,7 @@ class: title-slide center middle inverse
 
 &lt;br&gt;
 
-&lt;small&gt;(adapted with permission from [Antoine Bichat's presentation](https://abichat.github.io/Slides/ScienceCommunicationSOTR/ScienceCommunicationSOTR.html#1))&lt;/small&gt;
+&lt;small&gt;(adapted with permission from [Antoine Bichat's presentation](https://abichat.github.io/slides/sciencecommunication/))&lt;/small&gt;
 
 ---
 
@@ -78,7 +78,7 @@ The extention is typically `.md`.
 
 .pull-left[
 .center[
-  &lt;img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd1.png" width="400"&gt;
+  &lt;img src="https://abichat.github.io/slides/sciencecommunication/CreateRmd1.png" width="400"&gt;
 ]
 ]
 
@@ -87,7 +87,7 @@ The extention is typically `.md`.
 .pull-right[
   &lt;div style = "margin-top: 80px"&gt;&lt;/div&gt; 
   .center[
-    &lt;img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd2.png" width="400"&gt;
+    &lt;img src="https://abichat.github.io/slides/sciencecommunication/CreateRmd2.png" width="400"&gt;
   ]
 ]
 
@@ -96,7 +96,7 @@ The extention is typically `.md`.
 ## New `.Rmd`
 
 .center[
-  &lt;img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd3.png" width="700"&gt;
+  &lt;img src="https://abichat.github.io/slides/sciencecommunication/CreateRmd3.png" width="700"&gt;
 ]
 
 ---
@@ -106,7 +106,7 @@ The extention is typically `.md`.
 Use the `Knit` button to produce a HTML file
 
 .center[
-  &lt;img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd4.png" width="300"&gt;
+  &lt;img src="https://abichat.github.io/slides/sciencecommunication/CreateRmd4.png" width="300"&gt;
 ]
 
 &lt;br&gt;
@@ -480,8 +480,8 @@ leaflet(width = "100%") %&gt;%
   addTiles(options = providerTileOptions(minZoom = 2, maxZoom = 19))
 ```
 
-<div id="htmlwidget-3f2a995c6ac33d0b03e4" style="width:100%;height:360px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3f2a995c6ac33d0b03e4">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[45.19059,5.767249],12,[]],"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false,"minZoom":2,"maxZoom":19,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}]},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-4300d2aa7778cc76e410" style="width:100%;height:360px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4300d2aa7778cc76e410">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[45.19059,5.767249],12,[]],"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false,"minZoom":2,"maxZoom":19,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}]},"evals":[],"jsHooks":[]}</script>
 
 ---
 
@@ -611,6 +611,7 @@ class: inverse, center, middle
 
 .footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
@@ -620,17 +621,75 @@ class: inverse, center, middle
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})();</script>
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 <script>
 (function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -644,7 +703,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

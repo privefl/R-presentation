@@ -41,7 +41,7 @@ class: title-slide center middle inverse
 
 <br>
 
-<small>(adapted with permission from [Antoine Bichat's presentation](https://abichat.github.io/Slides/ScienceCommunicationSOTR/ScienceCommunicationSOTR.html#1))</small>
+<small>(adapted with permission from [Antoine Bichat's presentation](https://abichat.github.io/slides/sciencecommunication/))</small>
 
 ---
 
@@ -77,7 +77,7 @@ The extention is typically `.md`.
 
 .pull-left[
 .center[
-  <img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd1.png" width="400">
+  <img src="https://abichat.github.io/slides/sciencecommunication/CreateRmd1.png" width="400">
 ]
 ]
 
@@ -86,7 +86,7 @@ The extention is typically `.md`.
 .pull-right[
   <div style = "margin-top: 80px"></div> 
   .center[
-    <img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd2.png" width="400">
+    <img src="https://abichat.github.io/slides/sciencecommunication/CreateRmd2.png" width="400">
   ]
 ]
 
@@ -95,7 +95,7 @@ The extention is typically `.md`.
 ## New `.Rmd`
 
 .center[
-  <img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd3.png" width="700">
+  <img src="https://abichat.github.io/slides/sciencecommunication/CreateRmd3.png" width="700">
 ]
 
 ---
@@ -105,7 +105,7 @@ The extention is typically `.md`.
 Use the `Knit` button to produce a HTML file
 
 .center[
-  <img src="https://abichat.github.io/Slides/ScienceCommunicationSOTR/CreateRmd4.png" width="300">
+  <img src="https://abichat.github.io/slides/sciencecommunication/CreateRmd4.png" width="300">
 ]
 
 <br>
