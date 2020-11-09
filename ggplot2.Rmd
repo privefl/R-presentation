@@ -2,7 +2,7 @@
 title: "Visualisation with ggplot2"
 subtitle: "https://privefl.github.io/R-presentation/ggplot2.html"
 author: "Florian Privé"
-date: "October 19, 2017"
+date: "October 19, 2017<br>(minor updates in November 2020)"
 output:
   xaringan::moon_reader:
     includes:
@@ -89,11 +89,11 @@ ggplot(data = <DATA>) +
 
 - Easy superposition, facetting, etc.
 
-- Nice rendering (yet, I don't like the default grey theme).
+- Nice rendering (though I don't like the default grey theme).
 
-- **Store any ggplot2 object for modification or future recall.** Super useful for packages.
+- Store any ggplot2 object for modification or future recall. Super useful for packages.
 
-- Lots of users (less bugs, much help on Stack Overflow).
+- Lots of users (less bugs, more help on Stack Overflow).
 
 - Lots of extensions.
 
@@ -209,12 +209,13 @@ Learn more at http://tidyr.tidyverse.org/articles/tidy-data.html.
 ### Tidy the previous data
 
 ```{r, warning=FALSE, message=FALSE, cache=FALSE}
-library(tidyverse)
+library(dplyr)
 ```
 
 ```{r}
 (fertilityTidy <- fertilityData %>%
-   gather(key = "Year", value = "Fertility", -Country) %>%
+   tidyr::pivot_longer(cols = -Country, names_to = "Year",
+                       values_to = "Fertility") %>%
    mutate(Year = as.integer(Year)))
 ```
 
@@ -235,15 +236,16 @@ class: center, middle, inverse
 
 ---
 
-### Custom theme I use: black and white + larger fonts
+### Use black and white theme everywhere
 
-```{r, cache=FALSE}
-theme_set(bigstatsr::theme_bigstatsr())
+```{r, warning=FALSE, message=FALSE, cache=FALSE}
+library(ggplot2)
+theme_set(theme_bw(18))
 ```
 
 ***
 
-```{r, out.width = "68%", fig.asp = 0.7}
+```{r, out.width = "65%", fig.asp = 0.7, cache = FALSE}
 ggplot(data = fertilityTidy) + 
   geom_point(mapping = aes(x = Year, y = Fertility))
 ```
@@ -425,7 +427,7 @@ ggplot(iris) +
 
 ---
 
-## Go check the [**R Graph Gallery**](http://www.r-graph-gallery.com/portfolio/ggplot2-package/)
+## Go check the [**R Graph Gallery**](https://www.r-graph-gallery.com/ggplot2-package.html)
 
 <br>
 
@@ -516,20 +518,21 @@ ggplot(iris, aes(Petal.Length, Petal.Width,
 
 ## Transform ggplot to plotly
 
-```{r, cache=FALSE}
+```{r, cache=FALSE, eval=FALSE}
 plotly::ggplotly(width = 700, height = 450)
 ```
 
----
-
 ### Add more infos
 
-```{r, cache=FALSE}
+```{r, cache=FALSE, eval=FALSE}
 plotly::ggplotly(
   last_plot() + aes(text = bigstatsr::asPlotlyText(iris)),
   tooltip = "text", width = 700, height = 420)
 ```
 
+<br>
+
+You might want to look at package [{widgetframe}](https://cran.r-project.org/web/packages/widgetframe/vignettes/Using_widgetframe.html).
 
 ---
 
@@ -605,9 +608,9 @@ ggplot(iris, aes(Petal.Length, Petal.Width,
 
 - Right-click on this window -> "Open Image"
 
-- Then, I use the dimensions that are displayed at the top in `ggsave()` with `scale = 1/90` (calibrate the value for your computer), e.g. 
+- Then, I use the dimensions that are displayed at the top in `ggsave()` with `scale = 1/100` (calibrate the value for your computer), e.g. 
 ```{r, eval = FALSE}
-ggsave("myggplot.pdf", scale = 1/90, width = 888, height = 725)
+ggsave("myggplot.pdf", scale = 1/100, width = 888, height = 725)
 ```
 
 .footnote[In R Markdown, use chunk options `out.width` and `fig.asp`.]
