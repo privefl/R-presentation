@@ -147,8 +147,8 @@ colSums(X[])  ## super bad
 // [[Rcpp::export]]
 NumericVector big_colsums(Environment BM) {
   
-  XPtr&lt;FBM&gt; xpBM = BM["address"]; 
-  BMAcc&lt;double&gt; macc(xpBM); 
+  XPtr&lt;FBM&gt; xpBM = BM["address"]; // get the external pointer
+  BMAcc&lt;double&gt; macc(xpBM);       // create an accessor to the data
   
 * size_t n = macc.nrow();
 * size_t m = macc.ncol();
@@ -199,9 +199,9 @@ Automatic (parallel) grid-search for the two hyper-parameters of elastic-net.
 
 class: center middle inverse
 
-# Let us try 
+# Let us try some functions
 
-# some functions
+# from <i class="fab  fa-r-project "></i> package {bigstatsr}
 
 ---
 
@@ -209,7 +209,7 @@ class: center middle inverse
 
 
 ```r
-X &lt;- FBM(10e3, 1000, backingfile = "test2")
+X &lt;- FBM(10e3, 1000, backingfile = "test2")$save()
 object.size(X)
 ```
 
@@ -233,9 +233,17 @@ typeof(X)
 ## [1] "double"
 ```
 
+
+```r
+# `$save()` stored the object in an .rds file
+# which you can reload in any R session
+X &lt;- big_attach("test2.rds")
+```
+
+
 ---
 
-## Fill it with random values
+## Fill the FBM with random values
 
 &lt;img src="split-apply-combine.svg" width="65%" style="display: block; margin: auto;" /&gt;
 
@@ -257,7 +265,7 @@ X[1:5, 1]
 ```
 
 ```
-## [1] -0.7639775  0.9388268 -0.8473623  0.5048008 -0.2584358
+## [1] -0.6181886  0.8336760 -1.8257685 -0.8118899  1.2944096
 ```
 
 ---
@@ -272,7 +280,7 @@ system.time(corr1 &lt;- cor(mat))
 
 ```
 ##    user  system elapsed 
-##    6.25    0.00    6.32
+##    6.26    0.00    6.36
 ```
 
 
@@ -282,7 +290,7 @@ system.time(corr2 &lt;- big_cor(X))
 
 ```
 ##    user  system elapsed 
-##    6.10    0.00    6.09
+##    6.09    0.02    6.25
 ```
 
 ```r
@@ -304,7 +312,7 @@ system.time(svd1 &lt;- svd(scale(mat), nu = 10, nv = 10))
 
 ```
 ##    user  system elapsed 
-##   24.68    0.13   25.05
+##   24.60    0.14   24.96
 ```
 
 
@@ -315,7 +323,7 @@ system.time(svd2 &lt;- big_SVD(X, fun.scaling = big_scale(), k = 10))
 
 ```
 ##    user  system elapsed 
-##    7.21    0.16    7.42
+##    6.94    0.06    7.06
 ```
 
 
@@ -327,7 +335,7 @@ system.time(svd3 &lt;- big_randomSVD(X, fun.scaling = big_scale(), k = 10))
 
 ```
 ##    user  system elapsed 
-##    2.52    0.01    2.56
+##    2.33    0.00    2.33
 ```
 
 ---
@@ -347,7 +355,7 @@ mult_test &lt;- big_univLinReg(X, y, covar.train = svd2$u)
 plot(mult_test)
 ```
 
-&lt;img src="bigrverse_files/figure-html/unnamed-chunk-21-1.svg" width="63%" style="display: block; margin: auto;" /&gt;
+&lt;img src="bigrverse_files/figure-html/unnamed-chunk-22-1.svg" width="63%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -361,7 +369,7 @@ plot(mult_test, type = "Manhattan") +
   labs(color = "Causal?")
 ```
 
-&lt;img src="bigrverse_files/figure-html/unnamed-chunk-22-1.svg" width="85%" style="display: block; margin: auto;" /&gt;
+&lt;img src="bigrverse_files/figure-html/unnamed-chunk-23-1.svg" width="85%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -405,7 +413,7 @@ qplot(pred, y[ind.test]) +
   theme_bigstatsr()
 ```
 
-&lt;img src="bigrverse_files/figure-html/unnamed-chunk-25-1.svg" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="bigrverse_files/figure-html/unnamed-chunk-26-1.svg" width="60%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -560,8 +568,8 @@ str(sums6)
 
 ```
 ## 'data.frame':	1000 obs. of  2 variables:
-##  $ sum: num  88.7 -128.6 -32.9 200 -36.7 ...
-##  $ var: num  1 0.982 1.008 1.003 0.97 ...
+##  $ sum: num  85.8 -25.8 91.2 75.5 77.7 ...
+##  $ var: num  1.03 1.02 1.01 1.01 1.02 ...
 ```
 
 ```r
@@ -601,7 +609,7 @@ system.time(
 
 ```
 ##    user  system elapsed 
-##   11.42    0.00   11.59
+##   11.37    0.00   11.66
 ```
 
 ```r
@@ -613,7 +621,7 @@ system.time(
 
 ```
 ##    user  system elapsed 
-##   19.80    0.06    5.59
+##   22.08    0.04    6.16
 ```
 
 ---
@@ -634,7 +642,7 @@ system.time(
 
 ```
 ##    user  system elapsed 
-##    0.09    0.04    9.02
+##    0.08    0.12   10.47
 ```
 
 ```r
@@ -706,7 +714,7 @@ This package is intended for more efficient use of sparse data in C++ and also w
 
 &lt;br&gt;
 
-Extends {bigstatsr} (and also uses {bigsparser}) with functions specific to genetic data:
+Extends {bigstatsr} (and also uses {bigsparser}) with functions specific to genetic SNP data:
 
 - to convert between formats, especially to an FBM
 
@@ -752,9 +760,9 @@ https://privefl.github.io/R-presentation/bigrverse.html
 
 &lt;br&gt;
 
-&lt;br&gt;
-
 &lt;p style="font-size: 140%"&gt;<i class="fab  fa-twitter "></i> &amp;#x2014; @privefl &amp;#x2014; <i class="fab  fa-github "></i>&lt;/p&gt;
+
+&lt;br&gt;
 
 .footnote[Slides created using R package [**xaringan**](https://github.com/yihui/xaringan)]
     </textarea>

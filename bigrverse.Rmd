@@ -15,7 +15,7 @@ output:
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', dev = "svg")
 
-files <- c("test.bk", "test2.bk")
+files <- c("test.bk", "test2.bk", "test2.rds")
 stopifnot(all(
   sapply(files[file.exists(files)], file.remove)
 ))
@@ -127,8 +127,8 @@ knitr::include_graphics("split-apply-combine.svg")
 // [[Rcpp::export]]
 NumericVector big_colsums(Environment BM) {
   
-  XPtr<FBM> xpBM = BM["address"]; 
-  BMAcc<double> macc(xpBM); 
+  XPtr<FBM> xpBM = BM["address"]; // get the external pointer
+  BMAcc<double> macc(xpBM);       // create an accessor to the data
   
 * size_t n = macc.nrow();
 * size_t m = macc.ncol();
@@ -183,25 +183,31 @@ knitr::include_graphics("density-scores.svg")
 
 class: center middle inverse
 
-# Let us try 
+# Let us try some functions
 
-# some functions
+# from `r icon::fa_r_project()` package {bigstatsr}
 
 ---
 
 ## Create an FBM object
 
 ```{r, echo=TRUE}
-X <- FBM(10e3, 1000, backingfile = "test2")
+X <- FBM(10e3, 1000, backingfile = "test2")$save()
 object.size(X)
 file.size(X$backingfile)  ## 8 x 1e4 x 1e3
-
 typeof(X)
 ```
 
+```{r, echo=TRUE}
+# `$save()` stored the object in an .rds file
+# which you can reload in any R session
+X <- big_attach("test2.rds")
+```
+
+
 ---
 
-## Fill it with random values
+## Fill the FBM with random values
 
 ```{r, out.width='65%'}
 knitr::include_graphics("split-apply-combine.svg")
@@ -576,7 +582,7 @@ This package is intended for more efficient use of sparse data in C++ and also w
 
 <br>
 
-Extends {bigstatsr} (and also uses {bigsparser}) with functions specific to genetic data:
+Extends {bigstatsr} (and also uses {bigsparser}) with functions specific to genetic SNP data:
 
 - to convert between formats, especially to an FBM
 
@@ -614,6 +620,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/privefl/bigstatsr/mas
 ---
 
 ```{r cleanup, include=FALSE}
+rm(X); gc()
 sapply(files[file.exists(files)], file.remove)
 ```
 
@@ -628,8 +635,8 @@ https://privefl.github.io/R-presentation/bigrverse.html
 
 <br>
 
-<br>
-
 <p style="font-size: 140%">`r icon::fa("twitter")` &#x2014; @privefl &#x2014; `r icon::fa("github")`</p>
+
+<br>
 
 .footnote[Slides created using R package [**xaringan**](https://github.com/yihui/xaringan)]
