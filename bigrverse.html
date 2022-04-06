@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>R-Lille presentation</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+class: title-slide center middle inverse
+
+&lt;br&gt;
+
+# Memory- and Computation-Efficient&lt;br&gt;Statistical Tools for Big Matrices
+
+&lt;br&gt;
+
+### R-Lille (April 2022)
+
+&lt;br&gt;
+
+### Florian Privé
+
+#### Senior Researcher, Aarhus University (DK)
+
+---
+
+class: center middle inverse
+
+# Motivation
+
+---
+
+## Working with very large genotype matrices
+
+- previously: 15K x 280K, [celiac disease](https://doi.org/10.1038/ng.543) (~30GB)
+
+- currently: 500K x 500K, [UK Biobank](https://doi.org/10.1101/166298) (~2TB)
+ 
+&lt;img src="https://media.giphy.com/media/3o7bueyxGydy48Lwgo/giphy.gif" width="55%" style="display: block; margin: auto;" /&gt;
+
+.footnote[But I still want to use <i class="fab  fa-r-project "></i>..]
+
+---
+
+## The solution I found
+
+&lt;img src="memory-solution.svg" width="90%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Format `FBM` is very similar to format `filebacked.big.matrix` from package {bigmemory} (details in [this vignette](https://privefl.github.io/bigstatsr/articles/bigstatsr-and-bigmemory.html)).]
+
+---
+
+class: center middle inverse
+
+# Simple accessors
+
+---
+
+## Similar accessor as R matrices
+
+
+```r
+X &lt;- FBM(2, 5, init = 1:10, backingfile = "test")
+```
+
+
+```r
+X$backingfile
+```
+
+```
+## [1] "C:\\Users\\au639593\\Desktop\\R-presentation\\test.bk"
+```
+
+```r
+X[, 1]  ## ok
+```
+
+```
+## [1] 1 2
+```
+
+```r
+X[1, ]  ## bad
+```
+
+```
+## [1] 1 3 5 7 9
+```
+
+```r
+X[]     ## super bad
+```
+
+```
+##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    1    3    5    7    9
+## [2,]    2    4    6    8   10
+```
+
+---
+
+## Similar accessor as R matrices
+
+
+```r
+colSums(X[])  ## super bad
+```
+
+```
+## [1]  3  7 11 15 19
+```
+
+&lt;/br&gt;
+
+&lt;img src="caution.jpg" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Split-(par)Apply-Combine Strategy
+
+### Apply standard R functions to big matrices (in parallel)
+
+&lt;img src="split-apply-combine.svg" width="95%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Implemented in `big_apply()`.]
+
+---
+
+## Similar accessor as Rcpp matrices
+
+
+```cpp
+// [[Rcpp::plugins(cpp11)]]
+// [[Rcpp::depends(bigstatsr, rmio)]]
+#include &lt;bigstatsr/BMAcc.h&gt;
+
+// [[Rcpp::export]]
+NumericVector big_colsums(Environment BM) {
+  
+  XPtr&lt;FBM&gt; xpBM = BM["address"]; 
+  BMAcc&lt;double&gt; macc(xpBM); 
+  
+* size_t n = macc.nrow();
+* size_t m = macc.ncol();
+  
+  NumericVector res(m);
+  
+  for (size_t j = 0; j &lt; m; j++) 
+    for (size_t i = 0; i &lt; n; i++)
+*     res[j] += macc(i, j);
+  
+  return res;
+}
+```
+
+---
+
+class: center middle inverse
+
+# Some examples 
+
+# from my work
+
+---
+
+## Partial Singular Value Decomposition
+
+15K `\(\times\)` 100K -- 10 first PCs -- 6 cores -- **1 min** (vs 2h in base R)
+
+&lt;/br&gt;
+
+&lt;img src="PC1-4.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+.footnote[Implemented in `big_randomSVD()`, powered by R packages {RSpectra} and {Rcpp}.]
+
+---
+
+## Sparse linear models
+
+### Predicting complex diseases with a penalized logistic regression
+
+15K `\(\times\)` 280K -- 6 cores -- **2 min** (10x faster than {glmnet})
+
+Automatic (parallel) grid-search for the two hyper-parameters of elastic-net.
+
+&lt;img src="density-scores.svg" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center middle inverse
+
+# Let us try 
+
+# some functions
+
+---
+
+## Create an FBM object
+
+
+```r
+X &lt;- FBM(10e3, 1000, backingfile = "test2")
+object.size(X)
+```
+
+```
+## 680 bytes
+```
+
+```r
+file.size(X$backingfile)  ## 8 x 1e4 x 1e3
+```
+
+```
+## [1] 8e+07
+```
+
+```r
+typeof(X)
+```
+
+```
+## [1] "double"
+```
+
+---
+
+## Fill it with random values
+
+&lt;img src="split-apply-combine.svg" width="65%" style="display: block; margin: auto;" /&gt;
+
+
+```r
+big_apply(X, a.FUN = function(X, ind) {
+  X[, ind] &lt;- rnorm(nrow(X) * length(ind))
+  NULL  ## Here, you don't want to return anything
+}, a.combine = 'c')
+```
+
+```
+## NULL
+```
+
+
+```r
+X[1:5, 1]
+```
+
+```
+## [1] -0.7639775  0.9388268 -0.8473623  0.5048008 -0.2584358
+```
+
+---
+
+## Correlation matrix
+
+
+```r
+mat &lt;- X[]
+system.time(corr1 &lt;- cor(mat))
+```
+
+```
+##    user  system elapsed 
+##    6.25    0.00    6.32
+```
+
+
+```r
+system.time(corr2 &lt;- big_cor(X))
+```
+
+```
+##    user  system elapsed 
+##    6.10    0.00    6.09
+```
+
+```r
+all.equal(corr1, corr2[])
+```
+
+```
+## [1] TRUE
+```
+
+---
+
+## Partial Singular Value Decomposition
+
+
+```r
+system.time(svd1 &lt;- svd(scale(mat), nu = 10, nv = 10))
+```
+
+```
+##    user  system elapsed 
+##   24.68    0.13   25.05
+```
+
+
+```r
+# Quadratic in the smallest dimension, linear in the other one
+system.time(svd2 &lt;- big_SVD(X, fun.scaling = big_scale(), k = 10))
+```
+
+```
+##    user  system elapsed 
+##    7.21    0.16    7.42
+```
+
+
+```r
+# Linear in both dimensions
+# Extremely useful if both dimensions are very large
+system.time(svd3 &lt;- big_randomSVD(X, fun.scaling = big_scale(), k = 10))
+```
+
+```
+##    user  system elapsed 
+##    2.52    0.01    2.56
+```
+
+---
+
+## Multiple association
+
+
+
+
+```r
+M &lt;- 100 # number of causal variables
+set &lt;- sample(ncol(X), M)
+y &lt;- scale(X[, set]) %*% rnorm(M)
+y &lt;- y + rnorm(length(y), sd = 2 * sd(y))
+
+mult_test &lt;- big_univLinReg(X, y, covar.train = svd2$u)
+plot(mult_test)
+```
+
+&lt;img src="bigrverse_files/figure-html/unnamed-chunk-21-1.svg" width="63%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Multiple association
+
+
+```r
+library(ggplot2)
+plot(mult_test, type = "Manhattan") + 
+  aes(color = cols_along(X) %in% set) +
+  labs(color = "Causal?")
+```
+
+&lt;img src="bigrverse_files/figure-html/unnamed-chunk-22-1.svg" width="85%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Prediction
+
+
+```r
+# Split the indices in train/test sets
+ind.train &lt;- sort(sample(nrow(X), size = 0.8 * nrow(X)))
+ind.test &lt;- setdiff(rows_along(X), ind.train)
+
+# Train a linear model with elastic-net regularization
+# and automatic choice of hyper-parameter lambda
+train &lt;- big_spLinReg(
+  X, y[ind.train], 
+  ind.train = ind.train,             # use a subset for training
+  covar.train = svd2$u[ind.train, ], # use additional covariables
+  pf.covar = rep(0, ncol(svd2$u)),   # do not penalize covariables
+  alphas = c(1, 0.1, 0.01))          # try a grid of values for alpha
+```
+
+
+```r
+# Get predictions for the test set
+pred &lt;- predict(train, X = X, ind.row = ind.test, 
+                covar.row = svd2$u[ind.test, ])
+```
+
+.footnote[A tutorial on fitting penalized regressions in [this vignette](https://privefl.github.io/bigstatsr/articles/penalized-regressions.html).]
+
+
+---
+
+## Prediction
+
+
+```r
+# Plot true value vs prediction
+qplot(pred, y[ind.test]) + 
+  geom_abline(intercept = 0, slope = 1, color = "red") + 
+  theme_bigstatsr()
+```
+
+&lt;img src="bigrverse_files/figure-html/unnamed-chunk-25-1.svg" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+class: center middle inverse
+
+# Toy case: 
+
+## Compute the sum for each column
+
+---
+
+## Brute force solution
+
+
+```r
+sums1 &lt;- colSums(X[])  ## /!\ access all the data in memory
+```
+
+&lt;/br&gt;
+
+&lt;img src="caution.jpg" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Do it by blocks
+
+
+```r
+sums2 &lt;- big_apply(X, a.FUN = function(X, ind) colSums(X[, ind]), 
+                   a.combine = 'c')
+
+all.equal(sums2, sums1)
+```
+
+```
+## [1] TRUE
+```
+
+&lt;br&gt;
+
+&lt;img src="split-apply-combine.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Using Rcpp (1/3)
+
+
+```cpp
+// [[Rcpp::plugins(cpp11)]]
+// [[Rcpp::depends(bigstatsr, rmio)]]
+#include &lt;bigstatsr/BMAcc.h&gt;
+
+// [[Rcpp::export]]
+NumericVector bigcolsums(Environment BM) {
+  
+  XPtr&lt;FBM&gt; xpBM = BM["address"]; // get the external pointer
+  BMAcc&lt;double&gt; macc(xpBM);       // create an accessor to the data
+  
+  size_t n = macc.nrow(), m = macc.ncol();
+  NumericVector res(m);  // vector of m zeros
+
+  for (size_t j = 0; j &lt; m; j++) 
+    for (size_t i = 0; i &lt; n; i++) 
+      res[j] += macc(i, j);
+
+  return res;
+}
+```
+
+---
+
+## Using Rcpp (1/3)
+
+
+```r
+sums3 &lt;- bigcolsums(X)
+
+all.equal(sums3, sums1)
+```
+
+```
+## [1] TRUE
+```
+
+---
+
+## Using Rcpp (2/3): the bigstatsr way
+
+
+```cpp
+// [[Rcpp::plugins(cpp11)]]
+// [[Rcpp::depends(bigstatsr, rmio)]]
+#include &lt;bigstatsr/BMAcc.h&gt;
+
+// [[Rcpp::export]]
+NumericVector bigcolsums2(Environment BM,
+*                         const IntegerVector&amp; rowInd,
+*                         const IntegerVector&amp; colInd) {
+  
+  XPtr&lt;FBM&gt; xpBM = BM["address"];
+* SubBMAcc&lt;double&gt; macc(xpBM, rowInd, colInd, 1);
+  
+* size_t n = macc.nrow(), m = macc.ncol();
+  NumericVector res(m);  // vector of m zeros
+
+  for (size_t j = 0; j &lt; m; j++) 
+    for (size_t i = 0; i &lt; n; i++) 
+*     res[j] += macc(i, j);
+
+  return res;
+}
+```
+
+
+
+---
+
+## Using Rcpp (2/3): the bigstatsr way
+
+
+```r
+sums4 &lt;- bigcolsums2(X, rows_along(mat), cols_along(mat))
+
+all.equal(sums4, sums1)
+```
+
+```
+## [1] TRUE
+```
+
+
+```r
+sums5 &lt;- bigcolsums2(X, rows_along(mat), 1:10)
+
+all.equal(sums5, sums1[1:10])
+```
+
+```
+## [1] TRUE
+```
+
+---
+
+## Using Rcpp (3/3): already implemented
+
+
+```r
+sums6 &lt;- big_colstats(X)
+str(sums6)
+```
+
+```
+## 'data.frame':	1000 obs. of  2 variables:
+##  $ sum: num  88.7 -128.6 -32.9 200 -36.7 ...
+##  $ var: num  1 0.982 1.008 1.003 0.97 ...
+```
+
+```r
+all.equal(sums6$sum, sums1)
+```
+
+```
+## [1] TRUE
+```
+
+---
+
+class: center middle inverse
+
+# Parallelism
+
+---
+
+## Most of the functions are parallelized
+
+
+```r
+ind.rep &lt;- rep(cols_along(X), each = 100)  ## size: 100,000
+(NCORES &lt;- nb_cores())
+```
+
+```
+## [1] 4
+```
+
+```r
+system.time(
+  mult_test2 &lt;- big_univLinReg(X, y, covar.train = svd2$u,
+                               ind.col = ind.rep)
+)
+```
+
+```
+##    user  system elapsed 
+##   11.42    0.00   11.59
+```
+
+```r
+system.time(
+  mult_test3 &lt;- big_univLinReg(X, y, covar.train = svd2$u,
+                               ind.col = ind.rep, ncores = NCORES) 
+)
+```
+
+```
+##    user  system elapsed 
+##   19.80    0.06    5.59
+```
+
+---
+
+## Parallelize your own functions
+
+
+```r
+system.time(
+  mult_test4 &lt;- big_parallelize(
+    X, p.FUN = function(X, ind, y, covar) {
+      bigstatsr::big_univLinReg(X, y, covar.train = covar,
+                                ind.col = ind)
+    }, p.combine = "rbind", ind = ind.rep, 
+    ncores = NCORES, y = y, covar = svd2$u)
+)
+```
+
+```
+##    user  system elapsed 
+##    0.09    0.04    9.02
+```
+
+```r
+all.equal(mult_test4, mult_test3)
+```
+
+```
+## [1] TRUE
+```
+
+---
+
+class: center middle inverse
+
+# Conclusion
+
+---
+
+class: inverse, center, middle
+
+# I'm able  to run algorithms
+# on 100GB of data
+# in <i class="fab  fa-r-project "></i> on my computer 
+
+---
+
+## Advantages of using FBM objects
+
+&lt;br&gt;
+
+- you can apply algorithms on **data larger than your RAM**,
+
+- you can easily **parallelize** your algorithms because the data on disk is shared,
+
+- you write **more efficient algorithms** (you do less copies and think more about what you're doing),
+
+- you can use **different types of data**, for example, in my field, I’m storing my data with only 1 byte per element (rather than 8 bytes for a standard R matrix). See [the documentation of the FBM class](https://privefl.github.io/bigstatsr/reference/FBM-class.html) for details.
+
+
+---
+
+class: center middle inverse
+
+# Two other packages
+
+---
+
+## {bigsparser}
+
+&lt;br&gt;
+
+Provides a Sparse matrix format with data on disk with some features:
+
+- convert from a dgCMatrix/dsCMatrix to an SFBM, a Sparse Filebacked Big Matrix
+
+- compute the product and crossproduct of an SFBM with a vector
+
+- solve Ax=b, where A is a symmetric SFBM and b is a vector
+
+- a new *compact* format is available, which is useful when non-zero values in columns are contiguous (or almost).
+
+&lt;br&gt;
+
+This package is intended for more efficient use of sparse data in C++ and also when parallelizing, since data on disk does not need copying.
+
+---
+
+## {bigsnpr}
+
+&lt;br&gt;
+
+Extends {bigstatsr} (and also uses {bigsparser}) with functions specific to genetic data:
+
+- to convert between formats, especially to an FBM
+
+- wrappers around PLINK (e.g. for quality controls)
+
+- special functions for PCA/SVD
+
+- polygenic scores (predictors based on genetic data) methods
+
+- multiple testing
+
+- many utility functions and other algorithms
+
+- functions that work directly on memory-mapped PLINK bed/bim/fam files    
+(often using the same code, just with a different accessor)
+
+---
+
+## Contributions and extensions are welcome!
+
+&lt;img src="cat-help.jpg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### If we meet in-person someday, make sure to ask for an hex sticker
+
+&lt;br&gt;
+
+&lt;img src="https://raw.githubusercontent.com/privefl/bigstatsr/master/bigstatsr.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+
+class: inverse, center, middle
+
+# Thanks!
+
+&lt;br&gt;
+
+Presentation available at    
+https://privefl.github.io/R-presentation/bigrverse.html
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+&lt;p style="font-size: 140%"&gt;<i class="fab  fa-twitter "></i> &amp;#x2014; @privefl &amp;#x2014; <i class="fab  fa-github "></i>&lt;/p&gt;
+
+.footnote[Slides created using R package [**xaringan**](https://github.com/yihui/xaringan)]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
