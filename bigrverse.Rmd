@@ -70,6 +70,26 @@ knitr::include_graphics("memory-solution.svg")
 
 ---
 
+## How memory-mapping works
+
+<br>
+
+- when you access the 1st element (1st row, 1st col), it accesses a block (say the first column) from disk into memory (RAM)
+
+- when you access the 2nd element (2nd row, 1st col), it is already in memory so it is accessed very fast
+
+- when you access the second column, you access from disk again (once)
+
+- you can access many columns like that, until you do not have enough memory anymore
+
+- some space is freed automatically so that new columns can be accessed into memory
+
+<br>
+
+Everything is seamlessly managed by the operating system (OS).
+
+---
+
 class: center middle inverse
 
 # Simple accessors

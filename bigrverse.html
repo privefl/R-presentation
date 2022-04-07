@@ -59,6 +59,26 @@ class: center middle inverse
 
 ---
 
+## How memory-mapping works
+
+&lt;br&gt;
+
+- when you access the 1st element (1st row, 1st col), it accesses a block (say the first column) from disk into memory (RAM)
+
+- when you access the 2nd element (2nd row, 1st col), it is already in memory so it is accessed very fast
+
+- when you access the second column, you access from disk again (once)
+
+- you can access many columns like that, until you do not have enough memory anymore
+
+- some space is freed automatically so that new columns can be accessed into memory
+
+&lt;br&gt;
+
+Everything is seamlessly managed by the operating system (OS).
+
+---
+
 class: center middle inverse
 
 # Simple accessors
@@ -265,7 +285,7 @@ X[1:5, 1]
 ```
 
 ```
-## [1] -0.6181886  0.8336760 -1.8257685 -0.8118899  1.2944096
+## [1] -0.63074508  1.55563752 -0.02059371 -0.13974420 -0.73635154
 ```
 
 ---
@@ -280,7 +300,7 @@ system.time(corr1 &lt;- cor(mat))
 
 ```
 ##    user  system elapsed 
-##    6.26    0.00    6.36
+##    6.11    0.00    6.15
 ```
 
 
@@ -290,7 +310,7 @@ system.time(corr2 &lt;- big_cor(X))
 
 ```
 ##    user  system elapsed 
-##    6.09    0.02    6.25
+##    5.98    0.04    6.04
 ```
 
 ```r
@@ -312,7 +332,7 @@ system.time(svd1 &lt;- svd(scale(mat), nu = 10, nv = 10))
 
 ```
 ##    user  system elapsed 
-##   24.60    0.14   24.96
+##   24.53    0.09   25.06
 ```
 
 
@@ -323,7 +343,7 @@ system.time(svd2 &lt;- big_SVD(X, fun.scaling = big_scale(), k = 10))
 
 ```
 ##    user  system elapsed 
-##    6.94    0.06    7.06
+##    6.98    0.07    7.14
 ```
 
 
@@ -335,7 +355,7 @@ system.time(svd3 &lt;- big_randomSVD(X, fun.scaling = big_scale(), k = 10))
 
 ```
 ##    user  system elapsed 
-##    2.33    0.00    2.33
+##    2.20    0.00    2.21
 ```
 
 ---
@@ -568,8 +588,8 @@ str(sums6)
 
 ```
 ## 'data.frame':	1000 obs. of  2 variables:
-##  $ sum: num  85.8 -25.8 91.2 75.5 77.7 ...
-##  $ var: num  1.03 1.02 1.01 1.01 1.02 ...
+##  $ sum: num  -30.5 152.1 148 -102.1 44.6 ...
+##  $ var: num  1.03 1 1.01 1 0.99 ...
 ```
 
 ```r
@@ -609,7 +629,7 @@ system.time(
 
 ```
 ##    user  system elapsed 
-##   11.37    0.00   11.66
+##    9.14    0.00    9.28
 ```
 
 ```r
@@ -621,7 +641,7 @@ system.time(
 
 ```
 ##    user  system elapsed 
-##   22.08    0.04    6.16
+##   18.70    0.03    5.09
 ```
 
 ---
@@ -642,7 +662,7 @@ system.time(
 
 ```
 ##    user  system elapsed 
-##    0.08    0.12   10.47
+##    0.06    0.04    7.12
 ```
 
 ```r
