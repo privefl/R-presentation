@@ -1,0 +1,102 @@
+---
+title: "Packages Omics"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, warning=FALSE, message=FALSE}
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+theme_set(theme_bw(14))
+options(max.print = 2000)
+```
+
+
+```{r}
+# Get CRAN packages' descriptions
+cleaned_desc <- tools::CRAN_package_db() %>% 
+  as_tibble() %>% 
+  # Remove e.g. {rgenoud} and {GA}
+  filter(!grepl("genetic algorithm", Description, ignore.case = TRUE, fixed = TRUE)) %>% 
+  # Remove e.g. {Matching}
+  filter(!grepl("genetic search algorithm", Description, ignore.case = TRUE, fixed = TRUE)) %>% 
+  mutate(years_since_last_update = interval(Published, today()) / years(1)) %>% 
+  select(Package, Description, years_since_last_update, BugReports) %>% 
+  tidytext::unnest_tokens(word, Description) %>% 
+  anti_join(tidytext::stop_words, by = "word") %>%
+  unique() %>% 
+  print()
+```
+
+
+```{r}
+tab <- cleaned_desc %>%
+  group_by(Package) %>% 
+  filter(sum(grepl("genetic|omic", word)) >= 1) %>% 
+  ungroup() %>% 
+  pull(word) %>% 
+  table()
+```
+
+```{r}
+dput(names(sort(tab[tab > 20], decreasing = TRUE)))
+```
+
+```{r}
+omics_words <- c(
+  "allele", "dna", "eqtl", "gene", "genes", "genetic", "genetics", "genetically", 
+  "genome", "genomic", "genomics", "genotype", "genotypes", "gwas", "metabolomic",
+  "metabolomics", "metagenomic", "metagenomics", "nucleotide", "omic", "omics", 
+  "phylogenetic", "phylogenetics", "protein", "proteomic", "proteomics",
+  "rna", "snp", "snps", "transcriptomic", "transcriptomics")
+# removed "cell" because was capturing e.g. {tidyr} and {googlesheets4}
+# removed "sequencing" because was capturing e.g. {seriation}
+
+omics_pkgs <- cleaned_desc %>%
+  filter(word %in% omics_words) %>% 
+  select(-word) %>% 
+  unique()
+```
+
+
+```{r}
+n_distinct(omics_pkgs$Package)
+n_distinct(filter(omics_pkgs, !is.na(BugReports))$Package)
+```
+
+```{r}
+cran_dl_last_year <- function(pkgs) {
+  purrr::map_dfr(bigparallelr::split_vec(pkgs, block_len = 50), ~ {
+    cranlogs::cran_downloads(., from = today() - years(1), to = today()) %>% 
+      group_by(package) %>% 
+      summarise(count = sum(count))
+  })
+}
+```
+
+```{r}
+nb_dl_last_year <- cran_dl_last_year(unique(omics_pkgs$Package))
+```
+
+```{r}
+nb_dl_last_year %>% 
+  arrange(desc(count)) %>% 
+  print(n = 30)
+```
+
+```{r}
+pkg_with_bugreport <- filter(omics_pkgs, !is.na(BugReports))$Package
+# E.g. {adegenet} is not part of those
+```
+
+```{r}
+ggplot() +
+  geom_histogram(aes(count), nb_dl_last_year,
+                 fill = "#E69F00", color = "#000000", alpha = 0.5) +
+  geom_histogram(aes(count), filter(nb_dl_last_year, package %in% pkg_with_bugreport),
+                 fill = "#0072B2", color = "#000000", alpha = 0.5) +
+  scale_x_log10()
+```
+
