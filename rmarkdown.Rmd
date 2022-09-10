@@ -243,7 +243,7 @@ $$ \frac{1}{n} \sum_{i=1}^n X_i $$
 It also works directly with HTML syntax:
 
 ```
-<a href="https://abichat.github.io/">My personal page</a>
+<a href="https://abichat.github.io/">Antoine's personal page</a>
 
 <img src="https://slides.yihui.name/gif/impossible-parking.gif">
 ```
@@ -560,7 +560,7 @@ knitr::include_graphics("https://bookdown.org/yihui/bookdown/images/cover.jpg")
 
 * [Reference guide](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf)
 
-* [Cheat sheet](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
+* [Cheat sheet](https://rmarkdown.rstudio.com/lesson-15.HTML)
 
 * [Tips for R Markdown](https://holtzy.github.io/Pimp-my-rmd/)
 
