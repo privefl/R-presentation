@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
   <head>
     <title>Visualisation with ggplot2</title>
     <meta charset="utf-8" />
     <meta name="author" content="Florian Privé" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
   </head>
@@ -447,8 +448,6 @@ ggplot(iris, aes(Petal.Length, Petal.Width, color = Species)) +
 
 ## Find answers
 
-### [Stack Overflow questions with tag `[ggplot2]`](https://stackoverflow.com/questions/tagged/ggplot2)
-
 &lt;blockquote class="twitter-tweet" data-lang="en" align="center"&gt;&lt;p lang="en" dir="ltr"&gt;ok, hands up... when looking up code errors/questions with the intent of finding answers on Stack Overflow, do you:&lt;/p&gt;&amp;mdash; Sharla Gelfand (@sharlagelfand) &lt;a href="https://twitter.com/sharlagelfand/status/915654253456318464?ref_src=twsrc%5Etfw"&gt;4 octobre 2017&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src="//platform.twitter.com/widgets.js" charset="utf-8"&gt;&lt;/script&gt;
 
@@ -471,8 +470,6 @@ ggplot(iris) +
 ---
 
 ## Go check the [**R Graph Gallery**](https://www.r-graph-gallery.com/ggplot2-package.html)
-
-&lt;br&gt;
 
 &lt;br&gt;
 
@@ -581,6 +578,49 @@ lapply(p_list, function(p) p + theme(legend.position = "none")) %&gt;%
 
 ---
 
+### Your turn
+
+Create a similar plot by instead tidying the data (pivoting) + using facets
+
+--
+
+&lt;br&gt;
+
+
+```r
+(iris_tidy &lt;- tidyr::pivot_longer(iris, -Species))
+```
+
+```
+## # A tibble: 600 x 3
+##    Species name         value
+##    &lt;fct&gt;   &lt;chr&gt;        &lt;dbl&gt;
+##  1 setosa  Sepal.Length   5.1
+##  2 setosa  Sepal.Width    3.5
+##  3 setosa  Petal.Length   1.4
+##  4 setosa  Petal.Width    0.2
+##  5 setosa  Sepal.Length   4.9
+##  6 setosa  Sepal.Width    3  
+##  7 setosa  Petal.Length   1.4
+##  8 setosa  Petal.Width    0.2
+##  9 setosa  Sepal.Length   4.7
+## 10 setosa  Sepal.Width    3.2
+## # ... with 590 more rows
+```
+
+---
+
+
+```r
+ggplot(iris_tidy) +
+  geom_density(aes(value, fill = Species), alpha = 0.6) +
+  facet_wrap(~ name, scales = "free")
+```
+
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-30-1.svg" width="95%" style="display: block; margin: auto;" /&gt;
+
+---
+
 ## Interactive plots
 
 
@@ -590,7 +630,7 @@ ggplot(iris, aes(Petal.Length, Petal.Width,
   geom_point(size = 3)
 ```
 
-&lt;img src="ggplot2_files/figure-html/unnamed-chunk-29-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-31-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -626,13 +666,13 @@ You might want to look at package [{widgetframe}](https://cran.r-project.org/web
 
 - [Cookbook for R - Graphs](http://www.cookbook-r.com/Graphs/)
 
-- [**Cheatsheet**](https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf)
+- [**Cheatsheet**](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-visualization.pdf)
 
 - [Top 50 ggplot2 Visualizations](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
 
 - [**Viridis color palette**](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
 
-- [**An RStudio addin for ggplot2 theme tweaking**](https://github.com/calligross/ggthemeassist)
+- [An RStudio addin for ggplot2 theme tweaking](https://github.com/calligross/ggthemeassist)
 
 - [**Publication Ready Plots**](http://www.sthda.com/english/rpkgs/ggpubr/)
 
@@ -656,7 +696,7 @@ svd &lt;- big_SVD(X, big_scale(), k = 10)
 plot(svd, type = "scores")
 ```
 
-&lt;img src="ggplot2_files/figure-html/unnamed-chunk-32-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-34-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -674,7 +714,7 @@ last_plot() +
   labs(title = "Yet another title", x = "with a new 'x' label")
 ```
 
-&lt;img src="ggplot2_files/figure-html/unnamed-chunk-33-1.svg" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-35-1.svg" width="60%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -693,9 +733,9 @@ ggplot(iris, aes(Petal.Length, Petal.Width,
 
 - I resize the "Plot Zoom" windows till I'm satisfied
 
-- Right-click on this window -&gt; "Open Image"
+- Right-click on this window -&gt; "Open image" (or "Inspect element")
 
-- Then, I use the dimensions that are displayed at the top in `ggsave()` with `scale = 1/100` (calibrate the value for your computer), e.g. 
+- Then, in `ggsave()`, I use the dimensions that are displayed with `scale = 1/100` (calibrate the value for your computer), e.g. 
 
 ```r
 ggsave("myggplot.pdf", scale = 1/100, width = 888, height = 725)
@@ -740,7 +780,7 @@ class: center, middle, inverse
 
 ## ..to reproduce this plot
 
-&lt;img src="ggplot2_files/figure-html/unnamed-chunk-37-1.svg" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-39-1.svg" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -756,7 +796,7 @@ ggplot(df) +
        color = "Continent", size = "Population")
 ```
 
-&lt;img src="ggplot2_files/figure-html/unnamed-chunk-38-1.svg" width="78%" style="display: block; margin: auto;" /&gt;
+&lt;img src="ggplot2_files/figure-html/unnamed-chunk-40-1.svg" width="78%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -822,6 +862,32 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
 // adds .remark-code-has-line-highlighted class to <pre> parent elements
 // of code chunks containing highlighted lines with class .remark-code-line-highlighted
 (function(d) {
@@ -840,17 +906,6 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
 })(document);</script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<script>
-(function() {
-  var links = document.getElementsByTagName('a');
-  for (var i = 0; i < links.length; i++) {
-    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
-      links[i].target = '_blank';
-    }
-  }
-})();
-</script>
 
 <script>
 slideshow._releaseMath = function(el) {

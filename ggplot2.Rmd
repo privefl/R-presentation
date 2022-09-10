@@ -407,8 +407,6 @@ knitr::include_graphics("http://r4ds.had.co.nz/cover.png")
 
 ## Find answers
 
-### [Stack Overflow questions with tag `[ggplot2]`](https://stackoverflow.com/questions/tagged/ggplot2)
-
 <blockquote class="twitter-tweet" data-lang="en" align="center"><p lang="en" dir="ltr">ok, hands up... when looking up code errors/questions with the intent of finding answers on Stack Overflow, do you:</p>&mdash; Sharla Gelfand (@sharlagelfand) <a href="https://twitter.com/sharlagelfand/status/915654253456318464?ref_src=twsrc%5Etfw">4 octobre 2017</a></blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
@@ -428,8 +426,6 @@ ggplot(iris) +
 ---
 
 ## Go check the [**R Graph Gallery**](https://www.r-graph-gallery.com/ggplot2-package.html)
-
-<br>
 
 <br>
 
@@ -506,6 +502,28 @@ lapply(p_list, function(p) p + theme(legend.position = "none")) %>%
 
 ---
 
+### Your turn
+
+Create a similar plot by instead tidying the data (pivoting) + using facets
+
+--
+
+<br>
+
+```{r}
+(iris_tidy <- tidyr::pivot_longer(iris, -Species))
+```
+
+---
+
+```{r out.width = "95%", fig.asp = 0.7}
+ggplot(iris_tidy) +
+  geom_density(aes(value, fill = Species), alpha = 0.6) +
+  facet_wrap(~ name, scales = "free")
+```
+
+---
+
 ## Interactive plots
 
 ```{r, out.width="80%", fig.asp=0.7, cache=FALSE}
@@ -546,13 +564,13 @@ You might want to look at package [{widgetframe}](https://cran.r-project.org/web
 
 - [Cookbook for R - Graphs](http://www.cookbook-r.com/Graphs/)
 
-- [**Cheatsheet**](https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf)
+- [**Cheatsheet**](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-visualization.pdf)
 
 - [Top 50 ggplot2 Visualizations](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
 
 - [**Viridis color palette**](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
 
-- [**An RStudio addin for ggplot2 theme tweaking**](https://github.com/calligross/ggthemeassist)
+- [An RStudio addin for ggplot2 theme tweaking](https://github.com/calligross/ggthemeassist)
 
 - [**Publication Ready Plots**](http://www.sthda.com/english/rpkgs/ggpubr/)
 
@@ -606,9 +624,9 @@ ggplot(iris, aes(Petal.Length, Petal.Width,
 
 - I resize the "Plot Zoom" windows till I'm satisfied
 
-- Right-click on this window -> "Open Image"
+- Right-click on this window -> "Open image" (or "Inspect element")
 
-- Then, I use the dimensions that are displayed at the top in `ggsave()` with `scale = 1/100` (calibrate the value for your computer), e.g. 
+- Then, in `ggsave()`, I use the dimensions that are displayed with `scale = 1/100` (calibrate the value for your computer), e.g. 
 ```{r, eval = FALSE}
 ggsave("myggplot.pdf", scale = 1/100, width = 888, height = 725)
 ```
