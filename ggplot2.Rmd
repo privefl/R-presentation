@@ -504,7 +504,7 @@ lapply(p_list, function(p) p + theme(legend.position = "none")) %>%
 
 ### Your turn
 
-Create a similar plot by instead tidying the data (pivoting) + using facets
+Create a similar plot by pivoting the data + using facets
 
 --
 
@@ -644,8 +644,7 @@ class: center, middle, inverse
 ## Use this data..
 
 ```{r}
-(df <- gapminder::gapminder %>%
-   filter(year == 1992))
+(df <- dplyr::filter(gapminder::gapminder, year == 1992))
 ```
 
 ---
