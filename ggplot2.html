@@ -786,13 +786,13 @@ class: center, middle, inverse
 
 ```r
 ggplot(df) + 
-  geom_point(aes(gdpPercap, lifeExp, size = pop, 
+  geom_point(aes(gdpPercap, lifeExp, size = pop / 1e6, 
                  color = continent)) +
   scale_x_log10(breaks = c(300, 1e3, 3e3, 10e3, 30e3)) + 
   labs(title = "Gapminder for 1992",
        x = "Gross Domestic Product (log scale)",
        y = "Life Expectancy at birth (years)",
-       color = "Continent", size = "Population")
+       color = "Continent", size = "Population\n(millions)")
 ```
 
 &lt;img src="ggplot2_files/figure-html/unnamed-chunk-40-1.svg" width="78%" style="display: block; margin: auto;" /&gt;
