@@ -22,11 +22,11 @@ class: title-slide center middle inverse
 
 <br>
 
-# Performance of R code
+# Performance of `r icons::icon_style(fill = "white", ICON_R_PROJECT)` code
 
 <br>
 
-## R in Grenoble
+## `r icons::icon_style(fill = "white", ICON_R_PROJECT)` in Grenoble
 
 <br>
 
@@ -38,7 +38,7 @@ class: title-slide center middle inverse
 
 class: center middle inverse
 
-# R's memory management
+# Part 1: Memory management in `r icons::icon_style(fill = "white", ICON_R_PROJECT)`
 
 <br>
 
@@ -206,6 +206,223 @@ d3[1, ] <- d3[1, ] * 3  # modify one row
 ```{r, out.width="45%"}
 knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/36df61f54d1ac62e066fb814cb7ba38ea6047a74/facf8/diagrams/name-value/d-modify-r.png")
 ```
+
+---
+
+class: center middle inverse
+
+# Part 2: Why loops are slow in R?
+
+---
+
+### Never grow a vector
+
+<br>
+
+Example computing the cumulative sums of a vector:
+
+<br>
+
+```{r, echo=TRUE, eval=FALSE}
+x <- rnorm(10e3)
+
+current_sum <- 0
+res <- c()
+
+for (x_i in x) {
+  current_sum <- current_sum + x_i
+  res <- c(res, current_sum)
+}
+```
+
+<br>
+
+Why is this code bad?
+
+---
+
+```{r, out.width = "68%"}
+knitr::include_graphics("https://privefl.github.io/blog/images/stairs.jpg")
+```
+
+---
+
+### Much faster code by pre-allocating
+
+<br>
+
+If you know the size of the result in advance, you should pre-allocate it.
+
+<br>
+
+```{r, echo=TRUE, eval=FALSE}
+current_sum <- 0
+res2 <- double(length(x))  # same as rep(0, length(x))
+
+for (i in seq_along(x)) {
+  current_sum <- current_sum + x[i]
+  res2[i] <- current_sum
+}
+```
+
+---
+
+### Much faster code by using a list
+
+<br>
+
+It is okay to grow a list.
+
+<br>
+
+```{r, echo=TRUE, eval=FALSE}
+current_sum <- 0
+res3 <- list()
+
+for (i in seq_along(x)) {
+  current_sum <- current_sum + x[i]
+  res3[[i]] <- current_sum
+}
+
+unlist(res3)
+```
+
+---
+
+### Much faster code by growing a vector (the right way)
+
+<br>
+
+Since `r ICON_R_PROJECT` v3.4, you can efficiently grow a vector (not with `c()` though).
+
+<br>
+
+```{r, echo=TRUE, eval=FALSE}
+current_sum <- 0
+res4 <- c()
+
+for (i in seq_along(x)) {
+  current_sum <- current_sum + x[i]
+  res4[i] <- current_sum
+}
+```
+
+---
+
+### Much faster code by using existing efficient functions
+
+<br>
+
+Some base `r ICON_R_PROJECT` functions are code in C or Fortan, and are very fast. Use them! 
+
+<br>
+
+```{r, echo=TRUE, eval=FALSE}
+res5 <- cumsum(x)
+```
+
+--
+
+<br>
+
+#### Other examples
+
+- Using `rowMeans(x)` is much faster than `apply(x, 1, mean)`. 
+
+- If you want more efficient functions that apply to rows and columns of matrices, you can use [package {matrixStats}](https://github.com/HenrikBengtsson/matrixStats). 
+
+- When reading large text files, rather than `read.table()`, prefer using `data.table::fread()` (or `bigreadr::fread2()`).
+
+- Generally, packages that uses C/Rcpp are efficient.
+
+---
+
+### Loops vs sapply() vs vectorization
+
+<br>
+
+Three ways to compute the sum of two vectors (element-wise):
+
+<br>
+
+```{r, echo=TRUE}
+add_loop_prealloc <- function(x, y) {
+  res <- double(length(x))
+  for (i in seq_along(x)) {
+    res[i] <- x[i] + y[i]
+  }
+  res
+}
+
+add_sapply <- function(x, y) {
+  sapply(seq_along(x), function(i) x[i] + y[i])
+}
+
+add_vectorized <- `+`
+```
+
+---
+
+### Benchmark
+
+```{r, echo=TRUE, eval=FALSE}
+N <- 10e3; x <- runif(N); y <- rnorm(N)
+
+microbenchmark::microbenchmark(
+        LOOP = add_loop_prealloc(x, y),
+      SAPPLY = add_sapply(x, y),
+  VECTORIZED = add_vectorized(x, y)
+)
+```
+
+--
+
+```{r, echo=FALSE, cache=TRUE}
+N <- 10e3; x <- runif(N); y <- rnorm(N)
+
+microbenchmark::microbenchmark(
+        LOOP = add_loop_prealloc(x, y),
+      SAPPLY = add_sapply(x, y),
+  VECTORIZED = add_vectorized(x, y)
+)
+```
+
+<br>
+
+Loops are actually faster than `sapply()` because they can benefit from just-in-time compilation (JIT, since `r ICON_R_PROJECT` v3.4).
+
+Vectorization is by far the best.
+
+---
+
+### Why vectorizing?
+
+<br>
+
+I call *vectorized* a function that takes vectors as arguments and operate on each element of these vectors in another (compiled) language (such as C, C++ and Fortran).
+
+--
+
+As an interpreted language, for each iteration `res[i] <- x[i] + y[i]`, `r ICON_R_PROJECT` has to ask:
+
+- what is the type of `x[i]` and `y[i]`?
+
+- can I add these two types? 
+
+- what is the type of `x[i] + y[i]` then?
+
+- can I store this result in `res` or do I need to convert it?
+
+These questions must be answered for each iteration, which takes time.    
+Some of this is alleviated by JIT compilation.
+
+--
+
+On the contrary, for vectorized functions, these questions must be answered only once, which saves a lot of time. Read more with [Noam Ross’s blog post on vectorization](http://www.noamross.net/blog/2014/4/16/vectorization-in-r--why.html).
+
+---
+
+### How to vectorize this code?
 
 ---
 
