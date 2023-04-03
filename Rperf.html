@@ -51,7 +51,7 @@ x &lt;- c(1, 2, 3)
 * It's creating an object, a vector of values, `c(1, 2, 3)`.
 * And it's binding that object to a name, `x`.
 
-&lt;img src="https://d33wubrfki0l68.cloudfront.net/bd90c87ac98708b1731c92900f2f53ec6a71edaf/ce375/diagrams/name-value/binding-1.png" width="28%" style="display: block; margin: auto;" /&gt;
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/bd90c87ac98708b1731c92900f2f53ec6a71edaf/ce375/diagrams/name-value/binding-1.png" width="32%" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -61,7 +61,7 @@ x &lt;- c(1, 2, 3)
 ```r
 y &lt;- x
 ```
-&lt;img src="https://d33wubrfki0l68.cloudfront.net/bdc72c04d3135f19fb3ab13731129eb84c9170af/f0ab9/diagrams/name-value/binding-2.png" width="28%" style="display: block; margin: auto;" /&gt;
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/bdc72c04d3135f19fb3ab13731129eb84c9170af/f0ab9/diagrams/name-value/binding-2.png" width="30%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -104,7 +104,7 @@ z &lt;- f(x)
 
 --
 
-&lt;img src="https://d33wubrfki0l68.cloudfront.net/e8718027aabaed377da311f45b45a179588e4dcf/6bf90/diagrams/name-value/binding-f2.png" width="28%" style="display: block; margin: auto;" /&gt;
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/e8718027aabaed377da311f45b45a179588e4dcf/6bf90/diagrams/name-value/binding-f2.png" width="30%" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -127,6 +127,80 @@ z2 &lt;- f2(x)
 [3,] 3  3
 ```
 
+---
+
+### Lists
+
+It's not just names (i.e. variables) that point to values; elements of lists do too. 
+
+
+```r
+l1 &lt;- list(1, 2, 3)
+```
+
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/dae84980f1586fc4ef47091c91f51a5737b38135/a1403/diagrams/name-value/list.png" width="32%" style="display: block; margin: auto;" /&gt;
+
+--
+
+
+```r
+l2 &lt;- l1
+```
+
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/52bc0e3da3382cba957a9d83397b6c9200906ce2/c72aa/diagrams/name-value/l-modify-1.png" width="30%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Copy-on-modify for lists?
+
+
+```r
+l2[[3]] &lt;- 4
+```
+
+--
+
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/b844bb5a3443e1344299627f5760e2ae3a9885b5/e1c76/diagrams/name-value/l-modify-2.png" width="38%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Data frames
+
+&lt;br&gt;
+
+**Data frames are lists of vectors.**
+
+&lt;br&gt;
+
+
+```r
+d1 &lt;- data.frame(x = c(1, 5, 6), y = c(2, 4, 3))
+```
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/80d8995999aa240ff4bc91bb6aba2c7bf72afc24/95ee6/diagrams/name-value/dataframe.png" width="28%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+d2 &lt;- d1
+d2[, 2] &lt;- d2[, 2] * 2  # modify one column
+```
+
+--
+
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/c19fd7e31bf34ceff73d0fac6e3ea22b09429e4a/23d8d/diagrams/name-value/d-modify-c.png" width="30%" style="display: block; margin: auto;" /&gt;
+
+--
+
+
+```r
+d3 &lt;- d1
+d3[1, ] &lt;- d3[1, ] * 3  # modify one row
+```
+
+--
+
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/36df61f54d1ac62e066fb814cb7ba38ea6047a74/facf8/diagrams/name-value/d-modify-r.png" width="45%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -136,7 +210,7 @@ class: inverse, center, middle
 
 &lt;br&gt;
 
-Presentation available at [bit.ly/ldpred2_london](https://bit.ly/ldpred2_london)
+Presentation available at [bit.ly/RUGgre38](https://bit.ly/RUGgre38)
 
 &lt;br&gt;
 
