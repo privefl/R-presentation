@@ -46,7 +46,7 @@ class: center middle inverse
 
 ---
 
-### Binding basics
+### Understanding binding basics
 
 ```{r, echo = TRUE}
 x <- c(1, 2, 3)
@@ -422,7 +422,219 @@ On the contrary, for vectorized functions, these questions must be answered only
 
 ---
 
+### Example of vectorization
+Suppose we wish to estimate the integral $\int_0^1 x^2 dx$ using a Monte-Carlo method. Essentially, we throw darts at the curve and count the number of darts that fall below the curve (as in the following figure).
+
+```{r monte-carlo, echo=FALSE, out.width="88%"}
+knitr::include_graphics("https://bookdown.org/csgillespie/efficientR/_main_files/figure-html/3-1-1.png")
+```
+
+---
+
 ### How to vectorize this code?
+
+<br>
+
+Naive R code implementing this Monte-Carlo algorithm:
+
+<br>
+
+```{r, echo=TRUE}
+monte_carlo <- function(nb_samp) {
+  
+  hits <- 0
+  for (i in seq_len(nb_samp)) {
+    x <- runif(1)
+    y <- runif(1)
+    if (y < x^2) hits <- hits + 1
+  }
+  
+  hits / nb_samp
+}
+```
+
+```{r, echo=TRUE}
+monte_carlo(1e4)
+```
+
+---
+
+### A better solution
+
+```{r, echo=TRUE}
+monte_carlo2 <- function(nb_samp) {
+  
+  all_x <- runif(nb_samp)
+  all_y <- runif(nb_samp)
+  
+  hits <- 0
+  for (i in seq_len(nb_samp)) {
+    x <- all_x[i]
+    y <- all_y[i]
+    if (y < x^2) hits <- hits + 1
+  }
+  
+  hits / nb_samp
+}
+```
+
+---
+
+### A better solution
+
+```{r, echo=TRUE}
+monte_carlo3 <- function(nb_samp) {
+  
+  all_x <- runif(nb_samp)
+  all_y <- runif(nb_samp)
+  test <- all_y < all_x^2
+  
+  hits <- 0
+  for (i in seq_len(nb_samp)) {
+    if (test[i]) hits <- hits + 1
+  }
+  
+  hits / nb_samp
+}
+```
+
+---
+
+### An even better solution
+
+```{r, echo=TRUE}
+monte_carlo4 <- function(nb_samp) {
+  
+  all_x <- runif(nb_samp)
+  all_y <- runif(nb_samp)
+  test <- all_y < all_x^2
+  
+  mean(test)
+}
+```
+
+--
+
+```{r, echo=TRUE}
+monte_carlo5 <- function(nb_samp) {
+  mean(runif(nb_samp) < runif(nb_samp)^2)
+}
+```
+
+--
+
+```{r, echo=TRUE, cache=TRUE}
+c(monte_carlo (1e6),
+  monte_carlo2(1e6),
+  monte_carlo3(1e6),
+  monte_carlo4(1e6),
+  monte_carlo5(1e6))
+```
+
+---
+
+### Benchmark
+
+```{r, echo=TRUE, cache=TRUE}
+microbenchmark::microbenchmark(
+  monte_carlo (1e4),
+  monte_carlo2(1e4),
+  monte_carlo3(1e4),
+  monte_carlo4(1e4),
+  monte_carlo5(1e4)
+)
+```
+
+---
+
+class: center middle inverse
+
+# Part 3: Other strategies
+# to make your code faster
+
+---
+
+### Identify *where* your code is slow
+
+<br>
+
+> "Programmers waste enormous amounts of time thinking about, or worrying
+> about, the speed of noncritical parts of their programs, and these attempts 
+> at efficiency actually have a strong negative impact when debugging and
+> maintenance are considered."
+>
+> -- Donald Knuth.
+
+<br>
+
+--
+
+Trying to optimize each and every part of your code    
+$\Longrightarrow$ time lost + code too complex
+
+R is great at prototyping quickly; always start with that!        
+If performance matters, then profile your code to see which part of your code is taking too much time and optimize only this part!
+
+Learn more on how to profile your code in RStudio in [this article](https://support.rstudio.com/hc/en-us/articles/218221837-Profiling-R-code-with-the-RStudio-IDE).
+
+---
+
+### Let us profile the code we used before
+
+<br>
+
+```{r, echo=TRUE, eval=FALSE}
+x <- rnorm(50e3)
+
+current_sum <- 0
+res <- c()
+
+for (x_i in x) {
+  current_sum <- current_sum + x_i
+  res <- c(res, current_sum)
+}
+```
+
+<br>
+
+In RStudio, 'Profile' panel $\rightarrow$ Profile Selected Line(s).
+
+---
+
+### Rcpp: making R functions from C++ code
+
+Rcpp lives between R and C++, so that you can get
+
+- the performance of C++,
+
+- the convenience of R.
+
+--
+
+Typical bottlenecks that C++ can address include:
+
+- Recursive functions, or problems which involve calling functions **millions of times**. 
+The overhead of calling a function in C++ is much lower than that in R.
+
+- Loops that **can’t be easily vectorized** because subsequent iterations depend on previous ones.
+
+- Problems that require **advanced data structures** and algorithms that R doesn’t provide. Through the standard template library (STL), C++ has efficient implementations of many important data structures, from ordered maps to double-ended queues. See [this chapter](https://adv-r.hadley.nz/rcpp.html#stl).
+
+<br>
+
+To learn more, have a look at [my presentation on Rcpp](https://privefl.github.io/R-presentation/Rcpp.html).
+
+---
+
+### Parallelization
+
+<br>
+
+For parallelizing R code, I basically always use `foreach` and recommend to do so. See [my guide to parallelism in R with `foreach`](https://privefl.github.io/blog/a-guide-to-parallelism-in-r/).
+
+<br>
+
+Just remember to **optimize your code before** trying to parallelize it.
 
 ---
 

@@ -41,7 +41,7 @@ class: center middle inverse
 
 ---
 
-### Binding basics
+### Understanding binding basics
 
 
 ```r
@@ -418,6 +418,253 @@ Some of this is alleviated by JIT compilation.
 --
 
 On the contrary, for vectorized functions, these questions must be answered only once, which saves a lot of time. Read more with [Noam Ross’s blog post on vectorization](http://www.noamross.net/blog/2014/4/16/vectorization-in-r--why.html).
+
+---
+
+### Example of vectorization
+Suppose we wish to estimate the integral `\(\int_0^1 x^2 dx\)` using a Monte-Carlo method. Essentially, we throw darts at the curve and count the number of darts that fall below the curve (as in the following figure).
+
+&lt;img src="https://bookdown.org/csgillespie/efficientR/_main_files/figure-html/3-1-1.png" width="88%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### How to vectorize this code?
+
+&lt;br&gt;
+
+Naive R code implementing this Monte-Carlo algorithm:
+
+&lt;br&gt;
+
+
+```r
+monte_carlo &lt;- function(nb_samp) {
+  
+  hits &lt;- 0
+  for (i in seq_len(nb_samp)) {
+    x &lt;- runif(1)
+    y &lt;- runif(1)
+    if (y &lt; x^2) hits &lt;- hits + 1
+  }
+  
+  hits / nb_samp
+}
+```
+
+
+```r
+monte_carlo(1e4)
+```
+
+```
+[1] 0.3362
+```
+
+---
+
+### A better solution
+
+
+```r
+monte_carlo2 &lt;- function(nb_samp) {
+  
+  all_x &lt;- runif(nb_samp)
+  all_y &lt;- runif(nb_samp)
+  
+  hits &lt;- 0
+  for (i in seq_len(nb_samp)) {
+    x &lt;- all_x[i]
+    y &lt;- all_y[i]
+    if (y &lt; x^2) hits &lt;- hits + 1
+  }
+  
+  hits / nb_samp
+}
+```
+
+---
+
+### A better solution
+
+
+```r
+monte_carlo3 &lt;- function(nb_samp) {
+  
+  all_x &lt;- runif(nb_samp)
+  all_y &lt;- runif(nb_samp)
+  test &lt;- all_y &lt; all_x^2
+  
+  hits &lt;- 0
+  for (i in seq_len(nb_samp)) {
+    if (test[i]) hits &lt;- hits + 1
+  }
+  
+  hits / nb_samp
+}
+```
+
+---
+
+### An even better solution
+
+
+```r
+monte_carlo4 &lt;- function(nb_samp) {
+  
+  all_x &lt;- runif(nb_samp)
+  all_y &lt;- runif(nb_samp)
+  test &lt;- all_y &lt; all_x^2
+  
+  mean(test)
+}
+```
+
+--
+
+
+```r
+monte_carlo5 &lt;- function(nb_samp) {
+  mean(runif(nb_samp) &lt; runif(nb_samp)^2)
+}
+```
+
+--
+
+
+```r
+c(monte_carlo (1e6),
+  monte_carlo2(1e6),
+  monte_carlo3(1e6),
+  monte_carlo4(1e6),
+  monte_carlo5(1e6))
+```
+
+```
+[1] 0.333325 0.333494 0.333562 0.333586 0.333303
+```
+
+---
+
+### Benchmark
+
+
+```r
+microbenchmark::microbenchmark(
+  monte_carlo (1e4),
+  monte_carlo2(1e4),
+  monte_carlo3(1e4),
+  monte_carlo4(1e4),
+  monte_carlo5(1e4)
+)
+```
+
+```
+Unit: microseconds
+                expr     min       lq      mean   median       uq
+  monte_carlo(10000) 27217.6 35832.90 41264.791 38630.05 44239.40
+ monte_carlo2(10000)  1201.4  1247.15  1551.642  1335.40  1927.65
+ monte_carlo3(10000)   847.1   895.60  1158.774   967.75  1234.60
+ monte_carlo4(10000)   588.9   622.60   783.828   659.80   788.75
+ monte_carlo5(10000)   570.1   589.15   782.959   641.65   930.20
+     max neval
+ 87908.6   100
+  2513.9   100
+  8156.3   100
+  5411.4   100
+  4538.2   100
+```
+
+---
+
+class: center middle inverse
+
+# Part 3: Other strategies
+# to make your code faster
+
+---
+
+### Identify *where* your code is slow
+
+&lt;br&gt;
+
+&gt; "Programmers waste enormous amounts of time thinking about, or worrying
+&gt; about, the speed of noncritical parts of their programs, and these attempts 
+&gt; at efficiency actually have a strong negative impact when debugging and
+&gt; maintenance are considered."
+&gt;
+&gt; -- Donald Knuth.
+
+&lt;br&gt;
+
+--
+
+Trying to optimize each and every part of your code    
+`\(\Longrightarrow\)` time lost + code too complex
+
+R is great at prototyping quickly; always start with that!        
+If performance matters, then profile your code to see which part of your code is taking too much time and optimize only this part!
+
+Learn more on how to profile your code in RStudio in [this article](https://support.rstudio.com/hc/en-us/articles/218221837-Profiling-R-code-with-the-RStudio-IDE).
+
+---
+
+### Let us profile the code we used before
+
+&lt;br&gt;
+
+
+```r
+x &lt;- rnorm(50e3)
+
+current_sum &lt;- 0
+res &lt;- c()
+
+for (x_i in x) {
+  current_sum &lt;- current_sum + x_i
+  res &lt;- c(res, current_sum)
+}
+```
+
+&lt;br&gt;
+
+In RStudio, 'Profile' panel `\(\rightarrow\)` Profile Selected Line(s).
+
+---
+
+### Rcpp: making R functions from C++ code
+
+Rcpp lives between R and C++, so that you can get
+
+- the performance of C++,
+
+- the convenience of R.
+
+--
+
+Typical bottlenecks that C++ can address include:
+
+- Recursive functions, or problems which involve calling functions **millions of times**. 
+The overhead of calling a function in C++ is much lower than that in R.
+
+- Loops that **can’t be easily vectorized** because subsequent iterations depend on previous ones.
+
+- Problems that require **advanced data structures** and algorithms that R doesn’t provide. Through the standard template library (STL), C++ has efficient implementations of many important data structures, from ordered maps to double-ended queues. See [this chapter](https://adv-r.hadley.nz/rcpp.html#stl).
+
+&lt;br&gt;
+
+To learn more, have a look at [my presentation on Rcpp](https://privefl.github.io/R-presentation/Rcpp.html).
+
+---
+
+### Parallelization
+
+&lt;br&gt;
+
+For parallelizing R code, I basically always use `foreach` and recommend to do so. See [my guide to parallelism in R with `foreach`](https://privefl.github.io/blog/a-guide-to-parallelism-in-r/).
+
+&lt;br&gt;
+
+Just remember to **optimize your code before** trying to parallelize it.
 
 ---
 
