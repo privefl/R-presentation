@@ -1,0 +1,145 @@
+---
+title: "R in Grenoble #38"
+output:
+  xaringan::moon_reader:
+    seal: false
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, width = 70)
+knitr::opts_chunk$set(fig.align = 'center', dev = "svg", out.width = "70%",
+                      echo = FALSE, comment = "", fig.width = 5, global.par = TRUE)
+ICON_R_PROJECT <- icons::fontawesome$brands$`r-project`
+ICON_TRI_EXCL <- icons::fontawesome$solid$`exclamation-triangle`
+```
+
+class: title-slide center middle inverse
+
+<br>
+
+# Performance of R code
+
+<br>
+
+## R in Grenoble
+
+<br>
+
+### Florian Privé
+
+<br>
+
+---
+
+class: center middle inverse
+
+# R's memory management
+
+<br>
+
+#### Read more with [this chapter of Advanced R](https://adv-r.hadley.nz/names-values.html)
+
+---
+
+### Binding basics
+
+```{r, echo = TRUE}
+x <- c(1, 2, 3)
+```
+
+* It's creating an object, a vector of values, `c(1, 2, 3)`.
+* And it's binding that object to a name, `x`.
+
+```{r, out.width="28%"}
+knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/bd90c87ac98708b1731c92900f2f53ec6a71edaf/ce375/diagrams/name-value/binding-1.png")
+```
+
+--
+
+<br>
+
+```{r, echo = TRUE}
+y <- x
+```
+```{r, out.width="28%"}
+knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/bdc72c04d3135f19fb3ab13731129eb84c9170af/f0ab9/diagrams/name-value/binding-2.png")
+```
+
+---
+
+### Copy-on-modify
+
+```{r, echo=TRUE}
+x <- c(1, 2, 3)
+y <- x
+y[3] <- 4
+```
+
+--
+
+```{r, echo=TRUE}
+x
+```
+
+--
+
+```{r, out.width="28%"}
+knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/ef9f480effa2f1d0e401d1f94218d0cf118433c0/b56e9/diagrams/name-value/binding-3.png")
+```
+
+---
+
+### Copy-on-modify: what about inside functions?
+
+```{r, echo=TRUE}
+f <- function(a) {
+  a
+}
+x <- c(1, 2, 3)
+z <- f(x)
+```
+
+--
+
+```{r, out.width="28%"}
+knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/e8718027aabaed377da311f45b45a179588e4dcf/6bf90/diagrams/name-value/binding-f2.png")
+```
+
+--
+
+```{r, echo=TRUE}
+f2 <- function(a) {
+  a[1] <- 10
+  a
+}
+z2 <- f2(x)
+```
+
+--
+
+```{r}
+cbind(x, z2)
+```
+
+
+---
+
+class: inverse, center, middle
+
+# Thanks!
+
+<br>
+
+Presentation available at [bit.ly/ldpred2_london](https://bit.ly/ldpred2_london)
+
+<br>
+
+`r icons::icon_style(fill = "white", icons::fontawesome$brands$twitter)` `r icons::icon_style(fill = "white", icons::fontawesome$brands$github)` privefl
+
+.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan)]
+
