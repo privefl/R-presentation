@@ -305,7 +305,7 @@ ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
 ```')
 ```
 
-```{r chunkfig, fig.align="center", out.width="60%"}
+```{r chunkfig, fig.align="center", out.width="60%", warning=FALSE}
 ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
 ```
 
@@ -319,7 +319,7 @@ ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
 ```')
 ```
 
-```{r chunkfig2, fig.align="center", out.width="80%", fig.asp=0.7, fig.width=4}
+```{r chunkfig2, fig.align="center", out.width="80%", fig.asp=0.7, fig.width=4, warning=FALSE}
 ggplot2::qplot(Sepal.Length, Sepal.Width, data = iris)
 ```
 
@@ -413,7 +413,7 @@ For more refined tables, you can use `knitr::kable()`, `xtable::xtable()`, `kabl
 
 - Books (e.g. my online [advanced R course](https://privefl.github.io/advr38book/) or even [a thesis](https://keurcien.github.io/book/introduction.html))
 
-- [WIP] [{pagedown}](https://github.com/rstudio/pagedown): Paginate the HTML Output of R Markdown with CSS for Print
+- [{pagedown}](https://github.com/rstudio/pagedown): Paginate the HTML Output of R Markdown with CSS for Print
 
 ---
 
